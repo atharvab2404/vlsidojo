@@ -1,150 +1,64 @@
-export default function ProjectCategories() {
-  const categories = [
+import React from "react";
+import { Cpu, Sparkles, Rocket } from "lucide-react";
+
+export default function VLSIHub() {
+  const sections = [
     {
-      title: "Basic Projects",
-      subtitle: "Build Your Foundational Skillset",
-      description:
-        "A selection of beginner-friendly projects to help you master the core concepts of digital design and HDL coding.",
-      projects: [
-        {
-          label: "Beginner-Friendly",
-          name: "4-bit ALU Design",
-          image: "/images/alu-placeholder.png",
-          description:
-            "Design a mini Arithmetic Logic Unit to learn digital circuit design, logic gates, and modular HDL design.",
-          link: "#",
-        },
-        {
-          label: "Real-World Relevance",
-          name: "Traffic Light Controller",
-          image: "/images/traffic-light-placeholder.png",
-          description:
-            "Simulate a real-world traffic light system using a finite state machine, teaching you timing control and FSM modeling.",
-          link: "#",
-        },
-        {
-          label: "Hands-on Hardware",
-          name: "Digital Clock on FPGA",
-          image: "/images/clock-placeholder.png",
-          description:
-            "Implement a real-time digital clock on an FPGA, perfect for practicing counters, clock dividers, and HDL logic.",
-          link: "#",
-        },
+      title: "The Problem with Today’s VLSI Education",
+      icon: <Cpu className="w-8 h-8 text-white drop-shadow-md" />,
+      points: [
+        "College coursework feels too basic for industry needs.",
+        "Students struggle to showcase practical projects.",
+        "Industry-grade tools & concepts rarely taught in classrooms."
       ],
+      gradient: "from-red-500 to-orange-400"
     },
     {
-      title: "Intermediate Projects",
-      subtitle: "Expand Your Digital Design Skills",
-      description:
-        "Challenging projects to strengthen your understanding of digital systems and prepare you for advanced design concepts.",
-      projects: [
-        {
-          label: "Complex Logic",
-          name: "8-bit CPU Design",
-          image: "/images/cpu-placeholder.png",
-          description:
-            "Build an 8-bit CPU with registers and an ALU to learn more about processor design and instruction execution.",
-          link: "#",
-        },
-        {
-          label: "Real Applications",
-          name: "UART Communication Module",
-          image: "/images/uart-placeholder.png",
-          description:
-            "Implement a UART module for serial communication and understand asynchronous data transfer protocols.",
-          link: "#",
-        },
-        {
-          label: "FPGA Experience",
-          name: "PWM Motor Controller",
-          image: "/images/pwm-placeholder.png",
-          description:
-            "Create a pulse-width modulation motor controller to interface with hardware and understand signal modulation.",
-          link: "#",
-        },
+      title: "The VLSI Dojo Difference",
+      icon: <Sparkles className="w-8 h-8 text-white drop-shadow-md" />,
+      points: [
+        "Learn by building — not just theory.",
+        "Step-by-step, resume-ready projects.",
+        "Real-world skills: critical thinking, collaboration."
       ],
+      gradient: "from-indigo-500 to-purple-500"
     },
     {
-      title: "Advanced Projects",
-      subtitle: "Master VLSI and Digital Design",
-      description:
-        "Expert-level projects to push your skills, involving complex systems, SoC design, and hardware-software integration.",
-      projects: [
-        {
-          label: "High Performance",
-          name: "RISC-V Processor Core",
-          image: "/images/riscv-placeholder.png",
-          description:
-            "Design a full RISC-V 32-bit processor core, implementing instruction sets and pipelining concepts for SoC integration.",
-          link: "#",
-        },
-        {
-          label: "Hardware Acceleration",
-          name: "FPGA Image Processing",
-          image: "/images/image-processing-placeholder.png",
-          description:
-            "Accelerate image processing algorithms on FPGA, improving latency and performance over software-only implementations.",
-          link: "#",
-        },
-        {
-          label: "Advanced SoC",
-          name: "Custom Floating-Point Unit",
-          image: "/images/fpu-placeholder.png",
-          description:
-            "Design and integrate a high-performance FPU as a co-processor, exploring floating-point arithmetic and precision control.",
-          link: "#",
-        },
+      title: "From Projects to Placements",
+      icon: <Rocket className="w-10 h-10 text-white drop-shadow-md" />, // Larger & white for visibility
+      points: [
+        "Gain Verilog, SystemVerilog, EDA tools expertise.",
+        "Targeted job roles: VLSI Design, Verification, FPGA.",
+        "Stand out with advanced design projects."
       ],
-    },
+      gradient: "from-pink-500 to-red-400"
+    }
   ];
 
   return (
-    <section id="projects" className="bg-gray-100 py-16 px-8">
-      <h2 className="text-3xl font-bold text-black text-center mb-12">
-        Project Categories: Your Path to VLSI Mastery
-      </h2>
-
-      <div className="flex flex-col gap-8">
-        {categories.map((cat) => (
+    <section className="w-full py-12 px-6 bg-gradient-to-b from-gray-50 to-gray-100 font-[Poppins]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+        {sections.map((sec, idx) => (
           <div
-            key={cat.title}
-            className="p-6 rounded-xl bg-white shadow" // Outer box with subtle shadow, no yellow border
+            key={idx}
+            className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-start transition-transform transform hover:-translate-y-1 hover:shadow-2xl"
           >
-            <h3 className="text-2xl font-semibold mb-2 text-black">
-              {cat.subtitle}
-            </h3>
-            <p className="mb-6 text-gray-700">{cat.description}</p>
-
-            <div className="flex gap-6 overflow-x-auto py-2">
-              {cat.projects.map((proj) => (
-                <a
-                  key={proj.name}
-                  href={proj.link}
-                  className="flex-shrink-0 w-80 h-96 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
-                  style={{
-                    boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.3)", // subtle purple glow
-                  }}
-                >
-                  <div className="mb-3">
-                    <span className="text-sm font-medium text-blue-600">
-                      {proj.label}
-                    </span>
-                  </div>
-                  <img
-                    src={proj.image}
-                    alt={proj.name}
-                    className="w-full h-40 object-cover rounded-md mb-3"
-                  />
-                  <h4 className="text-lg font-semibold mb-2 text-black">
-                    {proj.name}
-                  </h4>
-                  <p className="text-gray-700 text-sm">{proj.description}</p>
-                  <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                    View Project Dojo
-                  </button>
-                </a>
-              ))}
+            <div
+              className={`inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r ${sec.gradient} mb-4`}
+            >
+              {sec.icon}
             </div>
+            <h2 className="text-lg font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-3">
+              {sec.title}
+            </h2>
+            <ul className="space-y-2 text-gray-600 text-sm leading-relaxed">
+              {sec.points.map((p, i) => (
+                <li key={i} className="flex items-start">
+                  <span className="w-2 h-2 bg-indigo-400 rounded-full mr-2 mt-1" />
+                  {p}
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
