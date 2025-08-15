@@ -4,6 +4,7 @@ import ProjectCategories from "@/components/ProjectCategories";
 import Testimonials from "@/components/Testimonials";
 import CallToAction from "@/components/CallToAction";
 import BlogSection from "@/components/BlogSection";
+import KnowCreators from "@/components/KnowCreators";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <WhyVLSIHub />
       <ProjectCategories />
       <BlogSection />
+      <KnowCreators/>
       <CallToAction />
     </main>
   );
