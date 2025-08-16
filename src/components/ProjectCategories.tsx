@@ -100,7 +100,10 @@ export default function ProjectCategories() {
 
   return (
     <section id="projects" className="bg-gray-100 py-16 px-8">
-      <h2 className="text-3xl font-bold text-black text-center mb-12">
+      <h2
+        className="text-2xl font-bold text-black text-center mb-12"
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+      >
         Project Categories: Your Path to VLSI Mastery
       </h2>
 
@@ -108,12 +111,20 @@ export default function ProjectCategories() {
         {categories.map((cat) => (
           <div
             key={cat.title}
-            className="p-6 rounded-xl bg-white shadow" // Outer box with subtle shadow, no yellow border
+            className="p-6 rounded-xl bg-white shadow"
           >
-            <h3 className="text-2xl font-semibold mb-2 text-black">
+            <h3
+              className="text-xl font-semibold mb-2 text-black"
+              style={{ fontFamily: "Montserrat, sans-serif" }}
+            >
               {cat.subtitle}
             </h3>
-            <p className="mb-6 text-gray-700">{cat.description}</p>
+            <p
+              className="mb-6 text-gray-700 text-sm"
+              style={{ fontFamily: "Inter, sans-serif" }}
+            >
+              {cat.description}
+            </p>
 
             <div className="flex gap-6 overflow-x-auto py-2">
               {cat.projects.map((proj) => (
@@ -122,11 +133,15 @@ export default function ProjectCategories() {
                   href={proj.link}
                   className="flex-shrink-0 w-80 h-96 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
                   style={{
-                    boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.3)", // subtle purple glow
+                    boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.3)",
+                    fontFamily: "Inter, sans-serif",
                   }}
                 >
                   <div className="mb-3">
-                    <span className="text-sm font-medium text-blue-600">
+                    <span
+                      className="text-xs font-medium text-blue-600"
+                      style={{ fontFamily: "Inter, sans-serif" }}
+                    >
                       {proj.label}
                     </span>
                   </div>
@@ -135,11 +150,22 @@ export default function ProjectCategories() {
                     alt={proj.name}
                     className="w-full h-40 object-cover rounded-md mb-3"
                   />
-                  <h4 className="text-lg font-semibold mb-2 text-black">
+                  <h4
+                    className="text-base font-semibold mb-2 text-black"
+                    style={{ fontFamily: "Montserrat, sans-serif" }}
+                  >
                     {proj.name}
                   </h4>
-                  <p className="text-gray-700 text-sm">{proj.description}</p>
-                  <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                  <p
+                    className="text-gray-700 text-xs"
+                    style={{ fontFamily: "Inter, sans-serif" }}
+                  >
+                    {proj.description}
+                  </p>
+                  <button
+                    className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
+                    style={{ fontFamily: "Inter, sans-serif" }}
+                  >
                     View Project Dojo
                   </button>
                 </a>

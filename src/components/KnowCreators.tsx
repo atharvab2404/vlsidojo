@@ -5,14 +5,14 @@ export default function KnowCreators() {
   const creators = [
     {
       name: "Atharva Bhawsar",
-      role: "CPU Cores DV, Intel India",
+      role: "CPU Cores DV, Intel ",
       bio: "John brings over a decade of experience in VLSI design and education. He is passionate about bridging the gap between academia and industry through hands-on learning.",
       img: "/creators/atharva.jpeg",
       linkedin: "https://www.linkedin.com/in/atharva-bhawsar-30a17b228/",
     },
     {
       name: "Anushka Srivastava",
-      role: "Silicon Design Engineer (GFX), AMD India",
+      role: "Silicon Design Engineer (GFX), AMD ",
       bio: "Jane specializes in building scalable platforms for technical education. She leads the development of interactive learning tools for VLSI Dojo.",
       img: "/creators/anushka.jpeg",
       linkedin: "https://www.linkedin.com/in/anushkasriv/",
@@ -30,8 +30,8 @@ export default function KnowCreators() {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-        <h2 className="relative text-white text-2xl font-semibold z-10">
+        <div className="absolute inset-0 bg-gray-50 "></div>
+        <h2 className="relative font-montserrat font-bold text-black text-2xl z-10">
           Meet the Founders
         </h2>
       </div>
@@ -56,18 +56,22 @@ export default function KnowCreators() {
               </div>
 
               {/* Name */}
-              <h3 className="mt-4 text-lg font-bold text-black">
+              <h3 className="mt-4 text-lg font-montserrat font-bold text-black">
                 {creator.name}
               </h3>
 
               {/* Role */}
-              <p className="italic text-gray-600 text-sm">{creator.role}</p>
+              <p className="italic text-gray-600 text-sm font-inter">
+                {creator.role}
+              </p>
 
               {/* Bio */}
-              <p className="mt-3 text-gray-700 text-sm">{creator.bio}</p>
+              <p className="mt-3 text-gray-700 text-sm font-inter">
+                {creator.bio}
+              </p>
 
               {/* Socials */}
-              <div className="flex gap-4 mt-auto pt-4">
+              <div className="flex gap-4 mt-auto pt-4 font-inter">
                 <a
                   href={creator.linkedin}
                   target="_blank"
