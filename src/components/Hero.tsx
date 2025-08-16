@@ -80,7 +80,7 @@ export default function Hero() {
         {/* Left Column */}
         <div className="flex-1 max-w-xl">
           <h1
-            className={`${montserratBold.className} text-[1.85rem] md:text-[2.35rem] font-bold text-[#00a8ff] leading-snug max-w-lg`}
+            className={`${montserratBold.className} text-[1.85rem] md:text-[2.35rem] font-bold text-[#00a8ff] leading-snug max-w-xl`}
           >
             Stop Wondering What Hardware Project to Build. Start Building Your Future.
           </h1>
