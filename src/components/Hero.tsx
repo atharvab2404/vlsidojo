@@ -110,7 +110,7 @@ export default function Hero() {
         <div className="flex-1 relative flex items-center justify-center">
           <div className="w-[36rem] h-[36rem] relative overflow-hidden">
             <Image
-              src="/img1.png"
+              src="/img9.png"
               alt="Processor Render"
               fill
               style={{ objectFit: "contain" }}
