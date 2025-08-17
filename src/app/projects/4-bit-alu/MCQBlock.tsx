@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CheckCircle, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -62,65 +61,61 @@ const MCQBlock = () => {
     <section className="mt-6">
       <h4 className="text-lg font-semibold mb-4">Quick Check</h4>
 
-      <Card
-        className="p-6 rounded-2xl shadow-lg hover:shadow-[0_0_25px_rgba(0,0,255,0.4)] 
-                   transition-shadow duration-300 bg-blue-100"
-      >
-        <CardContent>
-          <p className="font-medium text-lg mb-4 text-gray-800">{currentQuestion.question}</p>
-          <div className="space-y-3">
-            {currentQuestion.options.map((option) => {
-              const selectedOption = isSelected === option;
+      <div className="p-6 rounded-2xl bg-blue-100 shadow-lg hover:shadow-[0_0_25px_rgba(0,0,255,0.4)] transition-shadow duration-300">
+        <p className="font-medium text-lg mb-4 text-gray-800">{currentQuestion.question}</p>
 
-              return (
-                <motion.div
-                  key={option}
-                  whileHover={{ scale: 1.02 }}
-                  className={`flex items-center justify-between p-3 rounded-lg cursor-pointer border transition-colors font-medium ${
-                    selectedOption
-                      ? isCorrect
-                        ? "bg-green-200 border-green-400 text-gray-800"
-                        : "bg-red-200 border-red-400 text-gray-800"
-                      : "bg-white border-gray-300 hover:bg-gray-50"
-                  }`}
-                  onClick={() => handleSelect(option)}
-                >
-                  <span>{option}</span>
-                  {selectedOption &&
-                    (isCorrect ? (
-                      <CheckCircle className="text-green-600 w-5 h-5" />
-                    ) : (
-                      <XCircle className="text-red-600 w-5 h-5" />
-                    ))}
-                </motion.div>
-              );
-            })}
-          </div>
+        <div className="space-y-3">
+          {currentQuestion.options.map((option) => {
+            const selectedOption = isSelected === option;
 
-          {/* Navigation */}
-          <div className="flex justify-between mt-6">
-            <button
-              onClick={goPrev}
-              disabled={currentIndex === 0}
-              className="flex items-center text-gray-700 hover:text-gray-900 disabled:text-gray-400"
-            >
-              <ChevronLeft className="w-5 h-5 mr-1" /> Previous
-            </button>
-            <button
-              onClick={goNext}
-              disabled={currentIndex === questions.length - 1}
-              className="flex items-center text-gray-700 hover:text-gray-900 disabled:text-gray-400"
-            >
-              Next <ChevronRight className="w-5 h-5 ml-1" />
-            </button>
-          </div>
+            return (
+              <motion.div
+                key={option}
+                whileHover={{ scale: 1.02 }}
+                className={`flex items-center justify-between p-3 rounded-lg cursor-pointer border transition-colors font-medium ${
+                  selectedOption
+                    ? isCorrect
+                      ? "bg-green-200 border-green-400 text-gray-800"
+                      : "bg-red-200 border-red-400 text-gray-800"
+                    : "bg-white border-gray-300 hover:bg-gray-50"
+                }`}
+                onClick={() => handleSelect(option)}
+              >
+                <span>{option}</span>
+                {selectedOption &&
+                  (isCorrect ? (
+                    <CheckCircle className="text-green-600 w-5 h-5" />
+                  ) : (
+                    <XCircle className="text-red-600 w-5 h-5" />
+                  ))}
+              </motion.div>
+            );
+          })}
+        </div>
 
-          {/* Progress */}
-          <div className="mt-4 text-sm text-gray-600 text-center">
-            Question {currentIndex + 1} of {questions.length}
-          </div>
-        </CardContent>
-      </Card>
+        {/* Navigation */}
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={goPrev}
+            disabled={currentIndex === 0}
+            className="flex items-center text-gray-700 hover:text-gray-900 disabled:text-gray-400"
+          >
+            <ChevronLeft className="w-5 h-5 mr-1" /> Previous
+          </button>
+          <button
+            onClick={goNext}
+            disabled={currentIndex === questions.length - 1}
+            className="flex items-center text-gray-700 hover:text-gray-900 disabled:text-gray-400"
+          >
+            Next <ChevronRight className="w-5 h-5 ml-1" />
+          </button>
+        </div>
+
+        {/* Progress */}
+        <div className="mt-4 text-sm text-gray-600 text-center">
+          Question {currentIndex + 1} of {questions.length}
+        </div>
+      </div>
     </section>
   );
 };
