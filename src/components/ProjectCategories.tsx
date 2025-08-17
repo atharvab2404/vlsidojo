@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ProjectCategories() {
   const categories = [
     {
@@ -9,10 +11,10 @@ export default function ProjectCategories() {
         {
           label: "Beginner-Friendly",
           name: "4-bit ALU Design",
-          image: "/images/alu-placeholder.png",
+          image: "/projects/alu.png",
           description:
             "Design a mini Arithmetic Logic Unit to learn digital circuit design, logic gates, and modular HDL design.",
-          link: "#",
+          link: "/projects/4-bit-alu",
         },
         {
           label: "Real-World Relevance",
@@ -98,6 +100,7 @@ export default function ProjectCategories() {
     },
   ];
 
+
   return (
     <section id="projects" className="bg-gray-100 py-16 px-8">
       <h2
@@ -128,7 +131,7 @@ export default function ProjectCategories() {
 
             <div className="flex gap-6 overflow-x-auto py-2">
               {cat.projects.map((proj) => (
-                <a
+                <Link
                   key={proj.name}
                   href={proj.link}
                   className="flex-shrink-0 w-80 h-96 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
@@ -137,18 +140,11 @@ export default function ProjectCategories() {
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  <div className="mb-3">
-                    <span
-                      className="text-xs font-medium text-blue-600"
-                      style={{ fontFamily: "Inter, sans-serif" }}
-                    >
-                      {proj.label}
-                    </span>
-                  </div>
+                  
                   <img
                     src={proj.image}
                     alt={proj.name}
-                    className="w-full h-40 object-cover rounded-md mb-3"
+                    className="w-full h-50 object-cover rounded-md mb-3"
                   />
                   <h4
                     className="text-base font-semibold mb-2 text-black"
@@ -168,7 +164,7 @@ export default function ProjectCategories() {
                   >
                     View Project Dojo
                   </button>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -177,3 +173,4 @@ export default function ProjectCategories() {
     </section>
   );
 }
+
