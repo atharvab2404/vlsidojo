@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
+import MCQBlock from "./MCQBlock";
 
 export default function Page() {
   const [module, setModule] = useState(1); // current module: 1,2,3
@@ -19,10 +20,22 @@ export default function Page() {
   };
   useEffect(() => {
     // Disable text selection & copying
-    const handleContextMenu = (e) => e.preventDefault();
-    const handleCopy = (e) => e.preventDefault();
-    const handleCut = (e) => e.preventDefault();
-    const handlePaste = (e) => e.preventDefault();
+    const handleContextMenu = (e) => {
+        if (e.target.closest(".pseudo-code")) return; // allow right-click inside pseudo-code
+        e.preventDefault();
+    };
+    const handleCopy = (e) => {
+        if (e.target.closest(".pseudo-code")) return; // allow copy inside pseudo-code
+        e.preventDefault();
+    };
+    const handleCut = (e) => {
+        if (e.target.closest(".pseudo-code")) return; // allow cut inside pseudo-code
+        e.preventDefault();
+    };
+    const handlePaste = (e) => {
+        if (e.target.closest(".pseudo-code")) return; // allow paste inside pseudo-code
+        e.preventDefault();
+    };
 
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("copy", handleCopy);
@@ -238,6 +251,52 @@ export default function Page() {
                     Build separate functional blocks (Adder/Subtractor, AND, OR, XOR) and use a multiplexer (controlled by
                     <span className="font-mono"> opcode</span>) to select which block’s output drives the result.
                 </p>
+                
+                {/* === Pseudo-code Practice Section === */}
+                <div className="pseudo-code">
+                <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
+                    
+                    {/* Fake terminal header */}
+                    <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="ml-3 text-green-300 text-xs tracking-widest uppercase">Terminal</span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="text-lg font-semibold text-green-400 mb-2">✍️ Pseudo-code Practice</h4>
+                    <p className="text-sm text-green-200 mb-3 opacity-80">
+                    Write down the expected behavior in simple pseudo-code before looking at the solution.
+                    </p>
+
+                    {/* User Notepad */}
+                    <textarea
+                    className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none"
+                    placeholder="Write your pseudo-code here..."
+                    />
+
+                    {/* Collapsible Solution */}
+                    <details className="mt-4">
+                    <summary className="cursor-pointer text-green-400 font-medium hover:underline">
+                        💡 Show Solution
+                    </summary>
+                    <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner">
+                {`if opcode == 00:
+                    result = A + B
+                elif opcode == 01:
+                    result = A - B
+                elif opcode == 10:
+                    result = A & B
+                elif opcode == 11:
+                    result = A | B`}
+                    </pre>
+                    </details>
+                </div>
+                </div>
+                {/* === End of Pseudo-code Section === */}
+
+
 
                 <h4 className="text-lg font-semibold mt-4">A. Arithmetic Unit (Add/Subtract Logic)</h4>
                 <p className="leading-7">
@@ -267,6 +326,8 @@ export default function Page() {
                     <li><span className="font-mono">opcode</span> selects one result via the mux.</li>
                     <li>Flags are produced accordingly (<span className="font-mono">Cout</span> from adder, <span className="font-mono">Zf</span> from result check).</li>
                 </ol>
+
+                <MCQBlock />
                 </section>
                 {/* Checkbox & Next Button */}
                 <div className="flex items-center mt-4">
