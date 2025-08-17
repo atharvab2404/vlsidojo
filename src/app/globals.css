@@ -55,6 +55,14 @@
   font-style: normal;
 }
 
+.shadow-glow-green {
+  box-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99, 0 0 30px #00ff99;
+}
+
+.shadow-glow-red {
+  box-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d, 0 0 30px #ff4d4d;
+}
+
 .abel-regular {
   font-family: "Abel", sans-serif;
   font-weight: 400;
