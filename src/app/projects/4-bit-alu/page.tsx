@@ -226,16 +226,28 @@ export default function Page() {
 
                 {/* Popup */}
                 {open && (
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl max-w-md relative">
-                        {/* Close button */}
-                        <button
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl max-w-2xl w-full relative flex items-start gap-6">
+                    {/* Close button */}
+                    <button
                         onClick={() => setOpen(false)}
                         className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                        >
+                    >
                         <X size={20} />
-                        </button>
-                        <h4 className="text-lg font-semibold mb-2">Two’s-complement</h4>
+                    </button>
+
+                    {/* Mascot Image */}
+                    <div className="w-28 h-28 flex-shrink-0">
+                        <img
+                        src="/images/explain.png" // <-- replace with your mascot path
+                        alt="Website Mascot"
+                        className="w-full h-full object-contain"
+                        />
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="flex-1">
+                        <h4 className="text-lg font-semibold mb-2">LLAMA explains… </h4>
                         <p className="text-gray-700">
                         Two’s-complement is a mathematical operation on binary numbers,
                         widely used to represent signed integers. It allows binary addition
@@ -244,7 +256,9 @@ export default function Page() {
                         </p>
                     </div>
                     </div>
+                </div>
                 )}
+
 
                 <h3 className="text-xl font-semibold mt-6">2. Conceptual Design Strategy</h3>
                 <p className="leading-7">
