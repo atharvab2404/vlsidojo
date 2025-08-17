@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
+import CalloutBox from "./CalloutBox";
 
 export default function Page() {
   const [module, setModule] = useState(1); // current module: 1,2,3
@@ -380,6 +381,11 @@ export default function Page() {
                     Conceptually verify by instantiating the ALU, applying inputs, observing outputs, and comparing to expected
                     results.
                 </p>
+
+                <CalloutBox
+                    title="⚠️ Common Pitfall: Incomplete case Statements"
+                    content="In Verilog, if you don't specify an output for every possible input condition within a combinational always block, the tool will infer a latch to hold the last value. This is a common source of bugs!"
+                />
 
                 <h3 className="text-xl font-semibold mt-4">Test Scenarios</h3>
                 <ul className="list-disc pl-6 space-y-2">
