@@ -51,11 +51,11 @@ export default function Page() {
     };
   }, []);
   return (
-    <section className="bg-white min-h-screen py-12 px-4">
-      <div className="mx-auto max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8 text-black">
+    <section className="bg-[#D1FAE5] min-h-screen py-12 px-4">
+      <div className="mx-auto max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8 text-slate-700">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">4-bit ALU: Conceptual Design &amp; Verification Dojo</h1>
+          <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">4-bit ALU: Conceptual Design &amp; Verification Dojo</h1>
           <Link href="/#projects" className="text-black underline underline-offset-4">
             ← Back to Projects
           </Link>
@@ -66,15 +66,15 @@ export default function Page() {
             <div>
                 {/* Introduction */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">Introduction</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Introduction</h2>
+                <p className="leading-7 inter-body">
                     At the very heart of every computer processor lies the Arithmetic Logic Unit (ALU). This essential digital
                     circuit is the unsung hero that performs all the mathematical calculations and logical comparisons that make
                     a computer &quot;compute.&quot; Imagine trying to run a spreadsheet, play a game, or even browse the web
                     without a component capable of adding numbers, checking conditions, or manipulating data bits. That&apos;s
                     the critical problem the ALU solves!
                 </p>
-                <p className="leading-7">
+                <p className="leading-7 inter-body">
                     This Dojo will guide you through the conceptual design of a simple 4-bit ALU, helping you grasp the
                     fundamental principles of how arithmetic and logical operations are carried out in hardware. Understanding
                     the ALU&apos;s architecture and operation is a cornerstone for anyone interested in how microprocessors
@@ -82,93 +82,97 @@ export default function Page() {
                 </p>
                 </section>
 
+                <hr className="my-10 border-slate-200" />
+
                 {/* Prerequisites */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">Prerequisites</h2>
-                <p className="leading-7">To engage with the conceptual ideas in this Dojo, it helps to know:</p>
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Prerequisites</h2>
+                <p className="leading-7 inter-body">To engage with the conceptual ideas in this Dojo, it helps to know:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="font-semibold">Basic Logic Gates:</span> AND, OR, XOR, NOT.</li>
-                    <li><span className="font-semibold">Combinational Logic:</span> Output depends only on current inputs.</li>
-                    <li><span className="font-semibold">Binary Numbers:</span> Representation and basic arithmetic.</li>
-                    <li><span className="font-semibold">Multiplexers (Muxes):</span> Select one of many inputs using control signals.</li>
-                    <li><span className="font-semibold">System Clock &amp; Reset (Conceptual):</span> Timing and initialization ideas.</li>
+                    <li><span className="inter-subheading">Basic Logic Gates:</span> <span className="inter-body">AND, OR, XOR, NOT.</span></li>
+                    <li><span className="inter-subheading">Combinational Logic:</span> <span className="inter-body">Output depends only on current inputs.</span></li>
+                    <li><span className="inter-subheading">Binary Numbers:</span> <span className="inter-body">Representation and basic arithmetic.</span></li>
+                    <li><span className="inter-subheading">Multiplexers (Muxes):</span> <span className="inter-body">Select one of many inputs using control signals.</span></li>
+                    <li><span className="inter-subheading">System Clock &amp; Reset (Conceptual):</span> <span className="inter-body">Timing and initialization ideas.</span></li>
                 </ul>
 
-                <p className="leading-7">If you implement these concepts, typical open-source tools include:</p>
+                <p className="leading-7 inter-body">If you implement these concepts, typical open-source tools include:</p>
                 <ul className="list-disc pl-6 space-y-2">
                     <li>
-                    <span className="font-semibold">Icarus Verilog:</span> Compiler/simulator for HDL.
-                    <span className="ml-2">Installation Guide (search official docs).</span>
+                    <span className="inter-subheading">Icarus Verilog:</span> <span className="inter-body">Compiler/simulator for HDL.</span>
+                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
                     </li>
                     <li>
-                    <span className="font-semibold">GTKWave:</span> Waveform viewer.
-                    <span className="ml-2">Installation Guide (search official docs).</span>
+                    <span className="inter-subheading">GTKWave:</span> <span className="inter-body">Waveform viewer.</span>
+                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
                     </li>
                     <li>
-                    <span className="font-semibold">Yosys (Optional):</span> Synthesis to a gate-level netlist.
-                    <span className="ml-2">Installation Guide (search official docs).</span>
+                    <span className="inter-subheading">Yosys (Optional):</span> <span className="inter-body">Synthesis to a gate-level netlist.</span>
+                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
                     </li>
                 </ul>
                 </section>
 
+                <hr className="my-10 border-slate-200" />
+
                 {/* Signals & Ports Table */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">ALU Interface (Signals &amp; Ports)</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">ALU Interface (Signals &amp; Ports)</h2>
+                <p className="leading-7 inter-body">
                     The 4-bit ALU accepts two operands and an opcode, and produces a result with status flags.
                 </p>
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse border border-gray-300 text-sm">
                     <thead>
-                        <tr className="bg-gray-100">
-                        <th className="border border-gray-300 px-3 py-2 text-left">Signal</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Direction</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Width</th>
-                        <th className="border border-gray-300 px-3 py-2 text-left">Description</th>
+                        <tr className="border-b border-slate-300">
+                        <th className="px-3 py-2 text-left font-medium text-slate-600">Signal</th>
+                        <th className="px-3 py-2 text-left font-medium text-slate-600">Direction</th>
+                        <th className="px-3 py-2 text-left font-medium text-slate-600">Width</th>
+                        <th className="px-3 py-2 text-left font-medium text-slate-600">Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">A</td>
-                        <td className="border border-gray-300 px-3 py-2">Input</td>
-                        <td className="border border-gray-300 px-3 py-2">[3:0]</td>
-                        <td className="border border-gray-300 px-3 py-2">Operand A</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">A</td>
+                        <td className="px-3 py-2">Input</td>
+                        <td className="px-3 py-2">[3:0]</td>
+                        <td className="px-3 py-2">Operand A</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">B</td>
-                        <td className="border border-gray-300 px-3 py-2">Input</td>
-                        <td className="border border-gray-300 px-3 py-2">[3:0]</td>
-                        <td className="border border-gray-300 px-3 py-2">Operand B</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">B</td>
+                        <td className="px-3 py-2">Input</td>
+                        <td className="px-3 py-2">[3:0]</td>
+                        <td className="px-3 py-2">Operand B</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">opcode</td>
-                        <td className="border border-gray-300 px-3 py-2">Input</td>
-                        <td className="border border-gray-300 px-3 py-2">[2:0]</td>
-                        <td className="border border-gray-300 px-3 py-2">Selects ALU operation</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">opcode</td>
+                        <td className="px-3 py-2">Input</td>
+                        <td className="px-3 py-2">[2:0]</td>
+                        <td className="px-3 py-2">Selects ALU operation</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">Cin</td>
-                        <td className="border border-gray-300 px-3 py-2">Input</td>
-                        <td className="border border-gray-300 px-3 py-2">1</td>
-                        <td className="border border-gray-300 px-3 py-2">Carry-in for addition / two’s complement</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">Cin</td>
+                        <td className="px-3 py-2">Input</td>
+                        <td className="px-3 py-2">1</td>
+                        <td className="px-3 py-2">Carry-in for addition / two’s complement</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">Result</td>
-                        <td className="border border-gray-300 px-3 py-2">Output</td>
-                        <td className="border border-gray-300 px-3 py-2">[3:0]</td>
-                        <td className="border border-gray-300 px-3 py-2">Operation result</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">Result</td>
+                        <td className="px-3 py-2">Output</td>
+                        <td className="px-3 py-2">[3:0]</td>
+                        <td className="px-3 py-2">Operation result</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">Cout</td>
-                        <td className="border border-gray-300 px-3 py-2">Output</td>
-                        <td className="border border-gray-300 px-3 py-2">1</td>
-                        <td className="border border-gray-300 px-3 py-2">Carry-out (for add/sub)</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">Cout</td>
+                        <td className="px-3 py-2">Output</td>
+                        <td className="px-3 py-2">1</td>
+                        <td className="px-3 py-2">Carry-out (for add/sub)</td>
                         </tr>
-                        <tr>
-                        <td className="border border-gray-300 px-3 py-2">Zf</td>
-                        <td className="border border-gray-300 px-3 py-2">Output</td>
-                        <td className="border border-gray-300 px-3 py-2">1</td>
-                        <td className="border border-gray-300 px-3 py-2">Zero flag (Result == 0)</td>
+                        <tr className="border-b border-slate-200">
+                        <td className="px-3 py-2">Zf</td>
+                        <td className="px-3 py-2">Output</td>
+                        <td className="px-3 py-2">1</td>
+                        <td className="px-3 py-2">Zero flag (Result == 0)</td>
                         </tr>
                     </tbody>
                     </table>
@@ -201,28 +205,28 @@ export default function Page() {
             <div>
                 {/* Execution / Core */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">Execution (The Core)</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Execution (The Core)</h2>
+                <p className="leading-7 inter-body">
                     Our goal is to build a conceptual 4-bit ALU: it takes two 4-bit inputs and an opcode, and produces a 4-bit
                     result with status flags.
                 </p>
 
-                <h3 className="text-xl font-semibold mt-6">1. The ALU&apos;s Interface and Operations</h3>
-                <p className="leading-7">Operations covered:</p>
+                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">1. The ALU&apos;s Interface and Operations</h3>
+                <p className="leading-7 inter-body">Operations covered:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="font-semibold">Addition (A + B):</span> Standard binary addition.</li>
-                    <li><span className="font-semibold">Subtraction (A - B):</span>{" "}
+                    <li><span className="inter-subheading">Addition (A + B):</span> <span className="inter-body">Standard binary addition.</span></li>
+                    <li><span className="inter-subheading">Subtraction (A - B):</span> <span className="inter-body">{" "}
                         <button
                             onClick={() => setOpen(true)}
                             className="cursor-pointer inline-block px-2 py-0.3 rounded-xl bg-gray-100 border border-gray-300 shadow-sm hover:bg-gray-200 transition"
                         >
                         Two’s-complement <span className="ml-1">💡</span>
                         </button>{" "}
-                        via A + (~B) + 1.
+                        via A + (~B) + 1.</span>
                     </li>
-                    <li><span className="font-semibold">AND (A &amp; B)</span></li>
-                    <li><span className="font-semibold">OR (A | B)</span></li>
-                    <li><span className="font-semibold">XOR (A ^ B)</span></li>
+                    <li><span className="inter-subheading">AND (A &amp; B)</span></li>
+                    <li><span className="inter-subheading">OR (A | B)</span></li>
+                    <li><span className="inter-subheading">XOR (A ^ B)</span></li>
                 </ul>
 
                 {/* Popup */}
@@ -248,7 +252,7 @@ export default function Page() {
 
                     {/* Text Content */}
                     <div className="flex-1">
-                        <h4 className="text-lg font-semibold mb-2">LLAMA explains… </h4>
+                        <h4 className="text-lg inter-subheading mb-2">LLAMA explains… </h4>
                         <p className="text-gray-700">
                         Two’s-complement is a mathematical operation on binary numbers,
                         widely used to represent signed integers. It allows binary addition
@@ -261,10 +265,10 @@ export default function Page() {
                 )}
 
 
-                <h3 className="text-xl font-semibold mt-6">2. Conceptual Design Strategy</h3>
-                <p className="leading-7">
+                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">2. Conceptual Design Strategy</h3>
+                <p className="leading-7 inter-body">
                     Build separate functional blocks (Adder/Subtractor, AND, OR, XOR) and use a multiplexer (controlled by
-                    <span className="font-mono"> opcode</span>) to select which block’s output drives the result.
+                    <span className="inter-body"> opcode</span>) to select which block’s output drives the result.
                 </p>
                 
                 {/* === Pseudo-code Practice Section === */}
@@ -280,14 +284,14 @@ export default function Page() {
                     </div>
 
                     {/* Title */}
-                    <h4 className="text-lg font-semibold text-green-400 mb-2">✍️ Pseudo-code Practice</h4>
-                    <p className="text-sm text-green-200 mb-3 opacity-80">
+                    <h4 className="text-lg inter-subheading text-green-400 mb-2">✍️ Pseudo-code Practice</h4>
+                    <p className="text-sm text-green-200 mb-3 opacity-80 inter-body">
                     Write down the expected behavior in simple pseudo-code before looking at the solution.
                     </p>
 
                     {/* User Notepad */}
                     <textarea
-                    className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none"
+                    className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none fira-code-body"
                     placeholder="Write your pseudo-code here..."
                     />
 
@@ -296,7 +300,7 @@ export default function Page() {
                     <summary className="cursor-pointer text-green-400 font-medium hover:underline">
                         💡 Show Solution
                     </summary>
-                    <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner">
+                    <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
                 {`if opcode == 00:
                     result = A + B
                 elif opcode == 01:
@@ -313,33 +317,33 @@ export default function Page() {
 
 
 
-                <h4 className="text-lg font-semibold mt-4">A. Arithmetic Unit (Add/Subtract Logic)</h4>
-                <p className="leading-7">
+                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">A. Arithmetic Unit (Add/Subtract Logic)</h4>
+                <p className="leading-7 inter-body">
                     Addition uses four chained 1-bit full adders. Subtraction reuses the adder by inverting B and setting Cin=1
-                    (two’s-complement). The MSB carry-out is <span className="font-mono">Cout</span>.
+                    (two’s-complement). The MSB carry-out is <span className="inter-body">Cout</span>.
                 </p>
 
-                <h4 className="text-lg font-semibold mt-4">B. Logical Units</h4>
-                <p className="leading-7">
+                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">B. Logical Units</h4>
+                <p className="leading-7 inter-body">
                     Four 2-input gates in parallel for each operation: AND, OR, XOR — one per bit.
                 </p>
 
-                <h4 className="text-lg font-semibold mt-4">C. The Multiplexer (Mux)</h4>
-                <p className="leading-7">
+                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">C. The Multiplexer (Mux)</h4>
+                <p className="leading-7 inter-body">
                     A 4-bit-wide mux selects the active unit’s output based on the opcode (e.g., 000=ADD, 001=SUB, 010=AND, …).
                 </p>
 
-                <h4 className="text-lg font-semibold mt-4">D. Status Flags</h4>
+                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">D. Status Flags</h4>
                 <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="font-semibold">Cout:</span> Carry-out from arithmetic ops; 0 for logical ops.</li>
-                    <li><span className="font-semibold">Zf:</span> NOR of all result bits (1 if result == 0).</li>
+                    <li><span className="inter-subheading">Cout:</span> <span className="inter-body">Carry-out from arithmetic ops; 0 for logical ops.</span></li>
+                    <li><span className="inter-subheading">Zf:</span> <span className="inter-body">NOR of all result bits (1 if result == 0).</span></li>
                 </ul>
 
-                <h4 className="text-lg font-semibold mt-4">Conceptual Flow</h4>
+                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">Conceptual Flow</h4>
                 <ol className="list-decimal pl-6 space-y-2">
-                    <li>Arithmetic and logical units compute in parallel.</li>
-                    <li><span className="font-mono">opcode</span> selects one result via the mux.</li>
-                    <li>Flags are produced accordingly (<span className="font-mono">Cout</span> from adder, <span className="font-mono">Zf</span> from result check).</li>
+                    <li><span className="inter-body">Arithmetic and logical units compute in parallel.</span></li>
+                    <li><span className="inter-body">opcode</span> <span className="inter-body">selects one result via the mux.</span></li>
+                    <li><span className="inter-body">Flags are produced accordingly</span> (<span className="inter-body">Cout</span> <span className="inter-body">from adder</span>, <span className="inter-body">Zf</span> <span className="inter-body">from result check</span>).</li>
                 </ol>
 
                 <MCQBlock />
@@ -376,8 +380,8 @@ export default function Page() {
             <div>
                 {/* Verification & Validation */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">Verification &amp; Validation</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Verification &amp; Validation</h2>
+                <p className="leading-7 inter-body">
                     Conceptually verify by instantiating the ALU, applying inputs, observing outputs, and comparing to expected
                     results.
                 </p>
@@ -387,7 +391,7 @@ export default function Page() {
                     content="In Verilog, if you don't specify an output for every possible input condition within a combinational always block, the tool will infer a latch to hold the last value. This is a common source of bugs!"
                 />
 
-                <h3 className="text-xl font-semibold mt-4">Test Scenarios</h3>
+                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-4">Test Scenarios</h3>
                 <ul className="list-disc pl-6 space-y-2">
                     <li>ADD: A=0001, B=0010 → 0011, Cout=0, Zf=0</li>
                     <li>ADD: A=1111, B=0001 → 0000, Cout=1, Zf=1</li>
@@ -398,16 +402,16 @@ export default function Page() {
                     <li>OR:  A=0000, B=0000 → 0000, Cout=0, Zf=1</li>
                 </ul>
 
-                <h3 className="text-xl font-semibold mt-4">Waveform Analysis (Conceptual)</h3>
-                <p className="leading-7">
+                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-4">Waveform Analysis (Conceptual)</h3>
+                <p className="leading-7 inter-body">
                     Use a waveform viewer to ensure signal transitions match expectations after input changes.
                 </p>
                 </section>
 
                 {/* Optional Synthesis */}
                 <section className="space-y-4 mb-10">
-                <h2 className="text-2xl font-semibold">Optional: Synthesis</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Optional: Synthesis</h2>
+                <p className="leading-7 inter-body">
                     Synthesis converts your HDL into a gate-level netlist, checks implementability, and optimizes for area/speed.
                     It provides early performance insights for hardware targets (FPGA/ASIC).
                 </p>
@@ -415,8 +419,8 @@ export default function Page() {
 
                 {/* Conclusion */}
                 <section className="space-y-4">
-                <h2 className="text-2xl font-semibold">Conclusion &amp; Next Steps</h2>
-                <p className="leading-7">
+                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Conclusion &amp; Next Steps</h2>
+                <p className="leading-7 inter-body">
                     You’ve conceptually designed a 4-bit ALU, explored verification ideas, and seen how synthesis connects
                     concepts to gates. Consider expanding width (8/16-bit), adding operations (shifts, comparisons), exploring
                     pipelining, or venturing into floating-point arithmetic.

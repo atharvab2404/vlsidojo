@@ -60,7 +60,7 @@ const MCQBlock = () => {
 
   return (
     <section className="mt-6">
-      <h4 className="text-lg font-semibold mb-4">Quick Check</h4>
+      <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mb-4">Quick Check</h4>
 
       {/* Main container with mascot aligned right middle */}
       <div className="p-6 rounded-2xl bg-blue-100 shadow-lg hover:shadow-[0_0_25px_rgba(0,0,255,0.4)] transition-shadow duration-300 flex justify-between items-center">
