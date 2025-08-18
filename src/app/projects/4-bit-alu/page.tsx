@@ -173,6 +173,16 @@ export default function Page() {
                     </tbody>
                     </table>
                 </div>
+                {/* Block Diagram Image Below Table */}
+                <div className="mt-6 flex justify-center">
+                    <div className="max-w-xl w-full h-auto overflow-hidden">
+                        <img
+                        src="/images/alu.png"
+                        alt="4-bit ALU Block Diagram"
+                        className="w-full h-auto object-contain"
+                        />
+                    </div>
+                </div>
                 </section>
                 {/* Checkbox & Next Button */}
                 <div className="flex items-center mt-4">
