@@ -20,9 +20,21 @@ export default function Navbar() {
 
       {/* Links */}
       <ul className="hidden md:flex space-x-8 font-medium">
-        <li className="hover:text-[#00a8ff] cursor-pointer">Projects</li>
-        <li className="hover:text-[#00a8ff] cursor-pointer">Why Dojo?</li>
-        <li className="hover:text-[#00a8ff] cursor-pointer">Blog</li>
+        <li>
+          <a href="#projects" className="hover:text-[#00a8ff] cursor-pointer">
+            Projects
+          </a>
+        </li>
+        <li>
+          <a href="#why-dojo" className="hover:text-[#00a8ff] cursor-pointer">
+            Why Dojo?
+          </a>
+        </li>
+        <li>
+          <a href="#blog" className="hover:text-[#00a8ff] cursor-pointer">
+            Blog
+          </a>
+        </li>
       </ul>
 
       {/* Auth + Cart */}

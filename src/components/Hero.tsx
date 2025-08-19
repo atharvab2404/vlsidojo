@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Montserrat, Inter } from "next/font/google";
-
 import Navbar from "./Navbar";
 
 // Load Montserrat and Inter
@@ -82,9 +81,13 @@ export default function Hero() {
           </p>
 
           <div className="mt-8">
-            <button className="bg-[#00a8ff] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-[#0090dd] transition-all">
+            {/* Smooth scroll to Projects */}
+            <a
+              href="#projects"
+              className="bg-[#00a8ff] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-[#0090dd] transition-all inline-block"
+            >
               Explore Projects
-            </button>
+            </a>
           </div>
         </div>
 

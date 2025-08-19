@@ -52,7 +52,8 @@ const BlogSection = () => {
   };
 
   return (
-    <section className="px-8 lg:px-20 py-16 bg-[#1a1a2e]">
+    // ✅ Added id for Navbar scroll
+    <section id="blog" className="px-8 lg:px-20 py-16 bg-[#1a1a2e]">
       {/* Main Heading */}
       <motion.h2
         initial={{ opacity: 0, y: 10 }}

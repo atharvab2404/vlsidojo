@@ -100,7 +100,6 @@ export default function ProjectCategories() {
     },
   ];
 
-
   return (
     <section id="projects" className="bg-gray-100 py-16 px-8">
       <h2
@@ -112,10 +111,7 @@ export default function ProjectCategories() {
 
       <div className="flex flex-col gap-8">
         {categories.map((cat) => (
-          <div
-            key={cat.title}
-            className="p-6 rounded-xl bg-white shadow"
-          >
+          <div key={cat.title} className="p-6 rounded-xl bg-white shadow">
             <h3
               className="text-xl font-semibold mb-2 text-black"
               style={{ fontFamily: "Montserrat, sans-serif" }}
@@ -133,14 +129,13 @@ export default function ProjectCategories() {
               {cat.projects.map((proj) => (
                 <Link
                   key={proj.name}
-                  href={proj.link}
+                  href={proj.link} // Use the link property here
                   className="flex-shrink-0 w-80 h-96 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
                   style={{
                     boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.3)",
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
-                  
                   <img
                     src={proj.image}
                     alt={proj.name}
@@ -173,4 +168,3 @@ export default function ProjectCategories() {
     </section>
   );
 }
-
