@@ -14,7 +14,7 @@ interface ProfileData {
 }
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
 
   const [formData, setFormData] = useState<ProfileData>({
@@ -60,7 +60,8 @@ export default function ProfilePage() {
     fetchProfile();
   }, [session, status, router]);
 
-  if (status === "loading" || loading) return <p className="text-center mt-20">Loading...</p>;
+  if (status === "loading" || loading)
+    return <p className="text-center mt-20">Loading...</p>;
 
   const handleChange = (key: keyof ProfileData, value: string) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -71,11 +72,19 @@ export default function ProfilePage() {
     const res = await fetch("/api/profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        signupCompleted: true, // <-- mark completed here
+      }),
     });
 
     if (res.ok) {
       setIsSaved(true);
+
+      // refresh session so signupCompleted = true in session object
+      await update();
+
+      // now safe to redirect
       router.push("/profile");
     }
   };
@@ -100,18 +109,20 @@ export default function ProfilePage() {
           Signed in as <span className="font-semibold">{session.user?.email}</span>
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {Object.entries(formData).map(([key, value]) => (
-            <div key={key} className="bg-white/5 p-4 rounded-lg shadow-sm hover:shadow-md transition">
-              <label className="block text-sm font-semibold text-gray-200 capitalize mb-1">{key}</label>
-              <input
-                type="text"
-                value={value}
-                onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
-                className="w-full p-3 border border-white/20 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:ring-2 focus:ring-[#00c6ff] focus:outline-none transition"
-              />
-            </div>
-          ))}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {Object.entries(formData).map(([key, value]) => (
+          <div key={key} className="bg-white/5 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+            <label className="block text-sm font-semibold text-gray-200 capitalize mb-1">{key}
+              {key}
+            </label>
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
+              className="w-full p-3 border border-white/20 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:ring-2 focus:ring-[#00c6ff] focus:outline-none transition"
+            />
+          </div>
+        ))}
 
           <button
             type="submit"
