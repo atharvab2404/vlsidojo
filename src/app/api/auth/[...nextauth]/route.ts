@@ -14,20 +14,33 @@ export const authOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async signIn({ user }) {
-      // Check if user exists in DB
-      const dbUser = await prisma.user.findUnique({ where: { email: user.email! } });
+      const dbUser = await prisma.user.findUnique({
+        where: { email: user.email! },
+      });
+
+      // If user exists and hasn't completed signup → send to profile page
       if (dbUser && !dbUser.signupCompleted) {
-        return "/myprofile"; // first-time user
+        return "/myprofile";
       }
-      return true;
+
+      return true; // allow normal sign in
     },
     async session({ session }) {
-      const dbUser = await prisma.user.findUnique({ where: { email: session.user?.email! } });
-      if (dbUser) session.user.signupCompleted = dbUser.signupCompleted;
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user?.email! },
+      });
+
+      if (dbUser) {
+        session.user.signupCompleted = dbUser.signupCompleted;
+      }
+
       return session;
     },
     async redirect({ url, baseUrl }) {
-      return url.startsWith("/") ? baseUrl + url : baseUrl;
+      // Always return relative redirects
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

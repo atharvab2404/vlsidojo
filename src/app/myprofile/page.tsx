@@ -43,7 +43,7 @@ export default function ProfilePage() {
         const data = await res.json();
         // If profile already completed → redirect to landing page
         if (data.signupCompleted) {
-          router.push("/");
+          router.push("/profile");
           return;
         }
         setFormData({
@@ -77,7 +77,7 @@ export default function ProfilePage() {
 
     if (res.ok) {
       setIsSaved(true);
-      router.push("/"); // redirect after save
+      router.push("/profile"); // redirect after save
     }
   };
 
