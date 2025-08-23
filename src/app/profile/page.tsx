@@ -3,6 +3,7 @@
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Navbar from "@/components/Navbar"; // ✅ Import your Navbar component
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -29,53 +30,88 @@ export default function ProfilePage() {
     }
   }, [session, status, router]);
 
-  if (!session) return null;
+  if (!session) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex justify-center items-center h-screen">
+          <p>Please log in to view your profile.</p>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-6">User Profile</h1>
+    <>
+      {/* ✅ Navbar always visible at the top */}
+      <Navbar />
 
-      {userData ? (
-        <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg">
-          {/* Profile Image */}
-          <img
-            src={userData.image || "/default-avatar.png"}
-            alt="User Avatar"
-            className="w-24 h-24 rounded-full mx-auto mb-4"
-          />
+      <div className="flex flex-col items-center justify-center min-h-screen p-6">
+        <h1 className="text-2xl font-bold mb-6">User Profile</h1>
 
-          {/* User Info */}
-          <div className="space-y-2 text-gray-800">
-            <p><strong>Name:</strong> {userData.name || "—"}</p>
-            <p><strong>Email:</strong> {userData.email || "—"}</p>
-            <p><strong>Email Verified:</strong> {userData.emailVerified ? new Date(userData.emailVerified).toLocaleDateString() : "Not verified"}</p>
-            <p><strong>Phone:</strong> {userData.phone || "—"}</p>
-            <p><strong>College:</strong> {userData.college || "—"}</p>
-            <p><strong>Education:</strong> {userData.education || "—"}</p>
-            <p><strong>Branch:</strong> {userData.branch || "—"}</p>
-            <p><strong>Year:</strong> {userData.year || "—"}</p>
-            <p><strong>Company:</strong> {userData.company || "—"}</p>
+        {userData ? (
+          <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg">
+            {/* Profile Image */}
+            <img
+              src={userData.image || "/default-avatar.png"}
+              alt="User Avatar"
+              className="w-24 h-24 rounded-full mx-auto mb-4"
+            />
+
+            {/* User Info */}
+            <div className="space-y-2 text-gray-800">
+              <p>
+                <strong>Name:</strong> {userData.name || "—"}
+              </p>
+              <p>
+                <strong>Email:</strong> {userData.email || "—"}
+              </p>
+              <p>
+                <strong>Email Verified:</strong>{" "}
+                {userData.emailVerified
+                  ? new Date(userData.emailVerified).toLocaleDateString()
+                  : "Not verified"}
+              </p>
+              <p>
+                <strong>Phone:</strong> {userData.phone || "—"}
+              </p>
+              <p>
+                <strong>College:</strong> {userData.college || "—"}
+              </p>
+              <p>
+                <strong>Education:</strong> {userData.education || "—"}
+              </p>
+              <p>
+                <strong>Branch:</strong> {userData.branch || "—"}
+              </p>
+              <p>
+                <strong>Year:</strong> {userData.year || "—"}
+              </p>
+              <p>
+                <strong>Company:</strong> {userData.company || "—"}
+              </p>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-6 flex flex-col space-y-3">
+              <button
+                onClick={() => router.push("/")}
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+              >
+                Go to Home
+              </button>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+              >
+                Log Out
+              </button>
+            </div>
           </div>
-
-          {/* Buttons */}
-          <div className="mt-6 flex flex-col space-y-3">
-            <button
-              onClick={() => router.push("/")}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-            >
-              Go to Home
-            </button>
-            <button
-              onClick={() => signOut({ callbackUrl: "/" })}
-              className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-            >
-              Log Out
-            </button>
-          </div>
-        </div>
-      ) : (
-        <p>Loading user info...</p>
-      )}
-    </div>
+        ) : (
+          <p>Loading user info...</p>
+        )}
+      </div>
+    </>
   );
 }
