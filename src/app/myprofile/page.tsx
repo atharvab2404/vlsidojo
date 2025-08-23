@@ -41,7 +41,6 @@ export default function ProfilePage() {
       const res = await fetch("/api/profile");
       if (res.ok) {
         const data = await res.json();
-        // If profile already completed → redirect to landing page
         if (data.signupCompleted) {
           router.push("/profile");
           return;
@@ -77,37 +76,53 @@ export default function ProfilePage() {
 
     if (res.ok) {
       setIsSaved(true);
-      router.push("/profile"); // redirect after save
+      router.push("/profile");
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-16 p-6 bg-white rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">My Profile</h1>
-      <p className="mb-4 text-gray-600">Signed in as {session.user?.email}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f2027] via-[#203a43] to-[#2c5364]">
+      <div className="max-w-2xl w-full mx-auto mt-10 p-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 relative">
+        
+        {/* ✅ Header with Mascot */}
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-4xl font-extrabold text-white tracking-wide drop-shadow-lg">
+            Complete your profile
+          </h1>
+          <img
+            src="/images/form.png" // replace with your mascot
+            alt="Profile Icon"
+            className="w-40 h-40 object-contain drop-shadow-lg -mr-0"
+          />
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {Object.entries(formData).map(([key, value]) => (
-          <div key={key}>
-            <label className="block text-sm font-medium text-gray-700 capitalize">{key}</label>
-            <input
-              type="text"
-              value={value}
-              onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
-              className="w-full p-2 border rounded-lg"
-            />
-          </div>
-        ))}
+        <p className="mb-2 text-gray-200 text-lg">
+          Signed in as <span className="font-semibold">{session.user?.email}</span>
+        </p>
 
-        <button
-          type="submit"
-          className="px-4 py-2 bg-[#00a8ff] text-white rounded-lg hover:bg-[#0090d1]"
-        >
-          Save Profile
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {Object.entries(formData).map(([key, value]) => (
+            <div key={key} className="bg-white/5 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+              <label className="block text-sm font-semibold text-gray-200 capitalize mb-1">{key}</label>
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
+                className="w-full p-3 border border-white/20 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:ring-2 focus:ring-[#00c6ff] focus:outline-none transition"
+              />
+            </div>
+          ))}
 
-      {isSaved && <p className="mt-4 text-green-600">✅ Profile updated!</p>}
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-[#00c6ff] to-[#0072ff] text-white font-semibold rounded-lg hover:opacity-90 shadow-md transition"
+          >
+            Save Profile
+          </button>
+        </form>
+
+        {isSaved && <p className="mt-4 text-green-400 font-medium">✅ Profile updated!</p>}
+      </div>
     </div>
   );
 }
