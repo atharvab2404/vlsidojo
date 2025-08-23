@@ -1,4 +1,3 @@
-// components/Navbar.tsx
 "use client"; // ← make entire Navbar client-side
 
 import Image from "next/image";
@@ -7,8 +6,11 @@ import LoginButtons from "./LoginButtons";
 export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 w-full z-20 bg-[#1a1a2e]/90 backdrop-blur-sm flex items-center justify-between px-8 py-4 border-b border-[#00a8ff]/20">
-      {/* Logo */}
-      <div className="flex items-center space-x-3">
+      {/* Logo → scrolls to top */}
+      <div
+        className="flex items-center space-x-3 cursor-pointer"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
         <Image src="/logo.png" alt="VLSI Dojo" width={64} height={64} />
         <span
           className="text-2xl font-bold text-[#00a8ff]"
