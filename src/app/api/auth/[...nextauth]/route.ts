@@ -14,16 +14,8 @@ export const authOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async signIn({ user }) {
-      const dbUser = await prisma.user.findUnique({
-        where: { email: user.email! },
-      });
-
-      // If user exists and hasn't completed signup → send to profile page
-      if (dbUser && !dbUser.signupCompleted) {
-        return "/myprofile";
-      }
-
-      return true; // allow normal sign in
+      // Always allow sign in; redirection is handled in `redirect`
+      return true;
     },
     async session({ session }) {
       const dbUser = await prisma.user.findUnique({
@@ -37,7 +29,15 @@ export const authOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Always return relative redirects
+      // If redirect comes from provider callback → decide where to send them
+      if (url.startsWith("/api/auth/callback")) {
+        // At this point, session will have `signupCompleted` (set in session() above)
+        // NextAuth doesn’t pass session here directly, but since user just logged in,
+        // safest is to always send them to `/myprofile` first if not complete.
+        return `${baseUrl}/myprofile`;
+      }
+
+      // Default safe redirects
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       if (new URL(url).origin === baseUrl) return url;
       return baseUrl;

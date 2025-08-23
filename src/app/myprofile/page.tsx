@@ -14,7 +14,7 @@ interface ProfileData {
 }
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
 
   const [formData, setFormData] = useState<ProfileData>({
@@ -61,7 +61,8 @@ export default function ProfilePage() {
     fetchProfile();
   }, [session, status, router]);
 
-  if (status === "loading" || loading) return <p className="text-center mt-20">Loading...</p>;
+  if (status === "loading" || loading)
+    return <p className="text-center mt-20">Loading...</p>;
 
   const handleChange = (key: keyof ProfileData, value: string) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -72,12 +73,20 @@ export default function ProfilePage() {
     const res = await fetch("/api/profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        signupCompleted: true, // <-- mark completed here
+      }),
     });
 
     if (res.ok) {
       setIsSaved(true);
-      router.push("/profile"); // redirect after save
+
+      // refresh session so signupCompleted = true in session object
+      await update();
+
+      // now safe to redirect
+      router.push("/profile");
     }
   };
 
@@ -89,11 +98,15 @@ export default function ProfilePage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {Object.entries(formData).map(([key, value]) => (
           <div key={key}>
-            <label className="block text-sm font-medium text-gray-700 capitalize">{key}</label>
+            <label className="block text-sm font-medium text-gray-700 capitalize">
+              {key}
+            </label>
             <input
               type="text"
               value={value}
-              onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
+              onChange={(e) =>
+                handleChange(key as keyof ProfileData, e.target.value)
+              }
               className="w-full p-2 border rounded-lg"
             />
           </div>
