@@ -4,6 +4,10 @@ import Image from "next/image";
 import { Montserrat, Inter } from "next/font/google";
 import Navbar from "./Navbar";
 
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+
 // Load Montserrat and Inter
 const montserratBold = Montserrat({
   subsets: ["latin"],
@@ -21,6 +25,17 @@ const inter = Inter({
 });
 
 export default function Hero() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "loading") return;
+
+    // Only redirect if user is new
+    if (session?.user?.isNewUser) {
+      router.push("/myprofile");
+    }
+  }, [session, status, router]);
   return (
     <section className="relative bg-[#1a1a2e] text-[#f0f0f0] min-h-screen flex flex-col overflow-hidden">
       {/* Background Animation Layer */}

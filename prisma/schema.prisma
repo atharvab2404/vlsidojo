@@ -39,6 +39,15 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+
+  // 🔹 Extra fields
+  phone         String?
+  college       String?
+  education     String?   // (BTech/BS, MTech/MS, PhD)
+  branch        String?
+  year          String?   // (current year or passout)
+  company       String?   // optional if employed
+  signupCompleted Boolean  @default(false)  // <--- add this
   accounts      Account[]
   sessions      Session[]
 }

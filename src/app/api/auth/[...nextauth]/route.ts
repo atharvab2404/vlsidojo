@@ -1,27 +1,38 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
 
-const prisma = global.prisma || new PrismaClient();
-if (process.env.NODE_ENV !== "production") global.prisma = prisma;
-
-const authHandler = NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID || "",
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   session: { strategy: "jwt" },
-  secret: process.env.NEXTAUTH_SECRET || "fallbacksecret",
-  debug: true,
-});
+  callbacks: {
+    async signIn({ user }) {
+      // Check if user exists in DB
+      const dbUser = await prisma.user.findUnique({ where: { email: user.email! } });
+      if (dbUser && !dbUser.signupCompleted) {
+        return "/myprofile"; // first-time user
+      }
+      return true;
+    },
+    async session({ session }) {
+      const dbUser = await prisma.user.findUnique({ where: { email: session.user?.email! } });
+      if (dbUser) session.user.signupCompleted = dbUser.signupCompleted;
+      return session;
+    },
+    async redirect({ url, baseUrl }) {
+      return url.startsWith("/") ? baseUrl + url : baseUrl;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
+};
 
-export { authHandler as GET, authHandler as POST };
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
