@@ -18,11 +18,11 @@ export default function ProjectCategories() {
         },
         {
           label: "Real-World Relevance",
-          name: "Traffic Light Controller",
-          image: "/images/traffic-light-placeholder.png",
+          name: "Round Robin Arbiter",
+          image: "/projects/alu.png",
           description:
             "Simulate a real-world traffic light system using a finite state machine, teaching you timing control and FSM modeling.",
-          link: "#",
+          link: "/projects/param-round-robin-arbiter",
         },
         {
           label: "Hands-on Hardware",

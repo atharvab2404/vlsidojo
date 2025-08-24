@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 import CalloutBox from "./CalloutBox";
 
-export default function Module2({ readModules, handleCheckboxChange, setModule }) {
+export default function Module3({ readModules, handleCheckboxChange, setModule }) {
   const [open, setOpen] = useState(false);
 
   return (
