@@ -2,40 +2,37 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { X } from "lucide-react";
-import MCQBlock from "./MCQBlock";
-import CalloutBox from "./CalloutBox";
+import Module1 from "./Module1";
+import Module2 from "./Module2";
+import Module3 from "./Module3";
 
 export default function Page() {
   const [module, setModule] = useState(1); // current module: 1,2,3
-  const [readModules, setReadModules] = useState({
-    1: false,
-    2: false,
-    3: false,
-  });
+  const [readModules, setReadModules] = useState<boolean[]>([false, false, false]);
 
-  const [open, setOpen] = useState(false);
-
-  const handleCheckboxChange = (mod: number) => {
-    setReadModules({ ...readModules, [mod]: !readModules[mod] });
+  const handleCheckboxChange = (index: number) => {
+    const updated = [...readModules];
+    updated[index] = !updated[index];
+    setReadModules(updated);
   };
+
   useEffect(() => {
-    // Disable text selection & copying
-    const handleContextMenu = (e) => {
-        if (e.target.closest(".pseudo-code")) return; // allow right-click inside pseudo-code
-        e.preventDefault();
+    // Disable text selection & copying (except inside .pseudo-code)
+    const handleContextMenu = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(".pseudo-code")) return;
+      e.preventDefault();
     };
-    const handleCopy = (e) => {
-        if (e.target.closest(".pseudo-code")) return; // allow copy inside pseudo-code
-        e.preventDefault();
+    const handleCopy = (e: ClipboardEvent) => {
+      if ((e.target as HTMLElement).closest(".pseudo-code")) return;
+      e.preventDefault();
     };
-    const handleCut = (e) => {
-        if (e.target.closest(".pseudo-code")) return; // allow cut inside pseudo-code
-        e.preventDefault();
+    const handleCut = (e: ClipboardEvent) => {
+      if ((e.target as HTMLElement).closest(".pseudo-code")) return;
+      e.preventDefault();
     };
-    const handlePaste = (e) => {
-        if (e.target.closest(".pseudo-code")) return; // allow paste inside pseudo-code
-        e.preventDefault();
+    const handlePaste = (e: ClipboardEvent) => {
+      if ((e.target as HTMLElement).closest(".pseudo-code")) return;
+      e.preventDefault();
     };
 
     document.addEventListener("contextmenu", handleContextMenu);
@@ -50,417 +47,48 @@ export default function Page() {
       document.removeEventListener("paste", handlePaste);
     };
   }, []);
+
   return (
     <section className="bg-[#D1FAE5] min-h-screen py-12 px-4">
       <div className="mx-auto max-w-5xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8 text-slate-700">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">4-bit ALU: Conceptual Design &amp; Verification Dojo</h1>
-          <Link href="/#projects" className="text-black underline underline-offset-4">
+          <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">
+            4-bit ALU: Conceptual Design &amp; Verification Dojo
+          </h1>
+          <Link
+            href="/#projects"
+            className="text-black underline underline-offset-4"
+          >
             ← Back to Projects
           </Link>
         </div>
 
         {/* Module 1 */}
         {module === 1 && (
-            <div>
-                {/* Introduction */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Introduction</h2>
-                <p className="leading-7 inter-body">
-                    At the very heart of every computer processor lies the Arithmetic Logic Unit (ALU). This essential digital
-                    circuit is the unsung hero that performs all the mathematical calculations and logical comparisons that make
-                    a computer &quot;compute.&quot; Imagine trying to run a spreadsheet, play a game, or even browse the web
-                    without a component capable of adding numbers, checking conditions, or manipulating data bits. That&apos;s
-                    the critical problem the ALU solves!
-                </p>
-                <p className="leading-7 inter-body">
-                    This Dojo will guide you through the conceptual design of a simple 4-bit ALU, helping you grasp the
-                    fundamental principles of how arithmetic and logical operations are carried out in hardware. Understanding
-                    the ALU&apos;s architecture and operation is a cornerstone for anyone interested in how microprocessors
-                    function, providing invaluable insight into the core of digital systems.
-                </p>
-                </section>
-
-                <hr className="my-10 border-slate-200" />
-
-                {/* Prerequisites */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Prerequisites</h2>
-                <p className="leading-7 inter-body">To engage with the conceptual ideas in this Dojo, it helps to know:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="inter-subheading">Basic Logic Gates:</span> <span className="inter-body">AND, OR, XOR, NOT.</span></li>
-                    <li><span className="inter-subheading">Combinational Logic:</span> <span className="inter-body">Output depends only on current inputs.</span></li>
-                    <li><span className="inter-subheading">Binary Numbers:</span> <span className="inter-body">Representation and basic arithmetic.</span></li>
-                    <li><span className="inter-subheading">Multiplexers (Muxes):</span> <span className="inter-body">Select one of many inputs using control signals.</span></li>
-                    <li><span className="inter-subheading">System Clock &amp; Reset (Conceptual):</span> <span className="inter-body">Timing and initialization ideas.</span></li>
-                </ul>
-
-                <p className="leading-7 inter-body">If you implement these concepts, typical open-source tools include:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                    <li>
-                    <span className="inter-subheading">Icarus Verilog:</span> <span className="inter-body">Compiler/simulator for HDL.</span>
-                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
-                    </li>
-                    <li>
-                    <span className="inter-subheading">GTKWave:</span> <span className="inter-body">Waveform viewer.</span>
-                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
-                    </li>
-                    <li>
-                    <span className="inter-subheading">Yosys (Optional):</span> <span className="inter-body">Synthesis to a gate-level netlist.</span>
-                    <span className="ml-2 inter-body">Installation Guide (search official docs).</span>
-                    </li>
-                </ul>
-                </section>
-
-                <hr className="my-10 border-slate-200" />
-
-                {/* Signals & Ports Table */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">ALU Interface (Signals &amp; Ports)</h2>
-                <p className="leading-7 inter-body">
-                    The 4-bit ALU accepts two operands and an opcode, and produces a result with status flags.
-                </p>
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse border border-gray-300 text-sm">
-                    <thead>
-                        <tr className="border-b border-slate-300">
-                        <th className="px-3 py-2 text-left font-medium text-slate-600">Signal</th>
-                        <th className="px-3 py-2 text-left font-medium text-slate-600">Direction</th>
-                        <th className="px-3 py-2 text-left font-medium text-slate-600">Width</th>
-                        <th className="px-3 py-2 text-left font-medium text-slate-600">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">A</td>
-                        <td className="px-3 py-2">Input</td>
-                        <td className="px-3 py-2">[3:0]</td>
-                        <td className="px-3 py-2">Operand A</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">B</td>
-                        <td className="px-3 py-2">Input</td>
-                        <td className="px-3 py-2">[3:0]</td>
-                        <td className="px-3 py-2">Operand B</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">opcode</td>
-                        <td className="px-3 py-2">Input</td>
-                        <td className="px-3 py-2">[2:0]</td>
-                        <td className="px-3 py-2">Selects ALU operation</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">Cin</td>
-                        <td className="px-3 py-2">Input</td>
-                        <td className="px-3 py-2">1</td>
-                        <td className="px-3 py-2">Carry-in for addition / two’s complement</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">Result</td>
-                        <td className="px-3 py-2">Output</td>
-                        <td className="px-3 py-2">[3:0]</td>
-                        <td className="px-3 py-2">Operation result</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">Cout</td>
-                        <td className="px-3 py-2">Output</td>
-                        <td className="px-3 py-2">1</td>
-                        <td className="px-3 py-2">Carry-out (for add/sub)</td>
-                        </tr>
-                        <tr className="border-b border-slate-200">
-                        <td className="px-3 py-2">Zf</td>
-                        <td className="px-3 py-2">Output</td>
-                        <td className="px-3 py-2">1</td>
-                        <td className="px-3 py-2">Zero flag (Result == 0)</td>
-                        </tr>
-                    </tbody>
-                    </table>
-                </div>
-                {/* Block Diagram Image Below Table */}
-                <div className="mt-6 flex justify-center">
-                    <div className="max-w-xl w-full h-auto overflow-hidden">
-                        <img
-                        src="/images/alu.png"
-                        alt="4-bit ALU Block Diagram"
-                        className="w-full h-auto object-contain"
-                        />
-                    </div>
-                </div>
-                </section>
-                {/* Checkbox & Next Button */}
-                <div className="flex items-center mt-4">
-                <input
-                    type="checkbox"
-                    id="read1"
-                    checked={readModules[1]}
-                    onChange={() => handleCheckboxChange(1)}
-                    className="mr-2"
-                />
-                <label htmlFor="read1">I have read this module</label>
-                </div>
-                <button
-                disabled={!readModules[1]}
-                onClick={() => setModule(2)}
-                className={`mt-4 px-4 py-2 rounded text-white ${readModules[1] ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}
-                >
-                Move to Module 2
-                </button>
-            </div>
+          <Module1
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
         )}
 
-        
         {/* Module 2 */}
         {module === 2 && (
-            <div>
-                {/* Execution / Core */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Execution (The Core)</h2>
-                <p className="leading-7 inter-body">
-                    Our goal is to build a conceptual 4-bit ALU: it takes two 4-bit inputs and an opcode, and produces a 4-bit
-                    result with status flags.
-                </p>
-
-                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">1. The ALU&apos;s Interface and Operations</h3>
-                <p className="leading-7 inter-body">Operations covered:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="inter-subheading">Addition (A + B):</span> <span className="inter-body">Standard binary addition.</span></li>
-                    <li><span className="inter-subheading">Subtraction (A - B):</span> <span className="inter-body">{" "}
-                        <button
-                            onClick={() => setOpen(true)}
-                            className="cursor-pointer inline-block px-2 py-0.3 rounded-xl bg-gray-100 border border-gray-300 shadow-sm hover:bg-gray-200 transition"
-                        >
-                        Two’s-complement <span className="ml-1">💡</span>
-                        </button>{" "}
-                        via A + (~B) + 1.</span>
-                    </li>
-                    <li><span className="inter-subheading">AND (A &amp; B)</span></li>
-                    <li><span className="inter-subheading">OR (A | B)</span></li>
-                    <li><span className="inter-subheading">XOR (A ^ B)</span></li>
-                </ul>
-
-                {/* Popup */}
-                {open && (
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/30 backdrop-blur-sm">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl max-w-2xl w-full relative flex items-start gap-6">
-                    {/* Close button */}
-                    <button
-                        onClick={() => setOpen(false)}
-                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
-                    >
-                        <X size={20} />
-                    </button>
-
-                    {/* Mascot Image */}
-                    <div className="w-28 h-28 flex-shrink-0">
-                        <img
-                        src="/images/explain.png" // <-- replace with your mascot path
-                        alt="Website Mascot"
-                        className="w-full h-full object-contain"
-                        />
-                    </div>
-
-                    {/* Text Content */}
-                    <div className="flex-1">
-                        <h4 className="text-lg inter-subheading mb-2">LLAMA explains… </h4>
-                        <p className="text-gray-700">
-                        Two’s-complement is a mathematical operation on binary numbers,
-                        widely used to represent signed integers. It allows binary addition
-                        and subtraction to be performed uniformly without special handling
-                        of negative numbers.
-                        </p>
-                    </div>
-                    </div>
-                </div>
-                )}
-
-
-                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">2. Conceptual Design Strategy</h3>
-                <p className="leading-7 inter-body">
-                    Build separate functional blocks (Adder/Subtractor, AND, OR, XOR) and use a multiplexer (controlled by
-                    <span className="inter-body"> opcode</span>) to select which block’s output drives the result.
-                </p>
-                
-                {/* === Pseudo-code Practice Section === */}
-                <div className="pseudo-code">
-                <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
-                    
-                    {/* Fake terminal header */}
-                    <div className="flex items-center space-x-2 mb-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="ml-3 text-green-300 text-xs tracking-widest uppercase">Terminal</span>
-                    </div>
-
-                    {/* Title */}
-                    <h4 className="text-lg inter-subheading text-green-400 mb-2">✍️ Pseudo-code Practice</h4>
-                    <p className="text-sm text-green-200 mb-3 opacity-80 inter-body">
-                    Write down the expected behavior in simple pseudo-code before looking at the solution.
-                    </p>
-
-                    {/* User Notepad */}
-                    <textarea
-                    className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none fira-code-body"
-                    placeholder="Write your pseudo-code here..."
-                    />
-
-                    {/* Collapsible Solution */}
-                    <details className="mt-4">
-                    <summary className="cursor-pointer text-green-400 font-medium hover:underline">
-                        💡 Show Solution
-                    </summary>
-                    <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-                {`if opcode == 00:
-                    result = A + B
-                elif opcode == 01:
-                    result = A - B
-                elif opcode == 10:
-                    result = A & B
-                elif opcode == 11:
-                    result = A | B`}
-                    </pre>
-                    </details>
-                </div>
-                </div>
-                {/* === End of Pseudo-code Section === */}
-
-
-
-                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">A. Arithmetic Unit (Add/Subtract Logic)</h4>
-                <p className="leading-7 inter-body">
-                    Addition uses four chained 1-bit full adders. Subtraction reuses the adder by inverting B and setting Cin=1
-                    (two’s-complement). The MSB carry-out is <span className="inter-body">Cout</span>.
-                </p>
-
-                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">B. Logical Units</h4>
-                <p className="leading-7 inter-body">
-                    Four 2-input gates in parallel for each operation: AND, OR, XOR — one per bit.
-                </p>
-
-                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">C. The Multiplexer (Mux)</h4>
-                <p className="leading-7 inter-body">
-                    A 4-bit-wide mux selects the active unit’s output based on the opcode (e.g., 000=ADD, 001=SUB, 010=AND, …).
-                </p>
-
-                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">D. Status Flags</h4>
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><span className="inter-subheading">Cout:</span> <span className="inter-body">Carry-out from arithmetic ops; 0 for logical ops.</span></li>
-                    <li><span className="inter-subheading">Zf:</span> <span className="inter-body">NOR of all result bits (1 if result == 0).</span></li>
-                </ul>
-
-                <h4 className="text-lg inter-subheading text-slate-900 tracking-tight mt-4">Conceptual Flow</h4>
-                <ol className="list-decimal pl-6 space-y-2">
-                    <li><span className="inter-body">Arithmetic and logical units compute in parallel.</span></li>
-                    <li><span className="inter-body">opcode</span> <span className="inter-body">selects one result via the mux.</span></li>
-                    <li><span className="inter-body">Flags are produced accordingly</span> (<span className="inter-body">Cout</span> <span className="inter-body">from adder</span>, <span className="inter-body">Zf</span> <span className="inter-body">from result check</span>).</li>
-                </ol>
-
-                <MCQBlock />
-                </section>
-                {/* Checkbox & Next Button */}
-                <div className="flex items-center mt-4">
-                <input
-                    type="checkbox"
-                    id="read1"
-                    checked={readModules[1]}
-                    onChange={() => handleCheckboxChange(1)}
-                    className="mr-2"
-                />
-                <label htmlFor="read1">I have read this module</label>
-                </div>
-                <button
-                    onClick={() => setModule(1)}
-                    className="px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600"
-                >
-                    Back to Module 1
-                </button>
-                <button
-                disabled={!readModules[1]}
-                onClick={() => setModule(3)}
-                className={`mt-4 px-4 py-2 rounded text-white ${readModules[1] ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}
-                >
-                Move to Module 3
-                </button>
-            </div>
+          <Module2
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
         )}
 
-
+        {/* Module 3 */}
         {module === 3 && (
-            <div>
-                {/* Verification & Validation */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Verification &amp; Validation</h2>
-                <p className="leading-7 inter-body">
-                    Conceptually verify by instantiating the ALU, applying inputs, observing outputs, and comparing to expected
-                    results.
-                </p>
-
-                <CalloutBox
-                    title="⚠️ Common Pitfall: Incomplete case Statements"
-                    content="In Verilog, if you don't specify an output for every possible input condition within a combinational always block, the tool will infer a latch to hold the last value. This is a common source of bugs!"
-                />
-
-                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-4">Test Scenarios</h3>
-                <ul className="list-disc pl-6 space-y-2">
-                    <li>ADD: A=0001, B=0010 → 0011, Cout=0, Zf=0</li>
-                    <li>ADD: A=1111, B=0001 → 0000, Cout=1, Zf=1</li>
-                    <li>SUB: A=0101, B=0010 → 0011, Cout=1, Zf=0</li>
-                    <li>SUB: A=0010, B=0101 → 1101, Cout=0, Zf=0</li>
-                    <li>AND: A=1010, B=0110 → 0010, Cout=0, Zf=0</li>
-                    <li>XOR: A=1010, B=0110 → 1100, Cout=0, Zf=0</li>
-                    <li>OR:  A=0000, B=0000 → 0000, Cout=0, Zf=1</li>
-                </ul>
-
-                <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-4">Waveform Analysis (Conceptual)</h3>
-                <p className="leading-7 inter-body">
-                    Use a waveform viewer to ensure signal transitions match expectations after input changes.
-                </p>
-                </section>
-
-                {/* Optional Synthesis */}
-                <section className="space-y-4 mb-10">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Optional: Synthesis</h2>
-                <p className="leading-7 inter-body">
-                    Synthesis converts your HDL into a gate-level netlist, checks implementability, and optimizes for area/speed.
-                    It provides early performance insights for hardware targets (FPGA/ASIC).
-                </p>
-                </section>
-
-                {/* Conclusion */}
-                <section className="space-y-4">
-                <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">Conclusion &amp; Next Steps</h2>
-                <p className="leading-7 inter-body">
-                    You’ve conceptually designed a 4-bit ALU, explored verification ideas, and seen how synthesis connects
-                    concepts to gates. Consider expanding width (8/16-bit), adding operations (shifts, comparisons), exploring
-                    pipelining, or venturing into floating-point arithmetic.
-                </p>
-                </section>
-                {/* Checkbox & Next Button */}
-                <div className="flex items-center mt-4">
-                <input
-                    type="checkbox"
-                    id="read1"
-                    checked={readModules[1]}
-                    onChange={() => handleCheckboxChange(1)}
-                    className="mr-2"
-                />
-                <label htmlFor="read1">I have read this module</label>
-                </div>
-                <button
-                    onClick={() => setModule(2)}
-                    className="px-4 py-2 rounded bg-gray-500 text-white hover:bg-gray-600"
-                >
-                    Back to Module 2
-                </button>
-                <button
-                disabled={!readModules[1]}
-                onClick={() => setModule(3)}
-                className={`mt-4 px-4 py-2 rounded text-white ${readModules[1] ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}
-                >
-                Finish Dojo
-                </button>
-            </div>
+          <Module3
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
         )}
       </div>
     </section>
