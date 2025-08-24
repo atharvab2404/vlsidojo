@@ -82,29 +82,40 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
         </div>
       </section>
 
-      {/* Checkbox & Next Button */}
-      <div className="flex items-center mt-4">
-        <input
-          type="checkbox"
-          id="read1"
-          checked={readModules[0]}          
-          onChange={() => handleCheckboxChange(0)}
-          className="mr-2"
-        />
-        <label htmlFor="read1">I have read this module</label>
-      </div>
+      {/* Checkbox & Navigation Buttons */}
+      <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
+        {/* Left side (future Previous button) */}
+        <div></div>
 
-      <button
-        disabled={!readModules[0]}          
-        onClick={() => setModule(2)}        
-        className={`mt-4 px-4 py-2 rounded text-white ${
-          readModules[0]
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
-      >
-        Move to Module 2
-      </button>
+        {/* Center - Checkbox */}
+        <div className="flex justify-center">
+          <label htmlFor="read1" className="flex items-center space-x-2 text-slate-700">
+            <input
+              type="checkbox"
+              id="read1"
+              checked={readModules[0]}          
+              onChange={() => handleCheckboxChange(0)}
+              className="h-4 w-4 accent-blue-600 rounded"
+            />
+            <span>I have read this module</span>
+          </label>
+        </div>
+
+        {/* Right side - Next button */}
+        <div className="flex justify-end">
+          <button
+            disabled={!readModules[0]}          
+            onClick={() => setModule(2)}        
+            className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
+              readModules[0]
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Move to Module 2 →
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
