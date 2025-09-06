@@ -26,11 +26,11 @@ export default function ProjectCategories() {
         },
         {
           label: "Hands-on Hardware",
-          name: "Digital Clock on FPGA",
-          image: "/images/clock-placeholder.png",
+          name: "Universal Pattern Detector",
+          image: "/projects/alu.png",
           description:
             "Implement a real-time digital clock on an FPGA, perfect for practicing counters, clock dividers, and HDL logic.",
-          link: "#",
+          link: "/projects/pattern-detector",
         },
       ],
     },

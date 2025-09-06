@@ -9,17 +9,29 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
           Introduction
         </h2>
         <p className="leading-7 inter-body">
-          Imagine a popular coffee machine in an office. 
-          At any given moment, multiple people (let's call them "requesters") might want to use it. 
-          If everyone rushes at once, chaos ensues! A digital arbiter is like a sophisticated <strong>queue manager for hardware</strong>, 
-          ensuring only one requester gets access to a shared resource at a time, preventing conflicts and system deadlocks.
+          Imagine using <strong>Ctrl+F</strong> to find a word in a document. 
+          It’s simple, right? But what if the document was a raw, continuous stream of binary data, arriving millions of times per second? 
+          And what if the data wasn't a neat sequence, but came in wide, parallel chunks?
         </p>
         <p className="leading-7 inter-body">
-          This Dojo will take you on a conceptual journey into the world of a Parametrized Round-Robin Arbiter. 
-          You'll understand how a single, flexible design can implement three distinct fairness policies: a basic rotating scheme,
-          a more adaptive rotating scheme, and an advanced weighted scheme. This deep dive will illuminate how complex digital systems manage shared resources,
-          a fundamental challenge in modern chip design.
+          This is a common challenge in high-speed digital systems, from network routers inspecting data packets to storage controllers reading from flash memory. 
+          We need a specialized hardware module that can constantly scan this high-speed data stream to find a specific, predefined bit pattern.
         </p>
+        <h2 className="text-xl inter-subheading text-slate-900 tracking-tight">
+          Your Mission
+        </h2>
+        <p className="leading-7 inter-body">
+            In this dojo, you will design and build a powerful, configurable, and reusable Pattern Detector in SystemVerilog. You will learn how to:
+        </p>
+        <ol className="list-decimal pl-6 space-y-2">
+            <li> Create a sliding window (shift register) to buffer incoming parallel data.</li>
+            <li> Implement a parallel search algorithm to find a pattern at any bit position.</li>
+            <li> Build a flexible module using parameters that can be adapted for any data width or pattern.</li>
+        </ol>
+        <p className="leading-7 inter-body">
+            By the end, you'll have a piece of synthesizable hardware capable of finding a needle in a digital haystack, a fundamental skill for any digital design engineer.
+        </p>
+
       </section>
 
       <hr className="my-10 border-slate-200" />
@@ -33,11 +45,11 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
           To fully grasp the ideas presented here, a conceptual understanding of the following is helpful:
         </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Digital Logic Fundamentals: Knowing what basic gates (AND, OR, NOT) do, and the distinction between combinational logic (outputs instantly react to inputs, no memory) and sequential logic (outputs depend on current and past inputs, involving memory elements like flip-flops)</li>
-          <li>Binary Numbers: How numbers are represented and manipulated in binary.</li>
-          <li>System Clock & Reset: How a clock synchronizes operations in a digital system, and how a reset brings everything to a known starting state.</li>
-          <li>The Idea of a "Module": Thinking of a circuit as a black box with defined inputs and outputs.</li>
-          <li>Parameters in Design: Understanding how a single design can be made flexible by using configurable settings (like the number of inputs)</li>
+          <li><b>Digital Logic Fundamentals:</b> Knowing what basic gates (AND, OR, NOT) do, and the distinction between combinational logic (outputs instantly react to inputs, no memory) and sequential logic (outputs depend on current and past inputs, involving memory elements like flip-flops)</li>
+          <li><b>SystemVerilog Fundamentals:</b> You should be comfortable with module definitions, input/output logic ports, and the difference between combinational (always_comb) and sequential (always @(posedge clk)) logic.</li>
+          <li><b>Bit-Slicing and Part-Select:</b>  Knowledge of how to select a range of bits from a vector, especially the indexed part-select ([&lt;start_bit&gt;+:&lt;width&gt;]), which is critical for this design.</li>
+          <li><b>The Idea of a "Module":</b> Thinking of a circuit as a black box with defined inputs and outputs.</li>
+          <li><b>Parameters in Design:</b> Understanding how a single design can be made flexible by using configurable settings (like the number of inputs)</li>
         </ul>
       </section>
 

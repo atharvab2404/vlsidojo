@@ -287,6 +287,18 @@ export default function Page() {
             <span className="text-black">Module 3</span>
             <span>{readModules[2] ? "✅" : "⬜"}</span>
           </li>
+          <li
+            onClick={() => {
+              setModule(4);
+              setSidebarOpen(false);
+            }}
+            className={`cursor-pointer flex justify-between items-center p-2 rounded-md ${
+              module === 4 ? "bg-emerald-100 font-medium" : "hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-black">Module 4</span>
+            <span>{readModules[3] ? "✅" : "⬜"}</span>
+          </li>
         </ul>
       </div>
 

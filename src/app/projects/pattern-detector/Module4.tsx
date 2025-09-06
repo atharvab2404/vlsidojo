@@ -4,7 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 
-export default function Module2({ readModules, handleCheckboxChange, setModule }) {
+export default function Module4({ readModules, handleCheckboxChange, setModule }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -15,82 +15,135 @@ export default function Module2({ readModules, handleCheckboxChange, setModule }
           Design and Execution
         </h2>
         <p className="leading-7 inter-body">
-          Our parametrized Round-Robin arbiter is a single design that can behave in three different ways, chosen by a configuration setting.
-          It takes multiple request signals as input and provides a single grant signal as output, indicating which requester has won access.
-           It also takes an enable signal, which pauses or resumes arbitration.
+          You've built a fair arbiter and an efficient arbiter. Now, let's build a smart one.
         </p>
         <p className="leading-7 inter-body">
-          The key to its flexibility lies in parametrization.
-          Instead of designing three separate arbiters, we build one smart arbiter whose internal logic adapts based on a TYPE parameter.
-          This makes the design reusable and scalable for different scenarios.
+          <b>The Problem:</b> In real systems, not all requesters are equal. 
+           A real-time video stream is far more important than a background data log. 
+           Simple fairness isn't enough; we need to handle priority.
         </p>
         <p className="leading-7 inter-body">
-            The arbiter's heart consists of two main logical sections:
+          <b>Our Goal:</b> We will build a Weighted Round Robin (WRR) Arbiter. 
+          Each requester will have a "weight" (a priority value). The arbiter will follow two rules:
+          <ul className="list-disc pl-6 space-y-2">
+                <li>Only the requesters with the highest current weight get to compete.</li>
+                <li>Among this high-priority group, we use the efficient Modified Round Robin scheme you built in Module 2 to pick a winner.</li>
+            </ul>
         </p>
-        <ol className="list-decimal pl-6 space-y-2">
-            <li> <strong>Combinational Logic (Decision-Making):</strong> This part instantly decides who gets the grant in the current cycle, based on the current requests and the information remembered by the sequential logic.</li>
-            <li> <strong>Sequential Logic (Memory & State):</strong> This part instantly decides who gets the grant in the current cycle, based on the current requests and the information remembered by the sequential logic.</li>
-        </ol>
+        
 
         <hr className="my-10 border-slate-200" />
 
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Conventional Rotating Scheme (TYPE==0)
-        </h2>
+           Weighted Round Robin Scheme (TYPE==2)
+        </h2>          
+        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          1. The Priority Pre-Filter
+        </h3>
         <p className="leading-7 inter-body">
-          <strong>Principle:</strong> This is the most straightforward round-robin.
-          It's like a circular turn-taking system where the "priority pointer" always moves to the next person in line, 
-          regardless of whether the current "priority holder" actually requested.
+            The core idea is to filter the incoming requests <i>(i_req)</i> before they reach our arbiter logic.
+            We will generate a new, temporary request vector called req_w that only contains the "best" requests for this cycle. 
+            This is all combinational logic.
+        </p>
+        <ol className="list-decimal pl-6 space-y-2">
+            <li> <strong>Find the Highest Active Weight</strong> 
+            <p className="leading-7 inter-body">
+                First, we need to find the maximum weight among all requesters that are currently active.
+                <ul className="list-disc pl-6 space-y-2">
+                    <li><b>Action A (Masking):</b> Create a temporary signal masked that holds the weights of only the active requesters. If a requester isn't active, its masked weight is 0.</li>
+                    <li><b>Action B (Find Max):</b> Loop through the masked signal to find the highest value (max).</li>
+                </ul>
+                
+                You can write two always @(*) blocks to perform these actions.
+            </p>
+            </li>
+            <li> <strong>Generate the Filtered Request Vector (req_w)</strong> 
+            <p className="leading-7 inter-body">
+                Now that we know the max priority for this cycle, we can build our filtered request vector, req_w. 
+                A bit req_w[i] is set to 1 only if the original request i_req[i] is active AND its weight is equal to max.
+            </p>
+            <p className="leading-7 inter-body">
+                You can write a third always @(*) block to generate req_w.
+            </p>
+            </li>
+        </ol>
+
+        {/* === Pseudo-code Practice Section === */}
+        <div className="pseudo-code">
+          <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
+            {/* Fake terminal header */}
+            <div className="flex items-center space-x-2 mb-3">
+              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="ml-3 text-green-300 text-xs tracking-widest uppercase">
+                Terminal
+              </span>
+            </div>
+
+            {/* Title */}
+            <h4 className="text-lg inter-subheading text-green-400 mb-2">
+              ✍️ Pseudo-code Practice
+            </h4>
+            <p className="text-sm text-green-200 mb-3 opacity-80 inter-body">
+              Write down the expected behavior in simple pseudo-code before
+              looking at the solution.
+            </p>
+
+            {/* User Notepad */}
+            <textarea
+              className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none fira-code-body"
+              placeholder="Write your pseudo-code here..."
+            />
+
+            {/* Collapsible Solution */}
+            <details className="mt-4">
+              <summary className="cursor-pointer text-green-400 font-medium hover:underline">
+                💡 Show Solution
+              </summary>
+              <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
+{`req_doubled = {i_req, i_req};
+rotated_req = req_doubled >> ptr;
+priority_out = rotated_req & ~(rotated_req - 1);
+prio_doubled = {priority_out, priority_out};`}
+              </pre>
+            </details>
+          </div>
+        </div>
+        {/* === End of Pseudo-code Section === */}
+        
+        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          2. Reusing the Modified Arbiter Core
+        </h3>
+        <p className="leading-7 inter-body">
+            This is where your previous work pays off. The logic to perform Rotate -&gt; Prioritize -&gt; Rotate Back and to find the winner's index (ptr_arb) is a self-contained block.
         </p>
         <p className="leading-7 inter-body">
-          <strong>Our Goal:</strong> We will build a fair arbiter. Imagine a group of people sitting at a round table.
-           They pass a "talking stick" around. Whoever has the stick gets to talk. 
-           This is the core idea of Round Robin - everyone gets a turn in a fixed order.
+            Instead of feeding it i_req, we will now feed it our new, filtered req_w vector. The logic itself does not change at all.
         </p>
         <p className="leading-7 inter-body">
-            Our arbiter will use a digital pointer <i>(ptr)</i> that acts like that talking stick.
+            Copy the grant logic and winner-encoding logic from Mission 2, but make sure it uses req_w as its input.
         </p>
         
 
         <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          1. The Combinational Logic - Who Wins the Grant Right Now?
+          3. Managing the Weight State
         </h3>
         <p className="leading-7 inter-body">
-            First, let's figure out how to pick a winner for the current clock cycle.
-            This is pure combinational logic. We'll use a classic and highly efficient hardware trick: <strong>Rotate -&gt; Prioritize -&gt; Rotate Back.</strong>
+            The weights are not constant. They must be stored in registers and updated. This is the final piece of sequential logic we need to build.
+            <ul className="list-disc pl-6 space-y-2">
+                <li><b>Rule 1 (Load):</b> An external signal i_load can force-load a new set of weights. This has the highest priority.</li>
+                <li><b>Rule 2 (Decrement):</b> After a requester wins, its weight should be decreased by 1. 
+                This is crucial to prevent a high-priority requester from starving all the others. 
+                It ensures that eventually, its priority will drop, giving others a chance.</li>
+            </ul>
         </p>
-        <ol className="list-decimal pl-6 space-y-2">
-            <li> <strong>Rotate the Requests</strong> 
-            <p className="leading-7 inter-body">
-                The ptr tells us where to start looking. We need to bring the requester at the ptr position to a fixed spot (like bit 0) so we can easily work with it.
-                We do this by shifting the request vector i_req to the right by ptr positions.
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><b>The Challenge:</b> A simple shift &gt;&gt; loses bits. How do we handle the wrap-around?</li>
-                    <li><b>The Trick:</b> We temporarily double the request vector (&#123;2&#123;i_req&#125;&#125;). This gives us a "copy" to pull bits from as we shift.</li>
-                </ul>
-            </p>
-            </li>
-            <li> <strong>Find the First '1'</strong> 
-            <p className="leading-7 inter-body">
-                Now that our requests are rotated, the highest priority requester is the one closest to the right (the lowest bit position). 
-                We need to find the very first 1 in <i>rotate_r</i>.
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><b>The Challenge:</b> Looping through bits is slow in hardware.</li>
-                    <li><b>The Trick:</b> There's a clever bit-twiddling formula: <b>X & ~(X - 1)</b>.
-                     This magical expression isolates the lowest set bit in X and sets all others to zero. For example, if X = <i>8'b10110100</i>, then <b>X & ~(X-1)</b> results in <i>8'b00000100</i>.</li>
-                </ul>
-            </p>
-            </li>
-            <li> <strong>Rotate Back</strong> 
-            <p className="leading-7 inter-body">
-                We've picked a winner <i>(priority_out)</i>, but its bit is in the wrong position. We need to shift it back to where it originally was by rotating it left by <i>ptr</i> positions
-            </p>
-            </li>
-        </ol>
         <p className="leading-7 inter-body">
-            Now Let's try writing the pseudo-code for all these 3 steps!!
+            Write the final always @(posedge i_clk...) block. It will manage the weight_counters register and the ptr update (which is the same as the Modified scheme).
         </p>
-
+        <p className="leading-7 inter-body">
+            Now Let's try writing the pseudo-code for this entire Modified Scheme!!
+        </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
           <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
@@ -136,87 +189,16 @@ prio_doubled = {priority_out, priority_out};`}
         {/* === End of Pseudo-code Section === */}
 
         <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          2. The Sequential Logic - Who's Next?
+          Put it all together
         </h3>
         <p className="leading-7 inter-body">
-            Now we can implement our new, more efficient pointer logic. 
-            This will go into the sequential always @(posedge i_clk...) block, just like in the last mission.
+            You have all the components for the most advanced arbiter. Place this logic inside a final else if (TYPE==2) block in your generate statement.
         </p>
-        <ol className="list-decimal pl-6 space-y-2">
-            <li> <strong>The always Block</strong> 
-            <p className="leading-7 inter-body">
-                State (like our <i>ptr</i>) must be stored in a register. We define this behavior inside a clocked always block. 
-                This block will also register our combinational gnt signal to produce a stable output, <i>o_gnt</i>.
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><b>Your Task:</b>  Create the structure for a synchronous process with an asynchronous, active-low reset.</li>
-                </ul>
-            </p>
-            </li>
-            <li> <strong>Resetting the State</strong> 
-            <p className="leading-7 inter-body">
-                When the reset signal <i>(i_rstn)</i> is active (HIgh), we must force our arbiter into a known, default state. The pointer and the final grant output should both be 0.
-            </p>
-            </li>
-            <li> <strong>Updating the Pointer</strong> 
-            <p className="leading-7 inter-body">
-                For a "Conventional" arbiter, the rule is simple: after every arbitration, the pointer moves to the next position. 
-                It's fair but not always the most efficient.
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><b>The Logic:</b> increment ptr by 1 each clock cycle</li>
-                    <li><b>The Wrap-Around:</b> If the pointer is at the last position (N-1), it must wrap around back to 0.</li>
-                </ul>
-            </p>
-            </li>
-        </ol>
         <p className="leading-7 inter-body">
-            Now Let's try writing the pseudo-code for all these 3 steps!!
+            You have successfully designed a sophisticated, priority-aware arbiter by building a "pre-filter" on top of the efficient arbiter core you had already designed.
+            This demonstrates the power of hierarchical and modular design in digital logic.
         </p>
-
-        {/* === Pseudo-code Practice Section === */}
-        <div className="pseudo-code">
-          <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
-            {/* Fake terminal header */}
-            <div className="flex items-center space-x-2 mb-3">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="ml-3 text-green-300 text-xs tracking-widest uppercase">
-                Terminal
-              </span>
-            </div>
-
-            {/* Title */}
-            <h4 className="text-lg inter-subheading text-green-400 mb-2">
-              ✍️ Pseudo-code Practice
-            </h4>
-            <p className="text-sm text-green-200 mb-3 opacity-80 inter-body">
-              Write down the expected behavior in simple pseudo-code before
-              looking at the solution.
-            </p>
-
-            {/* User Notepad */}
-            <textarea
-              className="w-full h-40 p-3 bg-black border border-green-500 rounded-lg font-mono text-sm text-green-200 placeholder-green-600 focus:ring-2 focus:ring-green-400 outline-none fira-code-body"
-              placeholder="Write your pseudo-code here..."
-            />
-
-            {/* Collapsible Solution */}
-            <details className="mt-4">
-              <summary className="cursor-pointer text-green-400 font-medium hover:underline">
-                💡 Show Solution
-              </summary>
-              <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`req_doubled = {i_req, i_req};
-rotated_req = req_doubled >> ptr;
-priority_out = rotated_req & ~(rotated_req - 1);
-prio_doubled = {priority_out, priority_out};`}
-              </pre>
-            </details>
-          </div>
-        </div>
-        {/* === End of Pseudo-code Section === */}
-
-        <MCQBlock />
+        
       </section>
 
       {/* Checkbox & Navigation Buttons */}
@@ -224,10 +206,10 @@ prio_doubled = {priority_out, priority_out};`}
         {/* Left side - Previous button (always active, blue) */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(1)}
+            onClick={() => setModule(3)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ←  Module 1
+            ←  Module 3
           </button>
         </div>
 
@@ -237,8 +219,8 @@ prio_doubled = {priority_out, priority_out};`}
             <input
               type="checkbox"
               id="read2"
-              checked={readModules[1]}          
-              onChange={() => handleCheckboxChange(1)}
+              checked={readModules[3]}          
+              onChange={() => handleCheckboxChange(3)}
               className="h-4 w-4 accent-blue-600 rounded"
             />
             <span>I have read this module</span>
@@ -248,15 +230,15 @@ prio_doubled = {priority_out, priority_out};`}
         {/* Right side - Next button */}
         <div className="flex justify-end">
           <button
-            disabled={!readModules[1]}          
-            onClick={() => setModule(3)}        
+            disabled={!readModules[3]}          
+            onClick={() => setModule(5)}        
             className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
               readModules[1]
                 ? "bg-blue-600 hover:bg-blue-700 text-white"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-             Module 3 →
+             Module 5 →
           </button>
         </div>
       </div>
