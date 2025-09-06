@@ -41,15 +41,44 @@ model User {
   image         String?
 
   // 🔹 Extra fields
-  phone         String?
-  college       String?
-  education     String?   // (BTech/BS, MTech/MS, PhD)
-  branch        String?
-  year          String?   // (current year or passout)
-  company       String?   // optional if employed
-  signupCompleted Boolean  @default(false)  // <--- add this
-  accounts      Account[]
-  sessions      Session[]
+  phone           String?
+  college         String?
+  education       String? // (BTech/BS, MTech/MS, PhD)
+  branch          String?
+  year            String? // (current year or passout)
+  company         String? // optional if employed
+  signupCompleted Boolean   @default(false) // <--- add this
+  accounts        Account[]
+  sessions        Session[]
+
+  cart Cart?
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String     @unique
+  items     CartItem[]
+}
+
+model CartItem {
+  id      String   @id @default(cuid())
+  cartId  String
+  dojoId  String
+  quantity Int     @default(1)
+
+  cart    Cart     @relation(fields: [cartId], references: [id])
+  dojo    Dojo     @relation(fields: [dojoId], references: [id])
+}
+
+model Dojo {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Int      // store price in INR paise (e.g. ₹499 → 49900)
+  thumbnail   String
+
+  cartItems   CartItem[]
 }
 
 model VerificationToken {

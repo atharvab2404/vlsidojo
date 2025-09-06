@@ -2,8 +2,12 @@
 
 import Image from "next/image";
 import LoginButtons from "./LoginButtons";
+import { useCartStore } from "@/store/cartStore";
+import Link from "next/link";
 
 export default function Navbar() {
+  const { items } = useCartStore();
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <nav className="fixed top-0 left-0 w-full z-20 bg-[#1a1a2e]/90 backdrop-blur-sm flex items-center justify-between px-8 py-4 border-b border-[#00a8ff]/20">
       {/* Logo → scrolls to top */}
@@ -41,7 +45,14 @@ export default function Navbar() {
 
       {/* Auth + Cart */}
       <div className="flex space-x-6 text-sm items-center">
-        <button className="hover:text-[#00a8ff]">View Cart</button>
+        <Link href="/cart" className="relative hover:text-[#00a8ff]">
+          View Cart
+          {itemCount > 0 && (
+            <span className="ml-1 bg-[#00a8ff] text-white rounded-full px-2 py-0.5 text-xs">
+              {itemCount}
+            </span>
+          )}
+        </Link>
         <LoginButtons />
       </div>
     </nav>
