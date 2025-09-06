@@ -9,16 +9,19 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
           Introduction
         </h2>
         <p className="leading-7 inter-body">
-          Imagine a popular coffee machine in an office. 
-          At any given moment, multiple people (let's call them "requesters") might want to use it. 
-          If everyone rushes at once, chaos ensues! A digital arbiter is like a sophisticated <strong>queue manager for hardware</strong>, 
-          ensuring only one requester gets access to a shared resource at a time, preventing conflicts and system deadlocks.
+          Imagine needing to perform the exact same mathematical operation (like adding two 
+          numbers) on many different pairs of numbers simultaneously. Doing this one pair at 
+          a time would be slow! This is where a Single Instruction, Multiple Data (SIMD) processor shines. 
+          It's like having multiple mini-calculators working in parallel, all performing the same task but 
+          on different data.
         </p>
         <p className="leading-7 inter-body">
-          This Dojo will take you on a conceptual journey into the world of a Parametrized Round-Robin Arbiter. 
-          You'll understand how a single, flexible design can implement three distinct fairness policies: a basic rotating scheme,
-          a more adaptive rotating scheme, and an advanced weighted scheme. This deep dive will illuminate how complex digital systems manage shared resources,
-          a fundamental challenge in modern chip design.
+          This Dojo takes you on a conceptual journey through a simple SIMD processor 
+          with a specialized 16-bit SIMD ALU at its core. You'll understand how a processor 
+          fetches, decodes, executes, accesses memory, and writes results, specifically tailored for 
+          parallel data processing. This dive into processor architecture and SIMD principles is vital 
+          for understanding modern computing, from gaming graphics to scientific simulations, and will be a 
+          powerful addition to your understanding of digital systems.
         </p>
       </section>
 
@@ -33,11 +36,11 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
           To fully grasp the ideas presented here, a conceptual understanding of the following is helpful:
         </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Digital Logic Fundamentals: Knowing what basic gates (AND, OR, NOT) do, and the distinction between combinational logic (outputs instantly react to inputs, no memory) and sequential logic (outputs depend on current and past inputs, involving memory elements like flip-flops)</li>
-          <li>Binary Numbers: How numbers are represented and manipulated in binary.</li>
-          <li>System Clock & Reset: How a clock synchronizes operations in a digital system, and how a reset brings everything to a known starting state.</li>
-          <li>The Idea of a "Module": Thinking of a circuit as a black box with defined inputs and outputs.</li>
-          <li>Parameters in Design: Understanding how a single design can be made flexible by using configurable settings (like the number of inputs)</li>
+          <li><b>Digital Logic Fundamentals:</b> Knowing the difference between combinational (instantaneous) and sequential (clocked) logic, and the role of memory elements like registers and Block-RAM (BRAMs).</li>
+          <li><b>Binary Numbers & Arithmetic:</b> Familiarity with binary representation, basic arithmetic, and two's complement for representing negative numbers.</li>
+          <li><b>System Clock & Reset:</b> How a clock synchronizes operations and how a reset brings a system to a known initial state.</li>
+          <li><b>Processor Basics:</b> A high-level idea of what a CPU does (fetching instructions, processing data).</li>
+          <li><b>The Idea of a "Module":</b> Thinking of a circuit as a black box with defined inputs and outputs.</li>
         </ul>
       </section>
 

@@ -218,42 +218,47 @@ prio_doubled = {priority_out, priority_out};`}
 
         <MCQBlock />
       </section>
+      {/* Checkbox & Navigation Buttons */}
+      <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
+        {/* Left side - Previous button (always active, blue) */}
+        <div className="flex justify-start">
+          <button
+            onClick={() => setModule(1)}
+            className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            ←  Module 1
+          </button>
+        </div>
 
-      {/* Checkbox & Next Button */}
-      <div className="flex items-center mt-4">
-        <input
-          type="checkbox"
-          id="read1"
-          checked={readModules[0]}          
-          onChange={() => handleCheckboxChange(0)}
-          className="mr-2"
-        />
-        <label htmlFor="read1">I have read this module</label>
+        {/* Center - Checkbox */}
+        <div className="flex justify-center">
+          <label htmlFor="read2" className="flex items-center space-x-2 text-slate-700">
+            <input
+              type="checkbox"
+              id="read2"
+              checked={readModules[1]}          
+              onChange={() => handleCheckboxChange(1)}
+              className="h-4 w-4 accent-blue-600 rounded"
+            />
+            <span>I have read this module</span>
+          </label>
+        </div>
+
+        {/* Right side - Next button */}
+        <div className="flex justify-end">
+          <button
+            disabled={!readModules[1]}          
+            onClick={() => setModule(3)}        
+            className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
+              readModules[1]
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+             Module 3 →
+          </button>
+        </div>
       </div>
-
-      <button
-        disabled={!readModules[0]}          
-        onClick={() => setModule(1)}        
-        className={`mt-4 px-4 py-2 rounded text-white ${
-          readModules[0]
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
-      >
-        Move to Module 1
-      </button>
-
-      <button
-        disabled={!readModules[0]}          
-        onClick={() => setModule(3)}        
-        className={`mt-4 px-4 py-2 rounded text-white ${
-          readModules[0]
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-gray-400 cursor-not-allowed"
-        }`}
-      >
-        Move to Module 3
-      </button>
 
       
       

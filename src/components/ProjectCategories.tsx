@@ -19,7 +19,7 @@ export default function ProjectCategories() {
         {
           label: "Real-World Relevance",
           name: "Round Robin Arbiter",
-          image: "/projects/alu.png",
+          image: "/images/arbiter.png",
           description:
             "Simulate a real-world traffic light system using a finite state machine, teaching you timing control and FSM modeling.",
           link: "/projects/param-round-robin-arbiter",
@@ -42,11 +42,11 @@ export default function ProjectCategories() {
       projects: [
         {
           label: "Complex Logic",
-          name: "8-bit CPU Design",
-          image: "/images/cpu-placeholder.png",
+          name: "SIMD-Processor",
+          image: "/images/proc.png",
           description:
             "Build an 8-bit CPU with registers and an ALU to learn more about processor design and instruction execution.",
-          link: "#",
+          link: "/projects/SIMD-Processor",
         },
         {
           label: "Real Applications",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 
-export default function Module2({ readModules, handleCheckboxChange, setModule }) {
+export default function Module4({ readModules, handleCheckboxChange, setModule }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -12,22 +12,52 @@ export default function Module2({ readModules, handleCheckboxChange, setModule }
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Design and Execution
+          Stage 3: Execute (EX)
         </h2>
         <p className="leading-7 inter-body">
-          Welcome back, engineer. In our last mission, we built a fair arbiter. But is it efficient?
+        The Execute stage is the brain of your processor. It performs all the heavy lifting—the 
+        calculations and logical operations. This is where the magic of your Simple SIMD Processor 
+        truly happens, using the decoded signals from the previous stage.Based on the opcode and other control signals decoded in the previous ID (Instruction Decode) stage, the EXECUTE STAGE 
+        uses the appropriate functional unit (like an ALU) to calculate the result. This stage is responsible for:
         </p>
         <p className="leading-7 inter-body">
-          <b>The Problem:</b> The Conventional arbiter moves its pointer by one position every time, even if the requests are sparse. 
-          Imagine only requester #7 is active. The pointer will needlessly check positions #0, #1, #2, #3, #4, #5, and #6 before 
-          granting #7 again. This wastes time.
+          <strong>Design Logic:</strong> 
+          <ol className="list-decimal pl-6 space-y-2">
+            <li><strong>State-Dependent Execution:</strong> The entire logic for this stage is contained within a single if block that checks if the current_state is STATE_EX. This 
+              ensures that all the operations described here only happen during the correct clock cycle of the pipeline..</li>
+            <li><strong>Instruction-Specific Operations:</strong> Inside the STATE_EX block, a series of if-else if statements are used to check the command signals 
+              (CMD_...) that were set in the ID stage.
+              <ol  className="list-disc pl-6 space-y-2" >
+                <li><strong>Arithmetic and Logic:</strong> For operations like addition, subtraction, multiplication, AND, OR, and NOT, the outputs of the combinatorial logic (Add_output_Cout, Mul_output_Cout, etc.) are assigned to their respective result registers (result_reg_add, result_reg_mul, etc.). These result 
+                  registers hold the computed value, which will be written back to the register file in the next stage.</li>
+                <li><strong>Shift Operations:</strong> Similarly, for shift left (CMD_logic_shift_left) and shift right (CMD_logic_shift_right), 
+                  the output of the SIMDshifter module (shiftoutput) is assigned to the appropriate result register.</li>
+                <li><strong>Memory Access:</strong> For load and store instructions, the logic sets up the control signals for the memory stage.
+                  <ol className="list-decimal pl-6 space-y-2">
+                    <li>For load, rdata_en is set to 1, and current_data_address is set to the immediate value (im_reg).</li>
+                    <li>For store, both rdata_en and wdata_en are set to 1, current_data_address is set, and the data to be written (data_out_reg) is 
+                      selected from the register files (H, Oset, Qset) based on the data type flags.</li>
+                  </ol>
+                <li><strong>Control Flow:</strong> For loopjump and setloop, the logic modifies the Program Counter (PC) or Loop Counter (LC).
+                  <ol className="list-decimal pl-6 space-y-2">
+                    <li>CMD_setloop: The LC is updated with the im_reg value.</li>
+                    <li>CMD_loopjump: A conditional check on LC determines if next_PC should be updated to im_reg (for the jump) or simply incremented for sequential execution.</li>
+                  </ol>
+                </li>
+                </li>
+              </ol>
+            <li><strong>PC Update Logic:</strong> The most critical part of this stage is the update of the next PC value (next_PC). This value determines the address of the next instruction to be fetched.
+                  <ol className="list-decimal pl-6 space-y-2">
+                    <li>For CMD_loopjump, the next_PC is conditionally set to the jump target (im_reg) or incremented.</li>
+                    <li>For all other instructions, next_PC is simply incremented (next_PC {"<="} next_PC + 1;) 
+                    to fetch the next instruction in sequence. This is handled by a single else block after the if (CMD_loopjump) check, ensuring that every instruction updates the next_PC correctly.</li>
+                  </ol>                
+                
+                </li> 
+            </li>
+
+          </ol>
         </p>
-        <p className="leading-7 inter-body">
-          <b>Our Goal:</b> We will upgrade our design to a Modified Round Robin Arbiter. 
-          The new rule is simple and smart: the pointer will jump directly to the position after the winning requester. 
-          This makes the arbitration much faster when not all requesters are active.
-        </p>
-        
 
         <hr className="my-10 border-slate-200" />
 
@@ -207,10 +237,10 @@ prio_doubled = {priority_out, priority_out};`}
         {/* Left side - Previous button (always active, blue) */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(2)}
+            onClick={() => setModule(3)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ← Module 2
+            ← Module 3
           </button>
         </div>
 
@@ -220,8 +250,8 @@ prio_doubled = {priority_out, priority_out};`}
             <input
               type="checkbox"
               id="read3"
-              checked={readModules[2]}          
-              onChange={() => handleCheckboxChange(2)}
+              checked={readModules[3]}          
+              onChange={() => handleCheckboxChange(3)}
               className="h-4 w-4 accent-blue-600 rounded"
             />
             <span>I have read this module</span>
@@ -231,10 +261,10 @@ prio_doubled = {priority_out, priority_out};`}
         {/* Right side - Finish button */}
         <div className="flex justify-end">
           <button
-            disabled={!readModules[2]}          
-            onClick={() => setModule(4)}        
+            disabled={!readModules[3]}          
+            onClick={() => setModule(5)}        
             className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
-              readModules[2]
+              readModules[3]
                 ? "bg-blue-600 hover:bg-blue-700 text-white"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}

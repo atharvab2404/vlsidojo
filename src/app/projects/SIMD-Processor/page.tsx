@@ -5,6 +5,7 @@ import Link from "next/link";
 import Module1 from "./Module1";
 import Module2 from "./Module2";
 import Module3 from "./Module3";
+import Module4 from "./Module4";
 import FinalModule from "./FinalModule";
 
 export default function Page() {
@@ -109,6 +110,18 @@ export default function Page() {
             <span className="text-black">Module 3</span>
             <span>{readModules[2] ? "✅" : "⬜"}</span>
           </li>
+          <li
+            onClick={() => {
+              setModule(4);
+              setSidebarOpen(false);
+            }}
+            className={`cursor-pointer flex justify-between items-center p-2 rounded-md ${
+              module === 4 ? "bg-emerald-100 font-medium" : "hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-black">Module 4</span>
+            <span>{readModules[3] ? "✅" : "⬜"}</span>
+          </li>
         </ul>
       </div>
 
@@ -127,7 +140,7 @@ export default function Page() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">
-            Parametrized Round-Robin Arbiter: Conceptual Design &amp; Verification Dojo
+           Simple SIMD Processor 
           </h1>
           <Link
             href="/#projects"
@@ -163,9 +176,17 @@ export default function Page() {
             setModule={setModule}
           />
         )}
+        {/* Module 4 */}
+        {module === 4 && (
+          <Module4
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
+        )}
 
         {/* Final Module (not in sidebar) */}
-        {module === 4 && (
+        {module === 5 && (
           <FinalModule
             readModules={readModules}
             handleCheckboxChange={handleCheckboxChange}
