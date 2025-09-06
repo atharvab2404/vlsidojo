@@ -139,7 +139,7 @@ export default function Page() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">
-            Parametrized Round-Robin Arbiter: Conceptual Design &amp; Verification Dojo
+            Universal Pattern Detector: Conceptual Design &amp; Verification Dojo
           </h1>
           <Link
             href="/#projects"
@@ -160,20 +160,20 @@ export default function Page() {
 
         {/* Module 2 */}
         {module === 2 && (
-          <Module2
+            <Module2
             readModules={readModules}
             handleCheckboxChange={handleCheckboxChange}
             setModule={setModule}
-          />
+            />
         )}
 
         {/* Module 3 */}
         {module === 3 && (
-          <Module3
+            <Module3
             readModules={readModules}
             handleCheckboxChange={handleCheckboxChange}
             setModule={setModule}
-          />
+            />
         )}
 
         {/* Module 4 */}
