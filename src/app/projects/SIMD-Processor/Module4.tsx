@@ -11,112 +11,48 @@ export default function Module4({ readModules, handleCheckboxChange, setModule }
     <div>
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
-        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Stage 3: Execute (EX)
-        </h2>
-        <p className="leading-7 inter-body">
-        The Execute stage is the brain of your processor. It performs all the heavy lifting—the 
-        calculations and logical operations. This is where the magic of your Simple SIMD Processor 
-        truly happens, using the decoded signals from the previous stage.Based on the opcode and other control signals decoded in the previous ID (Instruction Decode) stage, the EXECUTE STAGE 
-        uses the appropriate functional unit (like an ALU) to calculate the result. This stage is responsible for:
-        </p>
-        <p className="leading-7 inter-body">
-          <strong>Design Logic:</strong> 
-          <ol className="list-decimal pl-6 space-y-2">
-            <li><strong>State-Dependent Execution:</strong> The entire logic for this stage is contained within a single if block that checks if the current_state is STATE_EX. This 
-              ensures that all the operations described here only happen during the correct clock cycle of the pipeline..</li>
-            <li><strong>Instruction-Specific Operations:</strong> Inside the STATE_EX block, a series of if-else if statements are used to check the command signals 
-              (CMD_...) that were set in the ID stage.
-              <ol  className="list-disc pl-6 space-y-2" >
-                <li><strong>Arithmetic and Logic:</strong> For operations like addition, subtraction, multiplication, AND, OR, and NOT, the outputs of the combinatorial logic (Add_output_Cout, Mul_output_Cout, etc.) are assigned to their respective result registers (result_reg_add, result_reg_mul, etc.). These result 
-                  registers hold the computed value, which will be written back to the register file in the next stage.</li>
-                <li><strong>Shift Operations:</strong> Similarly, for shift left (CMD_logic_shift_left) and shift right (CMD_logic_shift_right), 
-                  the output of the SIMDshifter module (shiftoutput) is assigned to the appropriate result register.</li>
-                <li><strong>Memory Access:</strong> For load and store instructions, the logic sets up the control signals for the memory stage.
-                  <ol className="list-decimal pl-6 space-y-2">
-                    <li>For load, rdata_en is set to 1, and current_data_address is set to the immediate value (im_reg).</li>
-                    <li>For store, both rdata_en and wdata_en are set to 1, current_data_address is set, and the data to be written (data_out_reg) is 
-                      selected from the register files (H, Oset, Qset) based on the data type flags.</li>
-                  </ol>
-                <li><strong>Control Flow:</strong> For loopjump and setloop, the logic modifies the Program Counter (PC) or Loop Counter (LC).
-                  <ol className="list-decimal pl-6 space-y-2">
-                    <li>CMD_setloop: The LC is updated with the im_reg value.</li>
-                    <li>CMD_loopjump: A conditional check on LC determines if next_PC should be updated to im_reg (for the jump) or simply incremented for sequential execution.</li>
-                  </ol>
-                </li>
-                </li>
-              </ol>
-            <li><strong>PC Update Logic:</strong> The most critical part of this stage is the update of the next PC value (next_PC). This value determines the address of the next instruction to be fetched.
-                  <ol className="list-decimal pl-6 space-y-2">
-                    <li>For CMD_loopjump, the next_PC is conditionally set to the jump target (im_reg) or incremented.</li>
-                    <li>For all other instructions, next_PC is simply incremented (next_PC {"<="} next_PC + 1;) 
-                    to fetch the next instruction in sequence. This is handled by a single else block after the if (CMD_loopjump) check, ensuring that every instruction updates the next_PC correctly.</li>
-                  </ol>                
-                
-                </li> 
-            </li>
-
-          </ol>
-        </p>
-
-        <hr className="my-10 border-slate-200" />
-
-        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-           Modified Rotating Scheme (TYPE==1)
-        </h2>
-        <p className="leading-7 inter-body">
-          <strong>Principle:</strong> This scheme is more adaptive. The "priority pointer" doesn't just blindly rotate; 
-          it updates its position based on who actually won the arbitration. This often leads to slightly more efficient cycling.
-        </p>
-        <p className="leading-7 inter-body">
-          If enable is high and a grant (grant_out) was issued in the current cycle, 
-          the priority_ptr for the next cycle will be set to the requester immediately after the one that just won. 
-          This makes the next arbitration start from a more relevant point.
-        </p>
-          
-        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          1. Reusing the Grant Logic (It's Already Done!)
+      <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          The SIMD Multiplier
         </h3>
         <p className="leading-7 inter-body">
-            This is the best part of modular design. 
-            The combinational logic that calculates the current winner (gnt) is based on the current pointer (ptr). 
-            This logic doesn't care how the pointer gets updated.
-        </p>
-        <p className="leading-7 inter-body">
-            Therefore, the <strong>Rotate -&gt; Prioritize -&gt; Rotate Back</strong> logic you wrote in Mission 1 is exactly the same. 
-            We don't need to change it at all!
-        </p>
-        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          2. Finding the Winner's Index
-        </h3>
-        <p className="leading-7 inter-body">
-            To update our pointer, we first need to know which requester won. 
-            Our gnt signal is "one-hot" (e.g., 8'b0100_0000), but we need the winner's binary index (in this case, 3'b101 for position 5). 
-            This process is called encoding.
-        </p>
-        <p className="leading-7 inter-body">
-            We'll create a new combinational signal, <i>ptr_arb</i>, to hold this index.
-        </p>
-        <ol className="list-decimal pl-6 space-y-2">
-            <li> <strong>The Combinational always Block</strong> 
-            <p className="leading-7 inter-body">
-                We can use an always @(*) block to describe this combinational logic. The * tells the simulator to re-evaluate the block whenever any of the inputs change.
-            </p>
-            </li>
-            <li> <strong>The Search Loop</strong> 
-            <p className="leading-7 inter-body">
-                Inside the block, we'll loop through the gnt vector. If we find a '1' at a certain position i, we know i is the winner's index, and we assign it to ptr_arb.
-                <ul className="list-disc pl-6 space-y-2">
-                    <li><b>Important:</b> We must give ptr_arb a default value before the loop. If no one is requesting, gnt will be all zeros. Without a default, we would accidentally create a latch. A safe default is the current ptr.</li>
-                    <li><b>Note:</b> The synthesis tool is smart enough to convert this loop into a fast, parallel priority encoder circuit.</li>
-                </ul>
-            </p>
-            </li>
-        </ol>
-        <p className="leading-7 inter-body">
-            Now Let's try writing the pseudo-code for these steps!!
+          This module, named SIMDmultiply, is the dedicated functional unit for all multiplication operations. Unlike a simple single-line multiplication, this design is highly optimized for hardware and is an excellent example of a custom digital circuit designed for parallel data processing.
         </p>
 
+        <p className="leading-7 inter-body"><strong>Segmented Shift-and-Add Multiplication</strong></p>
+
+        <p className="leading-7 inter-body">Instead of using a simple * operator, this module implements a classic shift-and-add algorithm in a parallel, segmented fashion. The core idea is that multiplication is just a series of additions and bit shifts. For a binary number A * B, you can multiply A by each bit of B and then add the results, shifting them for their correct position
+            <ol className="list-disc pl-6 space-y-2">
+              <li><strong>16-bit Mode (H):</strong> When the H flag is active, the circuit performs a full 16-bit by 16-bit multiplication. The sel signals (sel0 to sel3) are all set to 16'hFFFF, effectively selecting the full mulinputa for each partial product calculation.</li>
+              <li><strong>8-bit Mode (O):</strong> With the O flag, the module operates on two independent 8-bit sections. The sel signals act as masks, isolating the lower 8 bits (16'h00FF) for the first 8-bit multiplication and the upper 8 bits (16'hFF00) for the second. This allows two 8-bit multiplications to happen at the same time.</li>
+              <li><strong>4-bit Mode (Q):</strong>In this mode, the module performs four parallel 4-bit multiplications. The sel signals are set to masks like 16'h000F and 16'h00F0 to isolate each 4-bit segment, allowing for maximum parallelism.</li>
+            
+            </ol>
+        
+
+        </p>
+        <p className="leading-7 inter-body">The final output is constructed by selecting and concatenating the correct intermediate results based on the H, O, and Q flags.</p>
+
+
+       
+        <p className="leading-7 inter-body">
+          <strong>SIMDmultiply Pseudocode</strong> 
+            <p> Your mission is to write the pseudocode for the SIMDmultiply module. This is a purely combinational block. The pseudocode should reflect how the control flags dynamically change the data paths for the different operation widths.</p>
+
+        </p>
+
+
+
+
+
+
+
+
+
+
+
+        <p className="leading-7 inter-body">
+            Now Let's try writing the pseudo-code for this!!
+        </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
           <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
@@ -151,41 +87,116 @@ export default function Module4({ readModules, handleCheckboxChange, setModule }
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`req_doubled = {i_req, i_req};
-rotated_req = req_doubled >> ptr;
-priority_out = rotated_req & ~(rotated_req - 1);
-prio_doubled = {priority_out, priority_out};`}
+{`// SIMDmultiply Pseudocode
+
+Inputs:
+  mulinputa (16-bit vector)
+  mulinputb (16-bit vector)
+  H, O, Q (control flags for data type)
+
+Output:
+  muloutput (16-bit result)
+
+Begin Combinational Logic:
+  // Step 1: Define the segmentation masks
+  if H is true:
+    sel_mask_0 = 16'hFFFF
+    sel_mask_1 = 16'hFFFF
+    sel_mask_2 = 16'hFFFF
+    sel_mask_3 = 16'hFFFF
+  else if O is true:
+    sel_mask_0 = 16'h00FF
+    sel_mask_1 = 16'h00FF
+    sel_mask_2 = 16'hFF00
+    sel_mask_3 = 16'hFF00
+  else if Q is true:
+    sel_mask_0 = 16'h000F
+    sel_mask_1 = 16'h00F0
+    sel_mask_2 = 16'h0F00
+    sel_mask_3 = 16'hF000
+
+  // Step 2: Generate all partial products for a 16-bit input
+  // (This part is independent of the H, O, Q flags)
+  // For each bit 'i' in mulinputb (from 0 to 15):
+  //   Let 'a_i' = (mulinputb[i] ? mulinputa : 16'h0000)
+
+  // Step 3: Combine partial products in a shift-and-add tree
+  // First level of additions for 4-bit segments
+  tmp0 = (a0 shifted left by 0) + (a1 shifted left by 1) + (a2 shifted left by 2) + (a3 shifted left by 3)
+  // ... and so on for tmp1, tmp2, tmp3
+
+  // Second level of additions
+  tmp00 = tmp0 + (tmp1 shifted left by 4)
+  tmp11 = tmp2 + (tmp3 shifted left by 4)
+
+  // Final addition for a full 16-bit product
+  tmp000 = tmp00 + (tmp11 shifted left by 8)
+
+  // Step 4: Select the final output segments based on the control flags
+  assign muloutput[3:0] to bits [3:0] of tmp0
+  
+  if H is true:
+    assign muloutput[15:4] to bits [15:4] of tmp000
+  else if O is true:
+    assign muloutput[7:4] to bits [7:4] of tmp00
+    assign muloutput[15:8] to bits [15:8] of tmp11
+  else if Q is true:
+    assign muloutput[7:4] to bits [7:4] of tmp1
+    assign muloutput[11:8] to bits [11:8] of tmp2
+    assign muloutput[15:12] to bits [15:12] of tmp3`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
 
-        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          3. The New Pointer Update Rule
+
+
+
+            <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          The SIMD Shifter
         </h3>
         <p className="leading-7 inter-body">
-            Now we can implement our new, more efficient pointer logic. 
-            This will go into the sequential always @(posedge i_clk...) block, just like in the last mission.
-            <ul className="list-disc pl-6 space-y-2">
-                <li><b>The Old Rule:</b> ptr &lt;= ptr + 1</li>
-                <li><b>The New Rule:</b> ptr &lt;= ptr_arb + 1</li>
-            </ul>
+          The SIMDshifter module performs logical bit shifts to the left or right, a fundamental operation for many computational tasks. Its key feature is the ability to shift multiple independent data segments in parallel, thanks to the SIMD design.</p>
+        <p>This design is a highly optimized, combinational circuit. It directly manipulates the bit positions of the input vector based on the shift direction and data type. It doesn't rely on a clocked process or a loop, making it incredibly fast.</p>
+
+        <p className="leading-7 inter-body"><strong>Parallel Bit Shifting</strong></p>
+
+        <p className="leading-7 inter-body">Your SIMDshifter module uses a clever technique to implement all the required shifts in a single block of code. It pre-calculates the results for a generic left and right shift and then uses control signals to select the correct output bits.
+            <ol className="list-disc pl-6 space-y-2">
+              <li><strong>Pre-calculation:</strong>The shiftoutput_tmp wire is the core. It computes a one-bit logical left shift {"({left_shift, 1'b0}) or a one-bit logical right shift ({1'b0, right_shift})"}s of the entire 16-bit input. The left signal chooses between these two pre-shifted versions.</li>
+              <li><strong>Segmented Output:</strong>The final shiftoutput is constructed by taking slices from the shiftoutput_tmp and conditionally including bits that cross the segment boundaries. This is where the H, O, and Q flags come into play.
+                <ol className="list-disc pl-6 space-y-2">
+                  
+                    <li><strong>16-bit Mode (H):</strong> The bits shift seamlessly across the entire 16-bit word.</li>
+                    <li><strong>8-bit Mode (O):</strong> The bits shift within the two 8-bit segments. The bit that would shift out of the lower 8 bits is discarded, and the upper 8-bit segment shifts independently.</li>
+                    <li><strong>4-bit Mode (Q):</strong>Each 4-bit segment shifts entirely on its own. The bit that shifts out of one segment is discarded and doesn't affect the next.</li>
+                </ol>  
+              
+              </li>
+            </ol>
+        
+
         </p>
+        <p className="leading-7 inter-body">This intricate bit-manipulation logic allows the single shifter to handle all data types and shift directions, making it a powerful and reusable component.</p>
+       
         <p className="leading-7 inter-body">
-            This simple change is the entire secret to the Modified scheme
+          <strong>SIMDshifter Pseudocode</strong> 
+            <p>Your mission is to write the pseudocode for the SIMDshifter module. Focus on the conditional logic that controls how the bits from the temporary shifted vector are mapped to the final output based on the H, O, Q, and left signals. </p>
         </p>
 
-        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          4. Assemble the TYPE==1 Block
-        </h3>
-        <p className="leading-7 inter-body">
-            You're ready to add your new design to the main module. We'll add it as an else if block inside the generate statement. 
-            This allows us to switch between the Conventional (TYPE==0) and Modified (TYPE==1) arbiters just by changing a single parameter.
-        </p>
+
+
+
+
+
+
+
+
+
 
         <p className="leading-7 inter-body">
-            Now Let's try writing the pseudo-code for this entire Modified Scheme!!
+            Now Let's try writing the pseudo-code for this!!
         </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
@@ -221,17 +232,65 @@ prio_doubled = {priority_out, priority_out};`}
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`req_doubled = {i_req, i_req};
-rotated_req = req_doubled >> ptr;
-priority_out = rotated_req & ~(rotated_req - 1);
-prio_doubled = {priority_out, priority_out};`}
+{`// SIMDshifter Pseudocode
+
+Inputs:
+  shiftinput (16-bit vector)
+  H (control flag for 16-bit mode)
+  O (control flag for 8-bit mode)
+  Q (control flag for 4-bit mode)
+  left (control flag for shift direction)
+
+Output:
+  shiftoutput (16-bit result)
+
+Begin Combinational Logic:
+  // Step 1: Pre-calculate a one-bit left shift and a one-bit right shift
+  if left is true:
+    // This is the logical left-shift temporary result
+    tmp_result = concatenate(shiftinput[14:0], 1'b0)
+  else:
+    // This is the logical right-shift temporary result
+    tmp_result = concatenate(1'b0, shiftinput[15:1])
+
+  // Step 2: Assemble the final output based on control signals
+  // Segment 0 (bits 3:0):
+  // The highest bit of the segment (bit 3) is taken from tmp_result[3] if left, H, or O is true.
+  shiftoutput[3:0] = concatenate((left or H or O) and tmp_result[3], tmp_result[2:0])
+
+  // Segment 1 (bits 7:4):
+  // The highest bit (bit 7) is from a left-shift if left or H is true.
+  // The lowest bit (bit 4) is from a right-shift if not left, H, or O is true.
+  shiftoutput[7:4] = concatenate(
+    (left or H) and tmp_result[7], 
+    tmp_result[6:5], 
+    (not left or H or O) and tmp_result[4]
+  )
+
+  // Segment 2 (bits 11:8):
+  // The highest bit (bit 11) is from a left-shift if left, H, or O is true.
+  // The lowest bit (bit 8) is from a right-shift if not left or H is true.
+  shiftoutput[11:8] = concatenate(
+    (left or H or O) and tmp_result[11], 
+    tmp_result[10:9], 
+    (not left or H) and tmp_result[8]
+  )
+  
+  // Segment 3 (bits 15:12):
+  // The highest bit (bit 15) is from a left-shift if left or H is true.
+  // The lowest bit (bit 12) is from a right-shift if not left, H, or O is true.
+  shiftoutput[15:12] = concatenate(
+    (left or H) and tmp_result[15], 
+    tmp_result[14:13], 
+    (not left or H or O) and tmp_result[12]
+  )
+End Combinational Logic`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
       </section>
-
       {/* Navigation Controls */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
         {/* Left side - Previous button (always active, blue) */}
@@ -269,7 +328,7 @@ prio_doubled = {priority_out, priority_out};`}
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            Finish Dojo →
+             Module 5 →
           </button>
         </div>
       </div>

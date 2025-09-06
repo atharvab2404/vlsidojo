@@ -12,7 +12,7 @@ export default function Module3({ readModules, handleCheckboxChange, setModule }
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Module 3: Instruction Decode and Operand Fetch
+          Stage 3: Instruction Decode and Operand Fetch
         </h2>
         <p className="leading-7 inter-body">
         This module is the transition point from an instruction to action. In the ID stage, we interpret the opcode and extract the operands. Your code's always <em>@(posedge clk)</em> block is the key part of this module.
