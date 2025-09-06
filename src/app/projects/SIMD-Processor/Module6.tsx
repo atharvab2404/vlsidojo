@@ -15,10 +15,13 @@ export default function Module6({ readModules, handleCheckboxChange, setModule }
           Stage 5: Verification & Validation
         </h2>
         <p className="leading-7 inter-body">
-        The execution unit is where the computational work happens. This is the EX stage in our pipeline. Your code instantiates sub-modules like SIMDadd, SIMDshifter, and SIMDmultiply, which represent the heart of the processor's functionality.
+        Verifying a processor isn't just about making sure it works, it's about proving it works correctly under all conditions. For our Simple SIMD Processor, this means ensuring it accurately executes every instruction, correctly handles its SIMD operations, and smoothly moves data through its five-stage pipeline. The best way to do this is with a testbench.
         </p>
         <p className="leading-7 inter-body">
-          <strong>Design Task: Execution Logic Pseudocode</strong> 
+        A <strong>testbench</strong> is a self-contained module that acts as a "test harness" for our design. It's not part of the final hardware; its sole purpose is to provide controlled inputs and observe the outputs. For robust verification, our testbench will do more than just a simple test—it will simulate a real environment, providing random inputs to uncover unexpected bugs that a human might miss.
+        </p>
+        <p className="leading-7 inter-body">
+          <strong>Verification Steps:</strong> 
             <p>The EX stage in your code performs the operations based on the command flags set during ID.</p>
         </p>
           

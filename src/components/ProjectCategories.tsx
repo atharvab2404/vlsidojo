@@ -27,7 +27,7 @@ export default function ProjectCategories() {
         {
           label: "Hands-on Hardware",
           name: "Universal Pattern Detector",
-          image: "/projects/alu.png",
+          image: "/projects/pattern.png",
           description:
             "Implement a real-time digital clock on an FPGA, perfect for practicing counters, clock dividers, and HDL logic.",
           link: "/projects/pattern-detector",
