@@ -35,7 +35,7 @@ export default function Module2({ readModules, handleCheckboxChange, setModule }
         <hr className="my-10 border-slate-200" />
 
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Module 1: The Control Unit (FSM)
+          Stage 1: The Control Unit (FSM)
         </h2>
         <p className="leading-7 inter-body">
           The control unit is the brain of our processor. It's a finite state machine (FSM) that 
@@ -125,7 +125,7 @@ export default function Module2({ readModules, handleCheckboxChange, setModule }
         </div>
         {/* === End of Pseudo-code Section === */}
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Module 2: The Data Path and Registers
+          Stage 2: The Data Path and Registers
         </h2>
         <p className="leading-7 inter-body">
           This module is where the actual data resides and is manipulated. Your code defines several register banks and wires to handle data.

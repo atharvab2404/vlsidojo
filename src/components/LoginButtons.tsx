@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { MoreVertical } from "lucide-react"; 
 
 export default function LoginButtons() {
   const { data: session, status } = useSession();
@@ -34,17 +35,24 @@ export default function LoginButtons() {
           Sign Out
         </button>
 
-        {/* Clickable User Photo */}
-        <Link href="/profile">
-          <img
-            src={session.user?.image || "/default-profile.png"}
-            alt={session.user?.name || "Profile"}
-            className="w-8 h-8 rounded-full cursor-pointer hover:scale-105 transition"
-          />
-        </Link>
 
-        {/* User Name */}
-        <span className="text-sm font-medium">{session.user?.name}</span>
+
+    <div className="flex items-center space-x-2">
+      {/* User Name on the left */}
+      <span className="text-sm font-medium">{session.user?.name}</span>
+
+      {/* User Photo with dots */}
+      <Link href="/profile" className="flex items-center space-x-1 cursor-pointer group">
+        <img
+          src="/face.png"
+          alt="My Profile"
+          className="w-10 h-10 rounded-full transition group-hover:scale-105"
+        />
+        <MoreVertical className="w-5 h-5 text-gray-400 group-hover:text-gray-200" />
+      </Link>
+    </div>
+
+        
       </div>
     );
   }

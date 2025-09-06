@@ -6,6 +6,8 @@ import Module1 from "./Module1";
 import Module2 from "./Module2";
 import Module3 from "./Module3";
 import Module4 from "./Module4";
+import Module5 from "./Module5";
+import Module6 from "./Module6"
 import FinalModule from "./FinalModule";
 
 export default function Page() {
@@ -122,6 +124,30 @@ export default function Page() {
             <span className="text-black">Module 4</span>
             <span>{readModules[3] ? "✅" : "⬜"}</span>
           </li>
+          <li
+            onClick={() => {
+              setModule(5);
+              setSidebarOpen(false);
+            }}
+            className={`cursor-pointer flex justify-between items-center p-2 rounded-md ${
+              module === 5 ? "bg-emerald-100 font-medium" : "hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-black">Module 5</span>
+            <span>{readModules[4] ? "✅" : "⬜"}</span>
+          </li>
+          <li
+            onClick={() => {
+              setModule(6);
+              setSidebarOpen(false);
+            }}
+            className={`cursor-pointer flex justify-between items-center p-2 rounded-md ${
+              module === 6 ? "bg-emerald-100 font-medium" : "hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-black">Module 6</span>
+            <span>{readModules[5] ? "✅" : "⬜"}</span>
+          </li>
         </ul>
       </div>
 
@@ -184,9 +210,24 @@ export default function Page() {
             setModule={setModule}
           />
         )}
-
-        {/* Final Module (not in sidebar) */}
+        {/* Module 5 */}
         {module === 5 && (
+          <Module5
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
+        )}
+        {/* Module 6 */}
+        {module === 6 && (
+          <Module6
+            readModules={readModules}
+            handleCheckboxChange={handleCheckboxChange}
+            setModule={setModule}
+          />
+        )}
+        {/* Final Module (not in sidebar) */}
+        {module === 7 && (
           <FinalModule
             readModules={readModules}
             handleCheckboxChange={handleCheckboxChange}
