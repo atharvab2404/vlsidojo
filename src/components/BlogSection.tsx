@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ["latin"], weight: ["400", "500"] }); // regular/
 const BlogSection = () => {
   const blogs = [
     { id: 1, title: "The Chip that said 'Hello World'", description: "Story of the first Integrated Circuit", image: "/blogs/kilby.png", slug: "the-vlsi-roadmap" },
-    { id: 2, title: "FPGA vs ASIC", description: "Understand the key differences.", image: "/blogs/fpga-vs-asic.png", slug: "fpga-vs-asic" },
+    { id: 2, title: "The Calculator War That Gave Us the Modern CPU ", description: "The Story of the Intel 4004", image: "/blogs/intel4.png", slug: "chipwar" },
     { id: 3, title: "Timing Analysis Demystified", description: "Break down timing analysis.", image: "/blogs/fpga-vs-asic.png", slug: "timing-analysis-demystified" },
     { id: 4, title: "Power Optimization Techniques", description: "Reduce power consumption.", image: "/blogs/fpga-vs-asic.png", slug: "power-optimization-techniques" },
     { id: 5, title: "RTL Design Best Practices", description: "Tips to write efficient RTL code.", image: "/blogs/fpga-vs-asic.png", slug: "rtl-design-best-practices" },

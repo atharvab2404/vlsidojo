@@ -5,14 +5,14 @@ export default function KnowCreators() {
   const creators = [
     {
       name: "Atharva Bhawsar",
-      role: "CPU Cores DV, Intel ",
+      role: "CPU Cores Design Engineer, Intel ",
       bio: "John brings over a decade of experience in VLSI design and education. He is passionate about bridging the gap between academia and industry through hands-on learning.",
       img: "/creators/atharva.jpeg",
       linkedin: "https://www.linkedin.com/in/atharva-bhawsar-30a17b228/",
     },
     {
       name: "Anushka Srivastava",
-      role: "Silicon Design Engineer (GFX), AMD ",
+      role: "GPU Design Verification Engineer, AMD ",
       bio: "Jane specializes in building scalable platforms for technical education. She leads the development of interactive learning tools for VLSI Dojo.",
       img: "/creators/anushka.jpeg",
       linkedin: "https://www.linkedin.com/in/anushkasriv/",

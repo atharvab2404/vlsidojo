@@ -1,120 +1,3 @@
-// "use client";
-
-// import { signOut, useSession } from "next-auth/react";
-// import { useRouter } from "next/navigation";
-// import { useEffect, useState } from "react";
-// import Navbar from "@/components/Navbar"; // ✅ Import your Navbar component
-
-// export default function ProfilePage() {
-//   const { data: session, status } = useSession();
-//   const router = useRouter();
-//   const [userData, setUserData] = useState<any>(null);
-
-//   useEffect(() => {
-//     if (status === "loading") return;
-
-//     if (!session?.user?.email) {
-//       // if not logged in, redirect to homepage
-//       router.push("/");
-//     } else {
-//       // fetch user data from API (stored in db)
-//       const fetchUserData = async () => {
-//         const res = await fetch(`/api/user/${session.user?.email}`);
-//         if (res.ok) {
-//           const data = await res.json();
-//           setUserData(data);
-//         }
-//       };
-
-//       fetchUserData();
-//     }
-//   }, [session, status, router]);
-
-//   if (!session) {
-//     return (
-//       <>
-//         <Navbar />
-//         <div className="flex justify-center items-center h-screen">
-//           <p>Please log in to view your profile.</p>
-//         </div>
-//       </>
-//     );
-//   }
-
-//   return (
-//     <>
-//       {/* ✅ Navbar always visible at the top */}
-//       <Navbar />
-
-//       <div className="flex flex-col items-center justify-center min-h-screen p-6">
-//         <h1 className="text-2xl font-bold mb-6">User Profile</h1>
-
-//         {userData ? (
-//           <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg">
-//             {/* Profile Image */}
-//             <img
-//               src={userData.image || "/default-avatar.png"}
-//               alt="User Avatar"
-//               className="w-24 h-24 rounded-full mx-auto mb-4"
-//             />
-
-//             {/* User Info */}
-//             <div className="space-y-2 text-gray-800">
-//               <p>
-//                 <strong>Name:</strong> {userData.name || "—"}
-//               </p>
-//               <p>
-//                 <strong>Email:</strong> {userData.email || "—"}
-//               </p>
-//               <p>
-//                 <strong>Email Verified:</strong>{" "}
-//                 {userData.emailVerified
-//                   ? new Date(userData.emailVerified).toLocaleDateString()
-//                   : "Not verified"}
-//               </p>
-//               <p>
-//                 <strong>Phone:</strong> {userData.phone || "—"}
-//               </p>
-//               <p>
-//                 <strong>College:</strong> {userData.college || "—"}
-//               </p>
-//               <p>
-//                 <strong>Education:</strong> {userData.education || "—"}
-//               </p>
-//               <p>
-//                 <strong>Branch:</strong> {userData.branch || "—"}
-//               </p>
-//               <p>
-//                 <strong>Year:</strong> {userData.year || "—"}
-//               </p>
-//               <p>
-//                 <strong>Company:</strong> {userData.company || "—"}
-//               </p>
-//             </div>
-
-//             {/* Buttons */}
-//             <div className="mt-6 flex flex-col space-y-3">
-//               <button
-//                 onClick={() => router.push("/")}
-//                 className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-//               >
-//                 Go to Home
-//               </button>
-//               <button
-//                 onClick={() => signOut({ callbackUrl: "/" })}
-//                 className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
-//               >
-//                 Log Out
-//               </button>
-//             </div>
-//           </div>
-//         ) : (
-//           <p>Loading user info...</p>
-//         )}
-//       </div>
-//     </>
-//   );
-// }
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
@@ -128,7 +11,15 @@ export default function ProfilePage() {
   const [userData, setUserData] = useState<any>(null);
   const [courses, setCourses] = useState<any[]>([]);
 
+  // ✅ New states for toggling
+  const [showFullInfo, setShowFullInfo] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState<any>({});
+
   useEffect(() => {
+    // ✅ Scroll to top when page loads
+    window.scrollTo(0, 0);
+
     if (status === "loading") return;
 
     if (!session?.user?.email) {
@@ -139,13 +30,35 @@ export default function ProfilePage() {
         if (res.ok) {
           const data = await res.json();
           setUserData(data);
-
+          setFormData(data); // initialize edit form with data
           if (data.courses) setCourses(data.courses);
         }
       };
       fetchUserData();
     }
   }, [session, status, router]);
+
+  // ✅ Handle form field change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // ✅ Handle save info
+  const handleSave = async () => {
+    const res = await fetch(`/api/user`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (res.ok) {
+      const updated = await res.json();
+      setUserData(updated);
+      setEditMode(false);
+    } else {
+      alert("Failed to save info");
+    }
+  };
 
   if (!session) {
     return (
@@ -173,7 +86,8 @@ export default function ProfilePage() {
           }}
         />
 
-        <div className="relative p-6">
+        {/* ✅ Added pt-24 to push content below navbar */}
+        <div className="relative p-6 pt-24">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* ✅ Profile Section */}
             <div className="backdrop-blur-md bg-white/90 rounded-2xl shadow-xl p-6 col-span-1 border border-gray-200">
@@ -183,14 +97,123 @@ export default function ProfilePage() {
 
               {userData ? (
                 <div className="space-y-3 text-black">
-                  <p><strong>Name:</strong> {userData.name || "—"}</p>
-                  <p><strong>Email:</strong> {userData.email || "—"}</p>
-                  <p><strong>Phone:</strong> {userData.phone || "—"}</p>
-                  <p><strong>College:</strong> {userData.college || "—"}</p>
-                  <p><strong>Education:</strong> {userData.education || "—"}</p>
-                  <p><strong>Branch:</strong> {userData.branch || "—"}</p>
-                  <p><strong>Year:</strong> {userData.year || "—"}</p>
-                  <p><strong>Company:</strong> {userData.company || "—"}</p>
+                  {/* Always show Name & Email */}
+                  <p>
+                    <strong>Name:</strong> {userData.name || "—"}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {userData.email || "—"}
+                  </p>
+
+                  {/* Toggle Full Info */}
+                  {showFullInfo && (
+                    <>
+                      {editMode ? (
+                        <>
+                          <input
+                            type="text"
+                            name="phone"
+                            value={formData.phone || ""}
+                            onChange={handleChange}
+                            placeholder="Phone"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                          <input
+                            type="text"
+                            name="college"
+                            value={formData.college || ""}
+                            onChange={handleChange}
+                            placeholder="College"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                          <input
+                            type="text"
+                            name="education"
+                            value={formData.education || ""}
+                            onChange={handleChange}
+                            placeholder="Education"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                          <input
+                            type="text"
+                            name="branch"
+                            value={formData.branch || ""}
+                            onChange={handleChange}
+                            placeholder="Branch"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                          <input
+                            type="text"
+                            name="year"
+                            value={formData.year || ""}
+                            onChange={handleChange}
+                            placeholder="Year"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                          <input
+                            type="text"
+                            name="company"
+                            value={formData.company || ""}
+                            onChange={handleChange}
+                            placeholder="Company"
+                            className="w-full border rounded px-2 py-1"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <p>
+                            <strong>Phone:</strong> {userData.phone || "—"}
+                          </p>
+                          <p>
+                            <strong>College:</strong> {userData.college || "—"}
+                          </p>
+                          <p>
+                            <strong>Education:</strong>{" "}
+                            {userData.education || "—"}
+                          </p>
+                          <p>
+                            <strong>Branch:</strong> {userData.branch || "—"}
+                          </p>
+                          <p>
+                            <strong>Year:</strong> {userData.year || "—"}
+                          </p>
+                          <p>
+                            <strong>Company:</strong> {userData.company || "—"}
+                          </p>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {/* ✅ Buttons for toggling */}
+                  <div className="mt-4 flex flex-col space-y-2">
+                    <button
+                      onClick={() => setShowFullInfo(!showFullInfo)}
+                      className="w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white py-2 px-4 rounded-lg shadow hover:from-gray-600 hover:to-gray-700 transition"
+                    >
+                      {showFullInfo ? "Hide Info" : "Full Info"}
+                    </button>
+
+                    {showFullInfo && (
+                      <>
+                        {editMode ? (
+                          <button
+                            onClick={handleSave}
+                            className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-2 px-4 rounded-lg shadow hover:from-green-600 hover:to-green-700 transition"
+                          >
+                            Save Info
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setEditMode(true)}
+                            className="w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white py-2 px-4 rounded-lg shadow hover:from-gray-600 hover:to-gray-700 transition"
+                          >
+                            Edit Info
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
 
                   {/* ✅ Badges */}
                   <div className="mt-6">
@@ -213,7 +236,7 @@ export default function ProfilePage() {
                     )}
                   </div>
 
-                  {/* Buttons */}
+                  {/* Navigation Buttons */}
                   <div className="mt-6 flex flex-col space-y-3">
                     <button
                       onClick={() => router.push("/")}

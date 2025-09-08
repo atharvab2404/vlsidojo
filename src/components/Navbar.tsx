@@ -1,20 +1,96 @@
-"use client"; // ← make entire Navbar client-side
+// "use client";
+
+// import Image from "next/image";
+// import LoginButtons from "./LoginButtons";
+// import { useCartStore } from "@/store/cartStore";
+// import Link from "next/link";
+
+// interface NavbarProps {
+//   showBorder?: boolean;
+// }
+
+
+// export default function Navbar({ showBorder = true }: NavbarProps) {
+//   const { items } = useCartStore();
+//   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
+//   return (
+//         <nav
+//       className={`fixed top-0 left-0 w-full z-20 bg-[#1a1a2e]/90 backdrop-blur-sm 
+//         flex items-center justify-between px-8 py-4 
+//         ${showBorder ? "border-b border-[#00a8ff]/20" : ""} text-gray-200`}
+//     >
+//       {/* Logo → scrolls to top */}
+//       <div
+//         className="flex items-center space-x-3 cursor-pointer"
+//         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+//       >
+//         <Image src="/logo.png" alt="VLSI Dojo" width={64} height={64} />
+//         <span
+//           className="text-2xl font-bold text-[#00a8ff]"
+//           style={{ fontFamily: "MyCustomFont" }}
+//         >
+//           VLSI Dojo
+//         </span>
+//       </div>
+
+//       {/* Links */}
+//       <ul className="hidden md:flex space-x-8 font-medium">
+//         <li>
+//           <a href="/#projects" className="hover:text-[#00a8ff] cursor-pointer">
+//             Projects
+//           </a>
+//         </li>
+//         <li>
+//           <a href="/#why-dojo" className="hover:text-[#00a8ff] cursor-pointer">
+//             Why Dojo?
+//           </a>
+//         </li>
+//         <li>
+//           <a href="/#blog" className="hover:text-[#00a8ff] cursor-pointer">
+//             Blog
+//           </a>
+//         </li>
+//       </ul>
+
+//       {/* Auth + Cart */}
+//       <div className="flex space-x-6 text-sm items-center">
+//         <Link href="/cart" className="relative hover:text-[#00a8ff]">
+//           View Cart
+//           {itemCount > 0 && (
+//             <span className="ml-1 bg-[#00a8ff] text-white rounded-full px-2 py-0.5 text-xs">
+//               {itemCount}
+//             </span>
+//           )}
+//         </Link>
+//         <LoginButtons />
+//       </div>
+//     </nav>
+//   );
+// }
+"use client";
 
 import Image from "next/image";
 import LoginButtons from "./LoginButtons";
 import { useCartStore } from "@/store/cartStore";
 import Link from "next/link";
 
-export default function Navbar() {
+interface NavbarProps {
+  showBorder?: boolean;
+}
+
+export default function Navbar({ showBorder = true }: NavbarProps) {
   const { items } = useCartStore();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-20 bg-[#1a1a2e]/90 backdrop-blur-sm flex items-center justify-between px-8 py-4 border-b border-[#00a8ff]/20">
-      {/* Logo → scrolls to top */}
-      <div
-        className="flex items-center space-x-3 cursor-pointer"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      >
+    <nav
+      className={`fixed top-0 left-0 w-full z-20 bg-[#1a1a2e]/90 backdrop-blur-sm 
+        flex items-center justify-between px-8 py-4 
+        ${showBorder ? "border-b border-[#00a8ff]/20" : ""} text-gray-200`}
+    >
+      {/* ✅ Logo → links to home */}
+      <Link href="/" className="flex items-center space-x-3 cursor-pointer">
         <Image src="/logo.png" alt="VLSI Dojo" width={64} height={64} />
         <span
           className="text-2xl font-bold text-[#00a8ff]"
@@ -22,7 +98,7 @@ export default function Navbar() {
         >
           VLSI Dojo
         </span>
-      </div>
+      </Link>
 
       {/* Links */}
       <ul className="hidden md:flex space-x-8 font-medium">

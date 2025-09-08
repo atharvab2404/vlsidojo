@@ -53,7 +53,7 @@ export default function CartPage() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen flex items-center justify-center px-4 pt-28">
+        {/* <div className="min-h-screen flex items-center justify-center px-4 pt-28">
           <div className="max-w-xl text-center p-8 rounded-lg bg-[#0b1220]">
             <h2 className="text-2xl font-semibold text-slate-50 mb-3">
               Please log in to view your cart
@@ -69,7 +69,33 @@ export default function CartPage() {
               Sign In
             </Link>
           </div>
-        </div>
+        </div> */}
+      <div className="min-h-screen flex items-center justify-center px-4 pt-28">
+  <div className="max-w-xl text-center p-8 rounded-lg bg-[#0b1220]">
+    
+    {/* 🖼️ Add Image */}
+    <img 
+      src="/login.png" 
+      alt="Login Illustration" 
+      className="mx-auto mb-6 w-80 h-80 object-contain"
+    />
+
+    <h2 className="text-2xl font-semibold text-slate-50 mb-3">
+      Please log in to view your cart
+    </h2>
+    <p className="text-slate-400 mb-6">
+      You must be signed in to purchase Dojos.
+    </p>
+    <Link
+      href="/api/auth/signin"
+      className="inline-block px-5 py-2 rounded-md text-slate-900 font-medium"
+      style={{ background: ACCENT }}
+    >
+      Sign In
+    </Link>
+  </div>
+</div>
+
       </>
     );
   }
