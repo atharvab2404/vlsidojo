@@ -14,18 +14,8 @@ const BlogSection = () => {
   const blogs = [
     { id: 1, title: "The Chip that said 'Hello World'", description: "Story of the first Integrated Circuit", image: "/blogs/kilby.png", slug: "the-vlsi-roadmap" },
     { id: 2, title: "The Calculator War That Gave Us the Modern CPU ", description: "The Story of the Intel 4004", image: "/blogs/intel4.png", slug: "chipwar" },
-    { id: 3, title: "Timing Analysis Demystified", description: "Break down timing analysis.", image: "/blogs/fpga-vs-asic.png", slug: "timing-analysis-demystified" },
-    { id: 4, title: "Power Optimization Techniques", description: "Reduce power consumption.", image: "/blogs/fpga-vs-asic.png", slug: "power-optimization-techniques" },
-    { id: 5, title: "RTL Design Best Practices", description: "Tips to write efficient RTL code.", image: "/blogs/fpga-vs-asic.png", slug: "rtl-design-best-practices" },
-    { id: 6, title: "Clock Tree Synthesis", description: "Deep dive into clock trees.", image: "/blogs/fpga-vs-asic.png", slug: "clock-tree-synthesis" },
-    { id: 7, title: "Verilog for Beginners", description: "Intro to Verilog programming.", image: "/blogs/fpga-vs-asic.png", slug: "verilog-for-beginners" },
-    { id: 8, title: "Physical Design Flow", description: "Complete physical design flow.", image: "/blogs/fpga-vs-asic.png", slug: "physical-design-flow" },
-    { id: 9, title: "Blog 9", description: "Description 9.", image: "/blogs/fpga-vs-asic.png", slug: "blog-9" },
-    { id: 10, title: "Blog 10", description: "Description 10.", image: "/blogs/fpga-vs-asic.png", slug: "blog-10" },
-    { id: 11, title: "Blog 11", description: "Description 11.", image: "/blogs/fpga-vs-asic.png", slug: "blog-11" },
-    { id: 12, title: "Blog 12", description: "Description 12.", image: "/blogs/fpga-vs-asic.png", slug: "blog-12" },
-    { id: 13, title: "Blog 13", description: "Description 13.", image: "/blogs/fpga-vs-asic.png", slug: "blog-13" },
-  ];
+    { id: 3, title: "From Idea to Silicon: The Journey of a MicroChip", description: "Understanding the ASIC Design Flow.", image: "/blogs/vlsi.png", slug: "asic" },
+ ];
 
   const [visibleCount, setVisibleCount] = useState(8);
 
@@ -78,7 +68,7 @@ const BlogSection = () => {
             <motion.div variants={cardVariants}>
               <Link href={`/blog/${blog.slug}`}>
                 <div className="bg-[#2e2e4d] rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow cursor-pointer">
-                  <div className="relative w-full h-48">
+                  <div className="relative w-full h-65">
                     <Image src={blog.image} alt={blog.title} fill className="object-cover" />
                   </div>
                   <div className="p-4">
