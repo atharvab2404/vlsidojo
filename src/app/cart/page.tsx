@@ -29,6 +29,9 @@ export default function CartPage() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
+
+  // ✅ Removed duplicate script injection (you already added in layout.tsx)
+
   const subtotalPaise = useMemo(
     () =>
       items.reduce((s, it) => {
@@ -44,7 +47,10 @@ export default function CartPage() {
   const allProjects = useMemo(
     () =>
       (categories ?? []).flatMap((cat: any) =>
-        (cat.projects ?? []).map((p: any) => ({ ...p, _categoryGroup: cat.title }))
+        (cat.projects ?? []).map((p: any) => ({
+          ...p,
+          _categoryGroup: cat.title,
+        }))
       ),
     []
   );
@@ -53,8 +59,13 @@ export default function CartPage() {
     return (
       <>
         <Navbar />
-        {/* <div className="min-h-screen flex items-center justify-center px-4 pt-28">
+        <div className="min-h-screen flex items-center justify-center px-4 pt-28">
           <div className="max-w-xl text-center p-8 rounded-lg bg-[#0b1220]">
+            <img
+              src="/login.png"
+              alt="Login Illustration"
+              className="mx-auto mb-6 w-80 h-80 object-contain"
+            />
             <h2 className="text-2xl font-semibold text-slate-50 mb-3">
               Please log in to view your cart
             </h2>
@@ -69,38 +80,10 @@ export default function CartPage() {
               Sign In
             </Link>
           </div>
-        </div> */}
-      <div className="min-h-screen flex items-center justify-center px-4 pt-28">
-  <div className="max-w-xl text-center p-8 rounded-lg bg-[#0b1220]">
-    
-    {/* 🖼️ Add Image */}
-    <img 
-      src="/login.png" 
-      alt="Login Illustration" 
-      className="mx-auto mb-6 w-80 h-80 object-contain"
-    />
-
-    <h2 className="text-2xl font-semibold text-slate-50 mb-3">
-      Please log in to view your cart
-    </h2>
-    <p className="text-slate-400 mb-6">
-      You must be signed in to purchase Dojos.
-    </p>
-    <Link
-      href="/api/auth/signin"
-      className="inline-block px-5 py-2 rounded-md text-slate-900 font-medium"
-      style={{ background: ACCENT }}
-    >
-      Sign In
-    </Link>
-  </div>
-</div>
-
+        </div>
       </>
     );
   }
-
-  
 
   const applyDiscount = async () => {
     if (!discountCode.trim()) {
@@ -142,16 +125,107 @@ export default function CartPage() {
     }
   };
 
-  const proceedToPayment = async () => {
-    setLoadingCheckout(true);
-    try {
-      await new Promise((r) => setTimeout(r, 700));
-      clearCart();
-      alert("✅ Dummy payment complete — Dojos unlocked (demo).");
-    } finally {
-      setLoadingCheckout(false);
+const proceedToPayment = async () => {
+  setLoadingCheckout(true);
+  try {
+    // Build the items payload so server can compute authoritative amount
+    const payload = {
+      items: items.map((it) => ({
+        id: it.id,
+        title: it.title,
+        // ensure price is numeric — front-end uses same normalization
+        price: typeof it.price === "number" ? it.price : 0,
+        quantity: it.quantity ?? 1,
+      })),
+      // also include a client-side computed amount (paise) as fallback
+      amount: totalPaise,
+    };
+
+    const res = await fetch("/api/payments/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const orderData = await res.json();
+
+    if (!res.ok) {
+      console.error("[create-order] server response:", orderData);
+      alert("❌ Failed to create payment order: " + (orderData?.error || "unknown"));
+      return;
     }
-  };
+
+    if (!orderData?.id) {
+      console.error("[create-order] no order id:", orderData);
+      alert("❌ Failed to create payment order (no id returned).");
+      return;
+    }
+
+    // Ensure Razorpay SDK is available
+    if (typeof (window as any).Razorpay === "undefined") {
+      alert("❌ Razorpay SDK not loaded. Make sure script is added to layout.");
+      return;
+    }
+
+    const options: any = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: orderData.amount,
+      currency: orderData.currency || "INR",
+      name: "Dojo Platform",
+      description: "Purchase Dojos",
+      order_id: orderData.id,
+      prefill: {
+        email: session?.user?.email || "",
+        name: session?.user?.name || "",
+      },
+      handler: async function (response: any) {
+        // response: { razorpay_payment_id, razorpay_order_id, razorpay_signature }
+        try {
+          const verifyRes = await fetch("/api/payments/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+            }),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyRes.ok && verifyData.success) {
+            clearCart();
+            alert("✅ Payment successful! Dojos unlocked.");
+          } else {
+            console.error("[verify] server response:", verifyData);
+            alert("❌ Payment verification failed. Please contact support.");
+          }
+        } catch (e) {
+          console.error("[verify] error:", e);
+          alert("❌ Payment verification request failed. Check console.");
+        }
+      },
+      modal: {
+        // optional
+        escape: true,
+        backdropclose: false,
+      },
+      theme: { color: "#38bdf8" },
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.on && rzp.on("payment.failed", (response: any) => {
+      console.error("Payment failed event:", response);
+      alert("Payment failed: " + (response?.error?.description || "unknown"));
+    });
+
+    rzp.open();
+  } catch (err) {
+    console.error("proceedToPayment error:", err);
+    alert("❌ Something went wrong while creating the order. See console.");
+  } finally {
+    setLoadingCheckout(false);
+  }
+};
+
 
   return (
     <>
@@ -359,13 +433,13 @@ export default function CartPage() {
                   </button>
 
                   {/* Image at bottom */}
-                    <div className="mt-8">
-                        <img
-                            src="/images/payment-img.png"
-                            alt="Checkout Illustration"
-                            className="w-full h-auto rounded-lg object-contain max-h-48 md:max-h-64"
-                        />
-                    </div>
+                  <div className="mt-8">
+                    <img
+                      src="/images/payment-img.png"
+                      alt="Checkout Illustration"
+                      className="w-full h-auto rounded-lg object-contain max-h-48 md:max-h-64"
+                    />
+                  </div>
                 </div>
               </aside>
             </div>

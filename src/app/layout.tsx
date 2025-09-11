@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import Script from "next/script";
 
 // ✅ Import SessionProvider
 import { SessionProvider } from "next-auth/react";
@@ -33,6 +34,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.variable} ${inter.variable}`}>
+      <head>
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body className="antialiased bg-[#1a1a2e] text-[#f0f0f0]">
         {/* Wrap children in client-side Providers */}
         <Providers>{children}</Providers>
