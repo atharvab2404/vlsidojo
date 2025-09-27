@@ -2,9 +2,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { categories } from "@/data/projectCategories";
+
 
 /** convert "**bold**" into <strong> for controlled data */
 function renderBoldMarkdown(s: string) {
@@ -99,10 +100,12 @@ function DojoIntroModal({
   proj,
   onClose,
   isPurchased,
+  purchasedDojos,
 }: {
   proj: any;
   onClose: () => void;
   isPurchased: boolean;
+  purchasedDojos: string[];
 }) {
   const addItem = useCartStore((s) => s.addItem);
   const items = useCartStore((s) => s.items);
@@ -114,7 +117,6 @@ function DojoIntroModal({
 
   const title = proj.name;
   const tagline = proj.tagline ?? proj.subtitle ?? proj.intro ?? "";
-
   const skills: string[] = proj.skills ?? [];
 
   // static learning toolkit (same for all dojos)
@@ -147,7 +149,7 @@ function DojoIntroModal({
           <p className="italic text-slate-400 mt-2">{tagline}</p>
         </header>
 
-        {/* Skills section */}
+        {/* Skills */}
         <section className="px-8 py-6 border-b border-slate-700">
           <h3 className="text-xl font-semibold text-slate-50 mb-4">Skills &amp; Knowledge You Will Master</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -170,24 +172,23 @@ function DojoIntroModal({
           </div>
         </section>
 
-        {/* Learning Toolkit (static) */}
+        {/* Toolkit */}
         <section className="px-8 py-6 border-b border-slate-700">
           <h3 className="text-xl font-semibold text-slate-50 mb-6">Your Learning Toolkit</h3>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {toolkit.map((t, i) => (
               <div key={i} className="bg-slate-900/50 rounded-lg p-4 flex flex-col gap-3 min-h-[120px]">
-                <div className="w-12 h-12 flex items-center justify-center mb-1">
-                  {t.icon}
-                </div>
+                <div className="w-12 h-12 flex items-center justify-center mb-1">{t.icon}</div>
                 <h4 className="text-sm font-semibold text-slate-50">{t.title}</h4>
-                <p className="text-xs text-slate-400 mt-1">Short practical content to help you learn {t.title.toLowerCase()}.</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Short practical content to help you learn {t.title.toLowerCase()}.
+                </p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Footer (sticky inside modal) */}
+        {/* Footer */}
         <footer className="sticky bottom-0 p-6 border-t border-slate-700 bg-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <div className="text-lg text-slate-300">Price</div>
@@ -198,29 +199,33 @@ function DojoIntroModal({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Button logic:
-                - if purchased -> Start Dojo
-                - else if in cart (isAdded) -> View Cart
-                - else -> Add to Cart (primary)
-            */}
-            {!isPurchased ? (
-              <a href={proj.link} className="px-6 py-3 rounded-md bg-gradient-to-r from-sky-500 to-sky-400 text-slate-900 font-semibold hover:brightness-105 transition">
+            {isPurchased ? (
+              <a
+                href={proj.link}
+                className="px-6 py-3 rounded-md bg-gradient-to-r from-sky-500 to-sky-400 text-slate-900 font-semibold hover:brightness-105 transition"
+              >
                 🚀 Start Dojo
               </a>
             ) : isAdded ? (
-              <Link href="/cart" className="px-5 py-3 rounded-md border border-slate-600 text-slate-300 hover:bg-slate-700 transition">
+              <Link
+                href="/cart"
+                className="px-5 py-3 rounded-md border border-slate-600 text-slate-300 hover:bg-slate-700 transition"
+              >
                 View Cart
               </Link>
             ) : (
               <button
                 onClick={() =>
-                  addItem({
-                    id: projId,
-                    title: proj.name,
-                    price: proj.price ?? 499,
-                    thumbnail: proj.image ?? "",
-                    quantity: 1,
-                  })
+                  addItem(
+                    {
+                      id: projId,
+                      title: proj.name,
+                      price: proj.price ?? 499,
+                      thumbnail: proj.image ?? "",
+                      quantity: 1,
+                    },
+                    purchasedDojos
+                  )
                 }
                 className="px-6 py-3 rounded-md bg-gradient-to-r from-sky-500 to-sky-400 text-slate-900 font-semibold hover:brightness-105 transition"
               >
@@ -238,15 +243,25 @@ function DojoIntroModal({
  * ProjectCategories
  */
 export default function ProjectCategories() {
-  const addItem = useCartStore((s) => s.addItem); // still available if needed
-  const items = useCartStore((s) => s.items);
-
-  // TODO: get real purchased list for logged-in user
-  const [purchasedDojos] = useState<string[]>([]);
-
+  const [purchasedDojos, setPurchasedDojos] = useState<string[]>([]);
   const [selectedProj, setSelectedProj] = useState<any | null>(null);
 
   const getProjId = (proj: any) => proj.id ?? proj.name;
+
+  useEffect(() => {
+    async function fetchPurchasedDojos() {
+      try {
+        const res = await fetch("/api/purchased-dojos");
+        if (res.ok) {
+          const data = await res.json();
+          setPurchasedDojos(data?.purchased || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch purchased dojos", err);
+      }
+    }
+    fetchPurchasedDojos();
+  }, []);
 
   return (
     <section id="projects" className="bg-gray-100 py-16 px-8">
@@ -272,12 +287,9 @@ export default function ProjectCategories() {
                   <div
                     key={projId}
                     className="flex-shrink-0 w-80 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
-                    style={{
-                      boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.12)",
-                      fontFamily: "Inter, sans-serif",
-                    }}
+                    style={{ boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.12)", fontFamily: "Inter, sans-serif" }}
                   >
-                    <img src={proj.image} alt={proj.name} className="w-full h-55 object-cover rounded-md mb-3" />
+                    <img src={proj.image} alt={proj.name} className="w-full h-40 object-cover rounded-md mb-3" />
                     <h4 className="text-base font-semibold mb-2 text-black" style={{ fontFamily: "Montserrat, sans-serif" }}>
                       {proj.name}
                     </h4>
@@ -286,10 +298,10 @@ export default function ProjectCategories() {
                     </p>
 
                     <div className="flex flex-col gap-2">
+                      {/* Always show View Dojo (even if purchased) */}
                       <button
                         onClick={() => setSelectedProj({ ...proj, id: projId })}
                         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm text-center"
-                        style={{ fontFamily: "Inter, sans-serif" }}
                       >
                         View Dojo
                       </button>
@@ -308,6 +320,7 @@ export default function ProjectCategories() {
           proj={selectedProj}
           onClose={() => setSelectedProj(null)}
           isPurchased={purchasedDojos.includes(selectedProj.id)}
+          purchasedDojos={purchasedDojos}
         />
       )}
     </section>

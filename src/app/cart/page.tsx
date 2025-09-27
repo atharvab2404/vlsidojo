@@ -30,8 +30,6 @@ export default function CartPage() {
   >("idle");
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
-  // ✅ Removed duplicate script injection (you already added in layout.tsx)
-
   const subtotalPaise = useMemo(
     () =>
       items.reduce((s, it) => {
@@ -125,20 +123,17 @@ export default function CartPage() {
     }
   };
 
-const proceedToPayment = async () => {
+  const proceedToPayment = async () => {
   setLoadingCheckout(true);
   try {
-    // Build the items payload so server can compute authoritative amount
     const payload = {
       items: items.map((it) => ({
         id: it.id,
         title: it.title,
-        // ensure price is numeric — front-end uses same normalization
         price: typeof it.price === "number" ? it.price : 0,
         quantity: it.quantity ?? 1,
       })),
-      // also include a client-side computed amount (paise) as fallback
-      amount: totalPaise,
+      code: discountCode.trim() || null,  // ✅ send discount code, not totalPaise
     };
 
     const res = await fetch("/api/payments/create-order", {
@@ -149,27 +144,19 @@ const proceedToPayment = async () => {
 
     const orderData = await res.json();
 
-    if (!res.ok) {
-      console.error("[create-order] server response:", orderData);
-      alert("❌ Failed to create payment order: " + (orderData?.error || "unknown"));
+    if (!res.ok || !orderData?.id) {
+      alert("❌ Failed to create payment order");
       return;
     }
 
-    if (!orderData?.id) {
-      console.error("[create-order] no order id:", orderData);
-      alert("❌ Failed to create payment order (no id returned).");
-      return;
-    }
-
-    // Ensure Razorpay SDK is available
     if (typeof (window as any).Razorpay === "undefined") {
-      alert("❌ Razorpay SDK not loaded. Make sure script is added to layout.");
+      alert("❌ Razorpay SDK not loaded.");
       return;
     }
 
     const options: any = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: orderData.amount,
+      amount: orderData.amount, // ✅ already discounted from backend
       currency: orderData.currency || "INR",
       name: "Dojo Platform",
       description: "Purchase Dojos",
@@ -179,48 +166,45 @@ const proceedToPayment = async () => {
         name: session?.user?.name || "",
       },
       handler: async function (response: any) {
-        // response: { razorpay_payment_id, razorpay_order_id, razorpay_signature }
         try {
           const verifyRes = await fetch("/api/payments/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              items: items.map((i) => i.id),
+              userEmail: session?.user?.email,
             }),
           });
+
           const verifyData = await verifyRes.json();
-          if (verifyRes.ok && verifyData.success) {
-            clearCart();
-            alert("✅ Payment successful! Dojos unlocked.");
-          } else {
-            console.error("[verify] server response:", verifyData);
-            alert("❌ Payment verification failed. Please contact support.");
+          if (!verifyRes.ok || !verifyData.success) {
+            alert("❌ Payment verified but dojo unlock failed.");
+            return;
           }
+
+          clearCart();
+          alert("✅ Payment successful! All selected dojos unlocked.");
         } catch (e) {
           console.error("[verify] error:", e);
-          alert("❌ Payment verification request failed. Check console.");
+          alert("❌ Payment verification request failed.");
         }
-      },
-      modal: {
-        // optional
-        escape: true,
-        backdropclose: false,
       },
       theme: { color: "#38bdf8" },
     };
 
     const rzp = new (window as any).Razorpay(options);
-    rzp.on && rzp.on("payment.failed", (response: any) => {
-      console.error("Payment failed event:", response);
-      alert("Payment failed: " + (response?.error?.description || "unknown"));
+    rzp.on("payment.failed", (resp: any) => {
+      console.error("Payment failed event:", resp);
+      alert("❌ Payment failed. Try again.");
     });
 
     rzp.open();
   } catch (err) {
     console.error("proceedToPayment error:", err);
-    alert("❌ Something went wrong while creating the order. See console.");
+    alert("❌ Something went wrong.");
   } finally {
     setLoadingCheckout(false);
   }
