@@ -203,7 +203,7 @@ function DojoIntroModal({
                 - else if in cart (isAdded) -> View Cart
                 - else -> Add to Cart (primary)
             */}
-            {isPurchased ? (
+            {!isPurchased ? (
               <a href={proj.link} className="px-6 py-3 rounded-md bg-gradient-to-r from-sky-500 to-sky-400 text-slate-900 font-semibold hover:brightness-105 transition">
                 🚀 Start Dojo
               </a>
@@ -277,7 +277,7 @@ export default function ProjectCategories() {
                       fontFamily: "Inter, sans-serif",
                     }}
                   >
-                    <img src={proj.image} alt={proj.name} className="w-full h-40 object-cover rounded-md mb-3" />
+                    <img src={proj.image} alt={proj.name} className="w-full h-55 object-cover rounded-md mb-3" />
                     <h4 className="text-base font-semibold mb-2 text-black" style={{ fontFamily: "Montserrat, sans-serif" }}>
                       {proj.name}
                     </h4>

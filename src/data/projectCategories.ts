@@ -65,11 +65,11 @@ export const categories = [
       },
       {
         label: "Real Applications",
-        name: "UART Communication Module",
-        image: "/images/uart-placeholder.png",
+        name: "Transition Lookaside Buffer",
+        image: "/images/tlb.png",
         description:
-          "Implement a UART module for serial communication and understand asynchronous data transfer protocols.",
-        link: "#",
+          "Design and implement a pipelined, two-level TLB with PLRU and PCID support for virtual address translation.",
+        link: "/projects/TLB",
         price: 499,
         intro: "Short intro shown at top of modal (optional)",
         skills: ["Verilog", "FPGA flow", "Timing closure"],
