@@ -8,6 +8,7 @@ export const categories = [
       "A selection of beginner-friendly projects to help you master the core concepts of digital design and HDL coding.",
     projects: [
       {
+        id: "alu-4bit",
         label: "Beginner-Friendly",
         name: "4-bit ALU Design",
         image: "/projects/alu.png",
@@ -21,6 +22,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
+        id: "round-robin-arbiter",
         label: "Real-World Relevance",
         name: "Round Robin Arbiter",
         image: "/images/arbiter.png",
@@ -34,6 +36,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
+        id: "pattern-detector",
         label: "Hands-on Hardware",
         name: "Universal Pattern Detector",
         image: "/projects/alu.png",
@@ -55,6 +58,7 @@ export const categories = [
       "Challenging projects to strengthen your understanding of digital systems and prepare you for advanced design concepts.",
     projects: [
       {
+        id: "simd-processor",
         label: "Complex Logic",
         name: "SIMD-Processor",
         image: "/images/proc.png",
@@ -64,6 +68,7 @@ export const categories = [
         price: 499,
       },
       {
+        id: "uart-protocol",
         label: "Real Applications",
         name: "UART Communication Module",
         image: "/images/uart-placeholder.png",
@@ -77,6 +82,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
+        id: "pwm-controller",
         label: "FPGA Experience",
         name: "PWM Motor Controller",
         image: "/images/pwm-placeholder.png",
@@ -98,6 +104,7 @@ export const categories = [
       "Expert-level projects to push your skills, involving complex systems, SoC design, and hardware-software integration.",
     projects: [
       {
+        id: "riscv-core",
         label: "High Performance",
         name: "RISC-V Processor Core",
         image: "/images/riscv-placeholder.png",
@@ -111,6 +118,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
+        id: "image-processing",
         label: "Hardware Acceleration",
         name: "FPGA Image Processing",
         image: "/images/image-processing-placeholder.png",
@@ -124,6 +132,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
+        id: "fpu-unit",
         label: "Advanced SoC",
         name: "Custom Floating-Point Unit",
         image: "/images/fpu-placeholder.png",

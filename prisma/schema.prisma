@@ -50,7 +50,7 @@ model User {
   signupCompleted Boolean   @default(false) // <--- add this
   accounts        Account[]
   sessions        Session[]
-
+  purchases Purchase[]
   cart Cart?
 }
 
@@ -72,12 +72,12 @@ model CartItem {
 }
 
 model Dojo {
-  id          String   @id @default(cuid())
+  id          String   @id  
   title       String
   description String?
   price       Int      // store price in INR paise (e.g. ₹499 → 49900)
   thumbnail   String
-
+  purchases Purchase[]
   cartItems   CartItem[]
 }
 
@@ -87,4 +87,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Purchase {
+  id               String   @id @default(cuid())
+  userId           String
+  dojoId           String
+  razorpayOrderId  String
+  razorpayPaymentId String
+  status           String   // "paid", "pending", etc.
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  dojo Dojo @relation(fields: [dojoId], references: [id])
+
+  @@unique([userId, dojoId]) // prevent duplicates
 }
