@@ -1,7 +1,7 @@
 // src/app/api/purchased-dojos/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route"; // adjust import if needed
+import { authOptions } from "@/lib/auth"; // adjust import if needed
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
