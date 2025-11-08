@@ -5,7 +5,17 @@ import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 import CalloutBox from "./CalloutBox";
 
-export default function Module3({ readModules, handleCheckboxChange, setModule }) {
+type ModuleProps = {
+  readModules?: boolean[]; // tracks which modules are read
+  handleCheckboxChange?: (index: number) => void; // toggle module read state
+  setModule?: (module: number) => void; // navigate between modules
+};
+
+export default function Module3({
+  readModules = [false, false, false], // default for 3 modules
+  handleCheckboxChange = () => {},     // noop if not passed
+  setModule = () => {},                 // noop if not passed
+}: ModuleProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -61,31 +71,31 @@ export default function Module3({ readModules, handleCheckboxChange, setModule }
 
       {/* Navigation Controls */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
-        {/* Left side - Previous button (always active, blue) */}
+        {/* Previous button */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(2)}
+            onClick={() => setModule(5)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ← Module 2
+            ← Module 5
           </button>
         </div>
 
-        {/* Center - Checkbox */}
+        {/* Checkbox */}
         <div className="flex justify-center">
           <label htmlFor="read3" className="flex items-center space-x-2 text-slate-700">
             <input
               type="checkbox"
               id="read3"
               checked={readModules[2]}          
-              onChange={() => handleCheckboxChange(2)}
+              onChange={() => handleCheckboxChange(1)}
               className="h-4 w-4 accent-blue-600 rounded"
             />
             <span>I have read this module</span>
           </label>
         </div>
 
-        {/* Right side - Finish button */}
+        {/* Finish button */}
         <div className="flex justify-end">
           <button
             disabled={!readModules[2]}          
