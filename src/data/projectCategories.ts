@@ -49,6 +49,20 @@ export const categories = [
         knowledge: ["Pipelining", "Hazard handling"],
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
+      {
+        id: "alu-4bit",
+        label: "Beginner-Friendly",
+        name: "High-Speed Data Aligner",
+        image: "/projects/align.png",
+        description:
+          "A single-cycle Data Aligner that uses the Prefix Sum algorithm to compress sparse data.",
+        link: "/projects/Aligner",
+        price: 499,
+        intro: "Short intro shown at top of modal (optional)",
+        skills: ["Verilog", "FPGA flow", "Timing closure"],
+        knowledge: ["Pipelining", "Hazard handling"],
+        features: ["Step-by-step guide", "Testbenches", "Resume README"],
+      },
     ],
   },
   {
@@ -73,7 +87,7 @@ export const categories = [
         name: "Transition Lookaside Buffer",
         image: "/images/tlb.png",
         description:
-          "Design and implement a pipelined, two-level TLB with PLRU and PCID support for virtual address translation.",
+          "Design, implement, and verify the core hardware logic of a high-speed, set-associative Translation Lookaside Buffer (TLB) in Verilog.",
         link: "/projects/TLB",
         price: 499,
         intro: "Short intro shown at top of modal (optional)",

@@ -12,26 +12,32 @@ export default function Module3({ readModules, handleCheckboxChange, setModule }
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Stage 3: Instruction Decode and Operand Fetch
+          <strong>The Replacement Policy - PLRU</strong>
+        </h2>
+        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
+         3.1 How PLRU Works
         </h2>
         <p className="leading-7 inter-body">
-        This module is the transition point from an instruction to action. In the ID stage, we interpret the opcode and extract the operands. Your code's always <em>@(posedge clk)</em> block is the key part of this module.
+       When you get a TLB miss, you need to bring the new translation in. But what if the set is full? You have to evict an old entry. The PLRU policy is an approximation of the ideal "Least Recently Used" (LRU) policy.
         </p>
         <p className="leading-7 inter-body">
-          <strong>Design Task: Operand Fetching</strong> 
-            <p>The ID stage needs to set various flags <em>(Hreg1, Hreg2, etc.)</em> and read the register addresses <em>(R0, R1, R2, R3)</em> and immediate values <em>(im_reg)</em> from the <em>instruction_in</em>.
-          </p>
+          Imagine a binary tree with each leaf node representing one of the 8 ways. The internal nodes are single bits that point to either the left or right child. A '0' might mean "least recently used is on the left," and a '1' means "least recently used is on the right."
+        </p>
+        <p className="leading-7 inter-body">
+          Whenever you access a way, you "walk" up the tree from the leaf to the root, flipping the bits along the way to point away from the path you just took. To find the next victim, you just "walk" down the tree from the root, always following the bit that points to the least recently used path.
+        </p>
+        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
+        3.2 Pseudocode Challenge: PLRU Update
+        </h2>
+        <p className="leading-7 inter-body">
+           The provided code has a helper function new_plru that does the heavy lifting. But the core logic is in the state_req block.
         </p>
           
           <p className="leading-7 inter-body">
           <strong>Your turn:</strong> 
-           Analyze the ID stage logic and explain the purpose of the <em>R0, R1, R2, and R3</em> variables. How do they map to the different parts of the 18-bit instruction (instruction_in)? Explain what im_reg is and when it's used.
-        </p>
+           Focus on a single way, say way 0. Write the pseudocode for how the PLRU bits <em>(plru[req_set])</em> are updated when way 0 is accessed. Reference the binary tree image to visualize this. The key is to flip the bits on the path from the root to the accessed leaf.</p>
 
-        <p className="leading-7 inter-body">
-          <strong>Hint:</strong> 
-           Pay close attention to how the instruction bits are assigned to <em>R0, R1, R2, R3, and im_reg</em>.</p>
-      
+        
 
 
 
@@ -69,92 +75,41 @@ export default function Module3({ readModules, handleCheckboxChange, setModule }
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`// The 18-bit instruction format is:
-// [17:12] = opcode
-// [11:10] = R0 (Register Index 0)
-// [9:4]   = R1/im_reg (Register Index 1 or Immediate Value)
-// [3:2]   = R2 (Register Index 2)
-// [1:0]   = R3 (Register Index 3)
+{`// Pseudocode for PLRU Update on a Hit
+// Let's use a 7-bit PLRU register for an 8-way cache.
+// Bit 0: root, points to left (0) or right (1) half (ways 0-3 vs 4-7)
+// Bit 1: left half, ways 0-1 vs 2-3
+// Bit 2: right half, ways 4-5 vs 6-7
+// ... and so on
 
-// The original code has 17:12 as opcode. The rest are different based on the opcode.
-// The provided code has some ambiguity, so a refined interpretation is needed.
-// The code implies a format based on opcode type:
-// Type 1 (e.g., add with immediate): opcode(17:12) | R0(11:10) | im_reg(9:0)
-// Type 2 (e.g., add register-to-register): opcode(17:12) | R2(11:10) | R3(9:8) | R0/other fields(7:0)
-// The user will need to clarify the exact instruction format to write perfect code.
-
-// Based on the code's register assignments:
-// Extract the register indices and immediate value from instruction_in.
-R0 <= instruction_in[11:10];
-R1 <= instruction_in[5:4];
-R2 <= instruction_in[3:2];
-R3 <= instruction_in[1:0];
-im_reg <= instruction_in[9:0];
-
-// Set command flags based on the opcode
-// Example:
-if opcode is between 0 and 5
-    CMD_addition <= true
-// ... and so on for all opcodes`}
+if (hit on way 0) then
+  // Accessing way 0, so flip the root bit to point to the other half
+  plru[req_set].bit_0 = 1;
+  // Flip the bit for the left-left sub-tree
+  plru[req_set].bit_1 = 1;
+  // Flip the bit for the ways 0-1 group
+  plru[req_set].bit_3 = 1;
+end`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
 
-        <h3 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-           Module 4: The Functional Units (The Heart of Execution)
-        </h3>
+       <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
+        3.3 Pseudocode Challenge: PLRU Insertion
+        </h2>
         <p className="leading-7 inter-body">
-          Before we build the Execute stage, we need to design the specialized units that will do all the heavy lifting. Think of these as a team of highly-skilled workers. The Execute stage's job is simply to pick the right worker and give them the right data. Your processor uses three key functional units: an adder/subtractor, a multiplier, and a shifter. These modules are where the "Single Instruction, Multiple Data" magic truly happens, as they perform operations on multiple data segments in parallel.
-        </p>
-
-        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
-          The SIMD Adder/Subtractor
-        </h3>
-        <p className="leading-7 inter-body">
-            This module, named SIMDadd, is the workhorse for all arithmetic operations. Its design is particularly clever because it’s not just a single adder, but a segmented one that can dynamically switch between 16-bit, 8-bit, and 4-bit operations. This is the core of the SIMD principle in your processor.</p>
-
-
-        <p className="leading-7 inter-body"><strong>Segmented Parallel Addition</strong></p>
-
-        <p className="leading-7 inter-body">The module uses four independent 4-bit adders. The magic lies in how the carry-out from one adder becomes the carry-in for the next. This logic is controlled by the H, O, and Q signals:
-
-            <ol className="list-disc pl-6 space-y-2">
-              <li><strong>16-bit Mode (H):</strong> All four 4-bit adders are chained together. The carry-out from the lower segment becomes the carry-in for the next, forming a single 16-bit addition.</li>
-              <li><strong>8-bit Mode (O):</strong> The four 4-bit adders are separated into two groups. The carry propagates within the first two segments (4-bit chunks 0 and 1) to form an 8-bit result. The same happens for the last two segments (4-bit chunks 2 and 3), allowing two 8-bit additions to run in parallel.</li>
-              <li><strong>4-bit Mode (Q):</strong>The four 4-bit adders are completely independent. No carry propagates between them. Each segment performs its own 4-bit addition, resulting in four parallel 4-bit results.</li>
-            
-            </ol>
-
-
-        </p>
-
-
-        <p className="leading-7 inter-body"><strong>Subtraction through Two's Complement</strong></p>
-
-        <p className="leading-7 inter-body">Subtraction is handled by adding the two's complement of B. The module efficiently does this in a single step: it inverts all the bits of B (this is the one's complement) and then adds 1 to the least significant bit's carry-in. The sub input signal acts as this carry-in.</p>
-
-        <p className="leading-7 inter-body">
-          <strong>Design Task: SIMDadd Pseudocode</strong> 
-            <p> Your mission is to write the pseudocode for the SIMDadd module. This is a purely combinational block, meaning its output is always a direct result of its inputs. The code should reflect the segmented carry logic.</p>
-        </p>
+           When we have a miss, we need to find the victim to replace. This is done by traversing the PLRU tree.</p>
+          
+          <p className="leading-7 inter-body">
+          <strong>Your turn:</strong> 
+          Write pseudocode that, on an insertion (state == state_insert), finds the least recently used way in a set and updates the entry.
+          </p>
+        
 
 
 
-
-
-
-
-
-
-
-
-
-
-        <p className="leading-7 inter-body">
-            Now Let's try writing the pseudo-code for this!!
-        </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
           <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
@@ -189,49 +144,55 @@ if opcode is between 0 and 5
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`// SIMDadd Pseudocode
-Inputs:
-  A (16-bit vector)
-  B (16-bit vector)
-  H (control flag for 16-bit mode)
-  O (control flag for 8-bit mode)
-  Q (control flag for 4-bit mode)
-  sub (control flag for subtraction)
-
-Output:
-  Cout (16-bit result)
-
-Begin Combinational Logic:
-  // Step 1: Handle subtraction logic
-  if sub is true:
-    let B_real = bitwise NOT of B
-  else:
-    let B_real = B
-
-  // Step 2: Perform segmented additions with conditional carry
-  // Perform addition on the first 4-bit segment
-  C0 = A[3:0] + B_real[3:0] + sub
-
-  // Perform addition on the second 4-bit segment
-  // Carry is passed only if in 16-bit (H) or 8-bit (O) mode
-  C1 = A[7:4] + B_real[7:4] + (carry_out from C0 if (O or H) is true)
-
-  // Perform addition on the third 4-bit segment
-  // Carry is passed only if in 16-bit (H) mode
-  C2 = A[11:8] + B_real[11:8] + (carry_out from C1 if H is true)
-
-  // Perform addition on the fourth 4-bit segment
-  // Carry is passed only if in 16-bit (H) or 8-bit (O) mode
-  C3 = A[15:12] + B_real[15:12] + (carry_out from C2 if (O or H) is true)
-
-  // Step 3: Combine the results
-  Concatenate the 4-bit results from C3, C2, C1, C0 to form Cout`}
+{`// Pseudocode for PLRU Insertion
+always @(posedge clk) begin
+  if (state == state_insert) begin
+    // Start at the root of the PLRU tree
+    victim_way = 0;
+    
+    if (plru[insert_set].bit_0 == 0) begin // Check the root bit
+      if (plru[insert_set].bit_1 == 0) begin // Check the next level
+        if (plru[insert_set].bit_3 == 0) begin
+          victim_way = 0;
+        end else begin
+          victim_way = 1;
+        end
+      end else begin // Left-right sub-tree
+        // ...and so on for the other ways
+      end
+    end else begin // Right half
+      // ...and so on
+    end
+    
+    // Once the victim is found, insert the new entry
+    entries[insert_set][victim_way].tag = insert_tag;
+    entries[insert_set][victim_way].pcid = insert_pcid;
+    entries[insert_set][victim_way].pa = insert_pa[SADDR-1:SPAGE];
+    
+    // Then, update the PLRU bits for the new entry
+  end
+end`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
-      </section>
+
+      </section> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
 
       {/* Navigation Controls */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">

@@ -15,7 +15,9 @@ const BlogSection = () => {
     { id: 1, title: "The Chip that said 'Hello World'", description: "Story of the first Integrated Circuit", image: "/blogs/kilby.png", slug: "the-vlsi-roadmap" },
     { id: 2, title: "The Calculator War That Gave Us the Modern CPU ", description: "The Story of the Intel 4004", image: "/blogs/intel4.png", slug: "chipwar" },
     { id: 3, title: "From Idea to Silicon: The Journey of a MicroChip", description: "Understanding the ASIC Design Flow.", image: "/blogs/vlsi.png", slug: "asic" },
- ];
+    { id: 4, title: "Low Power Design in VLSI: Clock Gating vs. Power Gating", description: "Clock Gating vs. Power Gating: The VLSI battle against power.", image: "/blogs/vlsi.png", slug: "powerplay" },
+ 
+  ];
 
   const [visibleCount, setVisibleCount] = useState(8);
 

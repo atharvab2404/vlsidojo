@@ -6,7 +6,7 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
       {/* Introduction */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Introduction
+          <strong>Introduction</strong>
         </h2>
         <p className="leading-7 inter-body">
           Imagine your CPU as a diligent worker who needs to find a specific file (data) on a 
