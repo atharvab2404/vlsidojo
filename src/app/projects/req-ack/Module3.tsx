@@ -25,8 +25,8 @@ export default function Module3({
   const [code, setCode] = useState(`// Write your pseudo-code here
 // `);
 
-const highlightWithLineNumbers = (input) =>
-    Prism.highlight(input, Prism.languages.verilog, "verilog");
+const highlightWithLineNumbers = (input: string) =>
+  Prism.highlight(input, Prism.languages.verilog, "verilog");
   
   useEffect(() => {
     Prism.highlightAll();
