@@ -4,8 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import 'katex/dist/katex.min.css';
-import { InlineMath } from 'react-katex';
-import { BlockMath } from 'react-katex';
+
 // import Navbar from "@/components/Navbar"; // ✅ Adjust path if needed
 // import Link from "next/link"; // If you need internal links
 
@@ -147,15 +146,11 @@ export default function PowerGatingClockGatingBlog() {
 
           {/* Static Power Card - FIX APPLIED HERE */}
           <div className="p-5 border border-green-200 bg-green-50 rounded-lg shadow-md">
-            <h4 className="text-xl font-semibold text-green-700 mb-3">
-              Static Power (<InlineMath math="P_{static}" />)
-            </h4>
+            
             <p className="text-gray-700 mb-2">
               This is the power consumed due to **leakage current** flowing through an "off" transistor.
             </p>
-            <p className="font-mono text-sm bg-green-100 p-2 rounded">
-              <BlockMath math="P_{static} = V \cdot I_{leak}" />
-            </p>
+            
             <p className="text-sm mt-3 italic text-green-600">
               This problem **gets worse exponentially** as feature sizes shrink (sub-nanometer nodes).
             </p>
