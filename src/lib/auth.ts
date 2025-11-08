@@ -21,15 +21,20 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session }) {
-      const dbUser = await prisma.user.findUnique({
-        where: { email: session.user?.email! },
-      });
+        if (!session.user?.email) return session;
 
-      if (dbUser) {
-        session.user.signupCompleted = dbUser.signupCompleted;
-      }
+        const dbUser = await prisma.user.findUnique({
+            where: { email: session.user.email },
+            select: { id: true, signupCompleted: true }
+        });
 
-      return session;
+        if (dbUser) {
+            // ✅ Inject ID into session
+            session.user.id = dbUser.id;
+            session.user.signupCompleted = dbUser.signupCompleted;
+        }
+
+        return session;
     },
 
     async redirect({ url, baseUrl }) {
