@@ -58,6 +58,20 @@ export const categories = [
       "Challenging projects to strengthen your understanding of digital systems and prepare you for advanced design concepts.",
     projects: [
       {
+        id: "req-ack",
+        label: "Handshake",
+        name: "req-ack",
+        image: "/images/proc.png",
+        description:
+          "Build an 8-bit CPU with registers and an ALU to learn more about processor design and instruction execution.",
+        link: "/projects/req-ack",
+        price: 499,
+        intro: "This project guides you through designing a high-performance, configurable pattern detector in SystemVerilog. You will build a core digital component used in high-speed applications like network packet inspection and data storage to locate specific bit sequences within a parallel data stream.",
+        skills: ["System Verilog", "Digital Design Concepts", "Behavioral RTL modelling", "Verification and Debugging", "Paramterised Design"],
+        knowledge: ["Pipelining", "Hazard handling"],
+        features: ["Step-by-step guide", "Testbenches", "Resume README"],
+      },
+      {
         id: "simd-processor",
         label: "Complex Logic",
         name: "SIMD-Processor",
@@ -75,20 +89,6 @@ export const categories = [
         description:
           "Design and implement a pipelined, two-level TLB with PLRU and PCID support for virtual address translation.",
         link: "/projects/TLB",
-        price: 499,
-        intro: "Short intro shown at top of modal (optional)",
-        skills: ["Verilog", "FPGA flow", "Timing closure"],
-        knowledge: ["Pipelining", "Hazard handling"],
-        features: ["Step-by-step guide", "Testbenches", "Resume README"],
-      },
-      {
-        id: "pwm-controller",
-        label: "FPGA Experience",
-        name: "PWM Motor Controller",
-        image: "/images/pwm-placeholder.png",
-        description:
-          "Create a pulse-width modulation motor controller to interface with hardware and understand signal modulation.",
-        link: "#",
         price: 499,
         intro: "Short intro shown at top of modal (optional)",
         skills: ["Verilog", "FPGA flow", "Timing closure"],
