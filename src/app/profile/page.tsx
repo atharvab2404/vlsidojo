@@ -91,9 +91,13 @@ export default function ProfilePage() {
           link?: string;
         };
 
-        // Resolve purchasedArray elements into full dojo objects
+        // Type guard to filter out nulls
+        function isCourse(c: Course | null): c is Course {
+          return c !== null;
+        }
+
         const resolved = await Promise.all(
-          purchasedArray.map(async (el: any) => {
+          purchasedArray.map(async (el: any): Promise<Course | null> => {
             if (typeof el === "string" || typeof el === "number") {
               const id = String(el);
               const local = getDojoFromCategories(id);
@@ -173,12 +177,11 @@ export default function ProfilePage() {
           })
         );
 
-        // Filter out nulls and cast to Course[]
-        const filteredResolved: Course[] = resolved.filter(
-          (x): x is Course => x !== null
-        );
+        // Use type guard function
+        const filteredResolved: Course[] = resolved.filter(isCourse);
 
         setCourses(filteredResolved);
+
 
       } catch (err) {
         console.error("Error in fetchAll", err);
