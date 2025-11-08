@@ -1,6 +1,16 @@
 "use client";
 
-export default function Module1({ readModules, handleCheckboxChange, setModule }) {
+type ModuleProps = {
+  readModules?: boolean[]; // tracks which modules are read
+  handleCheckboxChange?: (index: number) => void; // toggle module read state
+  setModule?: (module: number) => void; // navigate between modules
+};
+
+export default function Module1({
+  readModules = [false, false, false], // default for 3 modules
+  handleCheckboxChange = () => {},     // noop if not passed
+  setModule = () => {},                 // noop if not passed
+}: ModuleProps) {
   return (
     <div>
       {/* Introduction */}
@@ -89,32 +99,37 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
         </div>
       </section>
 
-      {/* Center - Checkbox */}
-      <div className="flex justify-center">
-        <label htmlFor="read1" className="flex items-center space-x-2 text-slate-700">
-          <input
-            type="checkbox"
-            id="read1"
-            checked={readModules[0]}          
-            onChange={() => handleCheckboxChange(0)}
-            className="h-4 w-4 accent-blue-600 rounded"
-          />
-          <span>I have read this module</span>
-        </label>
-      </div>
+      {/* Navigation Controls */}
+      <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
+        
+        {/* Checkbox */}
+        <div className="flex justify-center">
+          <label htmlFor="read3" className="flex items-center space-x-2 text-slate-700">
+            <input
+              type="checkbox"
+              id="read3"
+              checked={readModules[2]}          
+              onChange={() => handleCheckboxChange(2)}
+              className="h-4 w-4 accent-blue-600 rounded"
+            />
+            <span>I have read this module</span>
+          </label>
+        </div>
 
-      <div className="flex justify-end">
-        <button
-          disabled={!readModules[0]}          
-          onClick={() => setModule(2)}        
-          className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
-            readModules[0]
-              ? "bg-blue-600 hover:bg-blue-700 text-white"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          Move to Module 2 →
-        </button>
+        {/* Finish button */}
+        <div className="flex justify-end">
+          <button
+            disabled={!readModules[2]}          
+            onClick={() => setModule(4)}        
+            className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
+              readModules[2]
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Finish Dojo →
+          </button>
+        </div>
       </div>
     </div>
   );

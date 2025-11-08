@@ -1,6 +1,18 @@
 "use client";
 
-export default function Module1({ readModules, handleCheckboxChange, setModule }) {
+import { ChangeEvent } from "react";
+
+type Module1Props = {
+  readModules?: boolean[]; // tracks which modules are read
+  handleCheckboxChange?: (index: number) => void; // toggle module read state
+  setModule?: (module: number) => void; // move to next module
+};
+
+export default function Module1({
+  readModules = [false], // default to avoid undefined
+  handleCheckboxChange = () => {}, // noop if not passed
+  setModule = () => {}, // noop if not passed
+}: Module1Props) {
   return (
     <div>
       {/* Introduction */}
@@ -84,10 +96,8 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
 
       {/* Checkbox & Navigation Buttons */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
-        {/* Left side (future Previous button) */}
         <div></div>
 
-        {/* Center - Checkbox */}
         <div className="flex justify-center">
           <label htmlFor="read1" className="flex items-center space-x-2 text-slate-700">
             <input
@@ -101,7 +111,6 @@ export default function Module1({ readModules, handleCheckboxChange, setModule }
           </label>
         </div>
 
-        {/* Right side - Next button */}
         <div className="flex justify-end">
           <button
             disabled={!readModules[0]}          
