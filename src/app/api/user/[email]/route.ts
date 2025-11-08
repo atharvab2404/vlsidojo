@@ -1,14 +1,12 @@
+// src/app/api/user/[email]/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  req: Request,
-  context: { params: { email: string } }
-) {
+export async function GET(req: Request, context: any) {
   try {
-    const { email } = context.params;
+    const email = context?.params?.email;
 
-    if (!email) {
+    if (!email || typeof email !== "string") {
       return NextResponse.json(
         { error: "Email parameter is required" },
         { status: 400 }
@@ -19,7 +17,7 @@ export async function GET(
       where: { email },
     });
 
-    // ✅ Auto-create user if not found
+    // Create the user if it doesn't exist
     if (!user) {
       user = await prisma.user.create({
         data: {
