@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma"; // adjust if needed
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { email: string } }
+  request: Request,
+  context: { params: { email: string } }
 ) {
   try {
-    const { email } = params;
+    const { email } = context.params;
 
     if (!email) {
       return NextResponse.json(
@@ -19,13 +19,13 @@ export async function GET(
       where: { email },
     });
 
-    // ✅ If user doesn't exist, create a new entry
+    // ✅ If user does not exist, create one
     if (!user) {
       user = await prisma.user.create({
         data: {
           email,
-          name: email.split("@")[0], // default name from email
-          image: "/default-profile.png", // fallback image
+          name: email.split("@")[0], // default username
+          image: "/default-profile.png", // optional fallback
         },
       });
     }
