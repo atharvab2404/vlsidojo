@@ -81,6 +81,15 @@ export default function ProfilePage() {
         else if (Array.isArray(purchasedRaw.items)) purchasedArray = purchasedRaw.items;
         else if (Array.isArray(purchasedRaw.purchases)) purchasedArray = purchasedRaw.purchases;
         else purchasedArray = [];
+        
+        type Course = {
+          id: string;
+          title: string;
+          description?: string;
+          thumbnail?: string;
+          price?: number;
+          link?: string;
+        };
 
         // Resolve purchasedArray elements into full dojo objects
         const resolved = await Promise.all(
@@ -92,7 +101,7 @@ export default function ProfilePage() {
                 return {
                   id: local.id ?? local.name,
                   title: local.name,
-                  description: local.description ?? "",
+                  description: local.description ?? undefined,
                   thumbnail: local.image ?? local.thumbnail ?? "/images/placeholder.png",
                   price: local.price ?? 0,
                   link: local.link ?? `/projects/${id}`,
@@ -106,7 +115,7 @@ export default function ProfilePage() {
                   return {
                     id: d.id ?? id,
                     title: d.title ?? d.name ?? id,
-                    description: d.description ?? "",
+                    description: d.description ?? undefined,
                     thumbnail: d.thumbnail ?? d.image ?? "/images/placeholder.png",
                     price: d.price ?? 0,
                     link: d.link ?? `/projects/${id}`,
@@ -117,7 +126,7 @@ export default function ProfilePage() {
               return {
                 id,
                 title: id,
-                description: "",
+                description: undefined,
                 thumbnail: "/images/placeholder.png",
                 price: 0,
                 link: `/projects/${id}`,
@@ -130,7 +139,7 @@ export default function ProfilePage() {
                 return {
                   id: d.id ?? el.dojoId ?? el.id,
                   title: d.title ?? d.name ?? el.title ?? el.id,
-                  description: d.description ?? "",
+                  description: d.description ?? undefined,
                   thumbnail: d.thumbnail ?? d.image ?? "/images/placeholder.png",
                   price: d.price ?? el.price ?? 0,
                   link: d.link ?? `/projects/${d.id ?? el.id}`,
@@ -143,7 +152,7 @@ export default function ProfilePage() {
                 return {
                   id: local.id ?? local.name,
                   title: local.name,
-                  description: local.description ?? "",
+                  description: local.description ?? undefined,
                   thumbnail: local.image ?? local.thumbnail ?? "/images/placeholder.png",
                   price: local.price ?? 0,
                   link: local.link ?? `/projects/${local.id ?? id}`,
@@ -153,7 +162,7 @@ export default function ProfilePage() {
               return {
                 id: id ?? String(Math.random()).slice(2),
                 title: el.title ?? el.name ?? id ?? "Untitled",
-                description: el.description ?? el.summary ?? "",
+                description: el.description ?? el.summary ?? undefined,
                 thumbnail: el.thumbnail ?? el.image ?? "/images/placeholder.png",
                 price: el.price ?? 0,
                 link: el.link ?? `/projects/${id}`,
@@ -164,7 +173,13 @@ export default function ProfilePage() {
           })
         );
 
-        setCourses(resolved.filter(Boolean));
+        // Filter out nulls and cast to Course[]
+        const filteredResolved: Course[] = resolved.filter(
+          (x): x is Course => x !== null
+        );
+
+        setCourses(filteredResolved);
+
       } catch (err) {
         console.error("Error in fetchAll", err);
       }
