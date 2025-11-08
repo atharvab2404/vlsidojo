@@ -48,6 +48,10 @@ export default function ProfilePage() {
       try {
         // 1) fetch user data
         try {
+          if (!session?.user?.email) {
+            // session not ready, maybe redirect or throw error
+            return;
+          }
           const userRes = await fetch(`/api/user/${encodeURIComponent(session.user!.email!)}`);
           if (userRes.ok) {
             const udata = await userRes.json();
