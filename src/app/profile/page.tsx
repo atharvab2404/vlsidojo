@@ -48,11 +48,8 @@ export default function ProfilePage() {
       try {
         // 1) fetch user data
         try {
-          if (!session?.user?.email) {
-            // session not ready, maybe redirect or throw error
-            return;
-          }
-          const userRes = await fetch(`/api/user/${encodeURIComponent(session.user!.email!)}`);
+          if (!session?.user?.email) return;
+          const userRes = await fetch(`/api/user/${encodeURIComponent(session.user.email)}`);
           if (userRes.ok) {
             const udata = await userRes.json();
             setUserData(udata);
@@ -67,17 +64,10 @@ export default function ProfilePage() {
         try {
           const pRes = await fetch("/api/purchased-dojos");
           if (!pRes.ok) {
-            // try alternate endpoint
-            console.warn("/api/purchased-dojos returned non-ok, trying /api/user/purchases");
             const alt = await fetch("/api/user/purchases");
-            if (alt.ok) {
-              purchasedRaw = await alt.json();
-            } else {
-              purchasedRaw = null;
-            }
-          } else {
-            purchasedRaw = await pRes.json();
-          }
+            if (alt.ok) purchasedRaw = await alt.json();
+            else purchasedRaw = null;
+          } else purchasedRaw = await pRes.json();
         } catch (err) {
           console.error("Failed fetching purchased dojos", err);
           purchasedRaw = null;
@@ -85,28 +75,18 @@ export default function ProfilePage() {
 
         // normalize purchased list into an array
         let purchasedArray: any[] = [];
-        if (!purchasedRaw) {
-          purchasedArray = [];
-        } else if (Array.isArray(purchasedRaw)) {
-          purchasedArray = purchasedRaw;
-        } else if (Array.isArray(purchasedRaw.purchased)) {
-          purchasedArray = purchasedRaw.purchased;
-        } else if (Array.isArray(purchasedRaw.items)) {
-          purchasedArray = purchasedRaw.items;
-        } else if (purchasedRaw.purchases && Array.isArray(purchasedRaw.purchases)) {
-          purchasedArray = purchasedRaw.purchases;
-        } else {
-          // Unknown shape: try to extract values
-          purchasedArray = [];
-        }
+        if (!purchasedRaw) purchasedArray = [];
+        else if (Array.isArray(purchasedRaw)) purchasedArray = purchasedRaw;
+        else if (Array.isArray(purchasedRaw.purchased)) purchasedArray = purchasedRaw.purchased;
+        else if (Array.isArray(purchasedRaw.items)) purchasedArray = purchasedRaw.items;
+        else if (Array.isArray(purchasedRaw.purchases)) purchasedArray = purchasedRaw.purchases;
+        else purchasedArray = [];
 
         // Resolve purchasedArray elements into full dojo objects
         const resolved = await Promise.all(
           purchasedArray.map(async (el: any) => {
-            // case: string id
             if (typeof el === "string" || typeof el === "number") {
               const id = String(el);
-              // prefer local categories data
               const local = getDojoFromCategories(id);
               if (local) {
                 return {
@@ -119,7 +99,6 @@ export default function ProfilePage() {
                 };
               }
 
-              // fallback: try server endpoint by id (if available)
               try {
                 const byId = await fetch(`/api/dojo/${encodeURIComponent(id)}`);
                 if (byId.ok) {
@@ -133,11 +112,8 @@ export default function ProfilePage() {
                     link: d.link ?? `/projects/${id}`,
                   };
                 }
-              } catch (e) {
-                // ignore
-              }
+              } catch {}
 
-              // last fallback: minimal object
               return {
                 id,
                 title: id,
@@ -148,9 +124,7 @@ export default function ProfilePage() {
               };
             }
 
-            // case: object
             if (typeof el === "object" && el !== null) {
-              // if the element is a purchase record with a `.dojo` relation
               if (el.dojo && typeof el.dojo === "object") {
                 const d = el.dojo;
                 return {
@@ -163,7 +137,6 @@ export default function ProfilePage() {
                 };
               }
 
-              // if element itself is a dojo-like object
               const id = el.id ?? el.dojoId ?? el.slug ?? el.name;
               const local = id ? getDojoFromCategories(String(id)) : null;
               if (local) {
@@ -177,7 +150,6 @@ export default function ProfilePage() {
                 };
               }
 
-              // otherwise use fields directly from the object
               return {
                 id: id ?? String(Math.random()).slice(2),
                 title: el.title ?? el.name ?? id ?? "Untitled",
@@ -224,6 +196,17 @@ export default function ProfilePage() {
       alert("Failed to save info");
     }
   };
+
+  if (status === "loading") {
+    return (
+      <>
+        <Navbar />
+        <div className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-100">
+          <p className="text-lg">Loading session...</p>
+        </div>
+      </>
+    );
+  }
 
   if (!session) {
     return (
