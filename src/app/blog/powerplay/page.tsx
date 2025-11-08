@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import 'katex/dist/katex.min.css';
 import { InlineMath } from 'react-katex';
+import { BlockMath } from 'react-katex';
 // import Navbar from "@/components/Navbar"; // ✅ Adjust path if needed
 // import Link from "next/link"; // If you need internal links
 
@@ -153,7 +154,7 @@ export default function PowerGatingClockGatingBlog() {
               This is the power consumed due to **leakage current** flowing through an "off" transistor.
             </p>
             <p className="font-mono text-sm bg-green-100 p-2 rounded">
-              $$P_{static} = V \cdot I_{leak}$$
+              <BlockMath math="P_{static} = V \cdot I_{leak}" />
             </p>
             <p className="text-sm mt-3 italic text-green-600">
               This problem **gets worse exponentially** as feature sizes shrink (sub-nanometer nodes).
