@@ -22,7 +22,7 @@ export default function Module2({
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          Building the TLB logic
+          <strong>Building the TLB logic</strong>
         </h2>
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
           2.1 Storing the Entries

@@ -4,17 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 
-type ModuleProps = {
-  readModules?: boolean[]; // tracks which modules are read
-  handleCheckboxChange?: (index: number) => void; // toggle module read state
-  setModule?: (module: number) => void; // navigate between modules
-};
-
-export default function Module3({
-  readModules = [false, false, false], // default for 3 modules
-  handleCheckboxChange = () => {},     // noop if not passed
-  setModule = () => {},                 // noop if not passed
-}: ModuleProps) {
+export default function Module2({ readModules, handleCheckboxChange, setModule }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,35 +12,21 @@ export default function Module3({
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
         <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          <strong>The Replacement Policy - PLRU</strong>
-        </h2>
-        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-         3.1 How PLRU Works
+          <strong>Core Logic - Prefix Sum (The Secret Sauce)</strong>
         </h2>
         <p className="leading-7 inter-body">
-       When you get a TLB miss, you need to bring the new translation in. But what if the set is full? You have to evict an old entry. The PLRU policy is an approximation of the ideal "Least Recently Used" (LRU) policy.
+        The Prefix Sum (Exclusive Scan) calculates the destination index for every input element i. This is the count of all valid elements that appear before index i. This calculation must happen in parallel across all N elements simultaneously.
         </p>
         <p className="leading-7 inter-body">
-          Imagine a binary tree with each leaf node representing one of the 8 ways. The internal nodes are single bits that point to either the left or right child. A '0' might mean "least recently used is on the left," and a '1' means "least recently used is on the right."
+          <em>Mathematically: new_index[i] = Sum(valid_in[j] for j from 0 to i-1)</em>
         </p>
-        <p className="leading-7 inter-body">
-          Whenever you access a way, you "walk" up the tree from the leaf to the root, flipping the bits along the way to point away from the path you just took. To find the next victim, you just "walk" down the tree from the root, always following the bit that points to the least recently used path.
-        </p>
-        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-        3.2 Pseudocode Challenge: PLRU Update
-        </h2>
-        <p className="leading-7 inter-body">
-           The provided code has a helper function new_plru that does the heavy lifting. But the core logic is in the state_req block.
-        </p>
-          
-          <p className="leading-7 inter-body">
-          <strong>Your turn:</strong> 
-           Focus on a single way, say way 0. Write the pseudocode for how the PLRU bits <em>(plru[req_set])</em> are updated when way 0 is accessed. Reference the binary tree image to visualize this. The key is to flip the bits on the path from the root to the accessed leaf.</p>
 
-        
-
-
-
+        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          <strong>SystemVerilog Code: Prefix Sum Implementation</strong>
+        </h3>
+       <p className="leading-7 inter-body">
+        This logic is implemented using an <em>always_comb</em> block and a <em>for loop</em>, which the synthesis tool interprets as a fast, parallel adder tree.
+       </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
           <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
@@ -85,41 +61,36 @@ export default function Module3({
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`// Pseudocode for PLRU Update on a Hit
-// Let's use a 7-bit PLRU register for an 8-way cache.
-// Bit 0: root, points to left (0) or right (1) half (ways 0-3 vs 4-7)
-// Bit 1: left half, ways 0-1 vs 2-3
-// Bit 2: right half, ways 4-5 vs 6-7
-// ... and so on
-
-if (hit on way 0) then
-  // Accessing way 0, so flip the root bit to point to the other half
-  plru[req_set].bit_0 = 1;
-  // Flip the bit for the left-left sub-tree
-  plru[req_set].bit_1 = 1;
-  // Flip the bit for the ways 0-1 group
-  plru[req_set].bit_3 = 1;
-end`}
+{`FUNCTION CalculatePrefixSum(valid_in):
+  SET valid_count[0] = 0
+  FOR i from 0 up to N-2:
+    valid_count[i+1] = valid_count[i] + valid_in[i]
+  RETURN valid_count`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
 
-       <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-        3.3 Pseudocode Challenge: PLRU Insertion
+       
+
+        
+      </section>
+      <section className="space-y-4 mb-10">
+        <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
+          <strong> Output Mapping and Alignment</strong>
         </h2>
         <p className="leading-7 inter-body">
-           When we have a miss, we need to find the victim to replace. This is done by traversing the PLRU tree.</p>
-          
-          <p className="leading-7 inter-body">
-          <strong>Your turn:</strong> 
-          Write pseudocode that, on an insertion (state == state_insert), finds the least recently used way in a set and updates the entry.
-          </p>
-        
+        The final and most complex step is the inverse mapping: for every output slot o, we must efficiently determine the single input i that must provide the data. This involves two conditions: valid_in[i] is true AND valid_count[i] (the destination index) equals o.
+        </p>
+      
 
-
-
+        <h3 className="text-xl inter-subheading text-slate-900 tracking-tight mt-6">
+          <strong>SystemVerilog Code: Output Alignment Implementation</strong>
+        </h3>
+       <p className="leading-7 inter-body">
+        This block uses nested loops and helper signals to infer a large bank of parallel multiplexers (MUXes) that select the correct data based on the prefix sum results.
+        </p>
         {/* === Pseudo-code Practice Section === */}
         <div className="pseudo-code">
           <div className="my-6 p-4 bg-gray-900 rounded-xl shadow-lg border border-green-400 relative font-mono">
@@ -154,75 +125,45 @@ end`}
                 💡 Show Solution
               </summary>
               <pre className="mt-2 p-4 bg-black text-green-300 rounded-lg text-sm overflow-x-auto border border-green-600 shadow-inner fira-code-body">
-{`// Pseudocode for PLRU Insertion
-always @(posedge clk) begin
-  if (state == state_insert) begin
-    // Start at the root of the PLRU tree
-    victim_way = 0;
-    
-    if (plru[insert_set].bit_0 == 0) begin // Check the root bit
-      if (plru[insert_set].bit_1 == 0) begin // Check the next level
-        if (plru[insert_set].bit_3 == 0) begin
-          victim_way = 0;
-        end else begin
-          victim_way = 1;
-        end
-      end else begin // Left-right sub-tree
-        // ...and so on for the other ways
-      end
-    end else begin // Right half
-      // ...and so on
-    end
-    
-    // Once the victim is found, insert the new entry
-    entries[insert_set][victim_way].tag = insert_tag;
-    entries[insert_set][victim_way].pcid = insert_pcid;
-    entries[insert_set][victim_way].pa = insert_pa[SADDR-1:SPAGE];
-    
-    // Then, update the PLRU bits for the new entry
-  end
-end`}
+{`FUNCTION AlignData(valid_count, data_in):
+  FOR o from 0 up to N-1 (Output Index):
+    SOURCE_INDEX = 0
+    FOR i from 0 up to N-1 (Input Index):
+      // Check for exact mapping: input i is valid AND its destination is 'o'
+      IS_MAPPED = (valid_count[i] == o) AND valid_in[i]
+      
+      // Select the winning source index i (Priority Encoder logic)
+      SOURCE_INDEX = SOURCE_INDEX | (IS_MAPPED ? i : 0)
+
+    valid_out[o] = IS_ANY_MAPPED_TO_O
+    data_out[o] = data_in[SOURCE_INDEX]`}
               </pre>
             </details>
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
 
-      </section> 
+       </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-      {/* Navigation Controls */}
+      {/* Checkbox & Navigation Buttons */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
-        {/* Previous button */}
+        {/* Left side - Previous button (always active, blue) */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(2)}
+            onClick={() => setModule(1)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ← Module 2
+            ←  Module 1
           </button>
         </div>
 
-        {/* Checkbox */}
+        {/* Center - Checkbox */}
         <div className="flex justify-center">
-          <label htmlFor="read3" className="flex items-center space-x-2 text-slate-700">
+          <label htmlFor="read2" className="flex items-center space-x-2 text-slate-700">
             <input
               type="checkbox"
-              id="read3"
-              checked={readModules[2]}          
+              id="read2"
+              checked={readModules[1]}          
               onChange={() => handleCheckboxChange(1)}
               className="h-4 w-4 accent-blue-600 rounded"
             />
@@ -230,23 +171,21 @@ end`}
           </label>
         </div>
 
-        {/* Finish button */}
+        {/* Right side - Next button */}
         <div className="flex justify-end">
           <button
-            disabled={!readModules[2]}          
-            onClick={() => setModule(4)}        
+            disabled={!readModules[1]}          
+            onClick={() => setModule(3)}        
             className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
-              readModules[2]
+              readModules[1]
                 ? "bg-blue-600 hover:bg-blue-700 text-white"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-            Finish Dojo →
+             Module 3 →
           </button>
         </div>
       </div>
-      
-      
     </div>
   );
 }

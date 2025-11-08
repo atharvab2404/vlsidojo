@@ -5,7 +5,6 @@ import Link from "next/link";
 import Module1 from "./Module1";
 import Module2 from "./Module2";
 import Module3 from "./Module3";
-import Module4 from "./Module4";
 import FinalModule from "./FinalModule";
 
 export default function Page() {
@@ -122,7 +121,6 @@ export default function Page() {
             <span className="text-black">Module 4</span>
             <span>{readModules[3] ? "✅" : "⬜"}</span>
           </li>
-
         </ul>
       </div>
 
@@ -141,7 +139,7 @@ export default function Page() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl inter-heading text-slate-900 tracking-tight">
-           Simple Transition Lookaside Buffer in verilog
+            High-Speed Data Aligner &amp; Verification Dojo
           </h1>
           <Link
             href="/#projects"
@@ -177,16 +175,9 @@ export default function Page() {
             setModule={setModule}
           />
         )}
-        {/* Module 4 */}
-        {module === 4 && (
-          <Module4
-            readModules={readModules}
-            handleCheckboxChange={handleCheckboxChange}
-            setModule={setModule}
-          />
-        )}
+
         {/* Final Module (not in sidebar) */}
-        {module === 5 && (
+        {module === 4 && (
           <FinalModule
             readModules={readModules}
             handleCheckboxChange={handleCheckboxChange}
