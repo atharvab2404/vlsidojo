@@ -261,9 +261,9 @@ export default function CartPage() {
                     const displayImage =
                       item.thumbnail || project?.image || "/projects/alu.png";
                     const displayCategory =
-                      item.category ||
-                      project?.label ||
-                      project?._categoryGroup ||
+                      item.category ??
+                      project?.label ??
+                      project?._categoryGroup ??
                       "Dojo";
                     const displayDescription =
                       item.description || project?.description || "";
