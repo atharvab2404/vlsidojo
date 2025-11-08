@@ -48,7 +48,8 @@ export default function ProfilePage() {
       try {
         // 1) fetch user data
         try {
-          const userRes = await fetch(`/api/user/${encodeURIComponent(session.user!.email!)}`);
+          if (!session?.user?.email) return;
+          const userRes = await fetch(`/api/user/${encodeURIComponent(session.user.email)}`);
           if (userRes.ok) {
             const udata = await userRes.json();
             setUserData(udata);
@@ -63,17 +64,10 @@ export default function ProfilePage() {
         try {
           const pRes = await fetch("/api/purchased-dojos");
           if (!pRes.ok) {
-            // try alternate endpoint
-            console.warn("/api/purchased-dojos returned non-ok, trying /api/user/purchases");
             const alt = await fetch("/api/user/purchases");
-            if (alt.ok) {
-              purchasedRaw = await alt.json();
-            } else {
-              purchasedRaw = null;
-            }
-          } else {
-            purchasedRaw = await pRes.json();
-          }
+            if (alt.ok) purchasedRaw = await alt.json();
+            else purchasedRaw = null;
+          } else purchasedRaw = await pRes.json();
         } catch (err) {
           console.error("Failed fetching purchased dojos", err);
           purchasedRaw = null;
@@ -81,41 +75,43 @@ export default function ProfilePage() {
 
         // normalize purchased list into an array
         let purchasedArray: any[] = [];
-        if (!purchasedRaw) {
-          purchasedArray = [];
-        } else if (Array.isArray(purchasedRaw)) {
-          purchasedArray = purchasedRaw;
-        } else if (Array.isArray(purchasedRaw.purchased)) {
-          purchasedArray = purchasedRaw.purchased;
-        } else if (Array.isArray(purchasedRaw.items)) {
-          purchasedArray = purchasedRaw.items;
-        } else if (purchasedRaw.purchases && Array.isArray(purchasedRaw.purchases)) {
-          purchasedArray = purchasedRaw.purchases;
-        } else {
-          // Unknown shape: try to extract values
-          purchasedArray = [];
+        if (!purchasedRaw) purchasedArray = [];
+        else if (Array.isArray(purchasedRaw)) purchasedArray = purchasedRaw;
+        else if (Array.isArray(purchasedRaw.purchased)) purchasedArray = purchasedRaw.purchased;
+        else if (Array.isArray(purchasedRaw.items)) purchasedArray = purchasedRaw.items;
+        else if (Array.isArray(purchasedRaw.purchases)) purchasedArray = purchasedRaw.purchases;
+        else purchasedArray = [];
+        
+        type Course = {
+          id: string;
+          title: string;
+          description?: string;
+          thumbnail?: string;
+          price?: number;
+          link?: string;
+        };
+
+        // Type guard to filter out nulls
+        function isCourse(c: Course | null): c is Course {
+          return c !== null;
         }
 
-        // Resolve purchasedArray elements into full dojo objects
         const resolved = await Promise.all(
-          purchasedArray.map(async (el: any) => {
-            // case: string id
+          purchasedArray.map(async (el: any): Promise<Course | null> => {
             if (typeof el === "string" || typeof el === "number") {
               const id = String(el);
-              // prefer local categories data
               const local = getDojoFromCategories(id);
               if (local) {
                 return {
                   id: local.id ?? local.name,
                   title: local.name,
-                  description: local.description ?? "",
+                  description: local.description ?? undefined,
                   thumbnail: local.image ?? local.thumbnail ?? "/images/placeholder.png",
                   price: local.price ?? 0,
                   link: local.link ?? `/projects/${id}`,
                 };
               }
 
-              // fallback: try server endpoint by id (if available)
               try {
                 const byId = await fetch(`/api/dojo/${encodeURIComponent(id)}`);
                 if (byId.ok) {
@@ -123,61 +119,54 @@ export default function ProfilePage() {
                   return {
                     id: d.id ?? id,
                     title: d.title ?? d.name ?? id,
-                    description: d.description ?? "",
+                    description: d.description ?? undefined,
                     thumbnail: d.thumbnail ?? d.image ?? "/images/placeholder.png",
                     price: d.price ?? 0,
                     link: d.link ?? `/projects/${id}`,
                   };
                 }
-              } catch (e) {
-                // ignore
-              }
+              } catch {}
 
-              // last fallback: minimal object
               return {
                 id,
                 title: id,
-                description: "",
+                description: undefined,
                 thumbnail: "/images/placeholder.png",
                 price: 0,
                 link: `/projects/${id}`,
               };
             }
 
-            // case: object
             if (typeof el === "object" && el !== null) {
-              // if the element is a purchase record with a `.dojo` relation
               if (el.dojo && typeof el.dojo === "object") {
                 const d = el.dojo;
                 return {
                   id: d.id ?? el.dojoId ?? el.id,
                   title: d.title ?? d.name ?? el.title ?? el.id,
-                  description: d.description ?? "",
+                  description: d.description ?? undefined,
                   thumbnail: d.thumbnail ?? d.image ?? "/images/placeholder.png",
                   price: d.price ?? el.price ?? 0,
                   link: d.link ?? `/projects/${d.id ?? el.id}`,
                 };
               }
 
-              // if element itself is a dojo-like object
               const id = el.id ?? el.dojoId ?? el.slug ?? el.name;
               const local = id ? getDojoFromCategories(String(id)) : null;
               if (local) {
                 return {
                   id: local.id ?? local.name,
                   title: local.name,
-                  description: local.description ?? "",
+                  description: local.description ?? undefined,
                   thumbnail: local.image ?? local.thumbnail ?? "/images/placeholder.png",
                   price: local.price ?? 0,
                   link: local.link ?? `/projects/${local.id ?? id}`,
                 };
               }
 
-              // otherwise use fields directly from the object
               return {
                 id: id ?? String(Math.random()).slice(2),
                 title: el.title ?? el.name ?? id ?? "Untitled",
-                description: el.description ?? el.summary ?? "",
+                description: el.description ?? el.summary ?? undefined,
                 thumbnail: el.thumbnail ?? el.image ?? "/images/placeholder.png",
                 price: el.price ?? 0,
                 link: el.link ?? `/projects/${id}`,
@@ -188,7 +177,12 @@ export default function ProfilePage() {
           })
         );
 
-        setCourses(resolved.filter(Boolean));
+        // Use type guard function
+        const filteredResolved: Course[] = resolved.filter(isCourse);
+
+        setCourses(filteredResolved);
+
+
       } catch (err) {
         console.error("Error in fetchAll", err);
       }
@@ -220,6 +214,17 @@ export default function ProfilePage() {
       alert("Failed to save info");
     }
   };
+
+  if (status === "loading") {
+    return (
+      <>
+        <Navbar />
+        <div className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-100 via-white to-blue-100">
+          <p className="text-lg">Loading session...</p>
+        </div>
+      </>
+    );
+  }
 
   if (!session) {
     return (

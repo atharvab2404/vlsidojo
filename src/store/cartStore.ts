@@ -9,6 +9,8 @@ interface CartItem {
   price: number;
   thumbnail: string;
   quantity: number;
+  category?: string;
+  description?: string;
 }
 
 interface CartState {

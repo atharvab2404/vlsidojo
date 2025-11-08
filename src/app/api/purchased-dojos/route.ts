@@ -1,7 +1,7 @@
 // src/app/api/purchased-dojos/route.ts
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route"; // adjust import if needed
+import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -12,7 +12,7 @@ export async function GET() {
       return NextResponse.json({ purchased: [] }, { status: 401 });
     }
 
-    // ✅ Fetch all purchased dojo IDs for this user
+    // ✅ Strongly typed result inferred directly from Prisma
     const purchases = await prisma.purchase.findMany({
       where: {
         user: { email: session.user.email },
@@ -21,7 +21,8 @@ export async function GET() {
       select: { dojoId: true },
     });
 
-    const purchased = purchases.map((p) => p.dojoId);
+    // ✅ Explicit type to silence TypeScript
+    const purchased = purchases.map((p: { dojoId: string }) => p.dojoId);
 
     return NextResponse.json({ purchased });
   } catch (err) {

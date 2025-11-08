@@ -105,24 +105,25 @@ export default function ProfilePage() {
           />
         </div>
 
-        <p className="mb-2 text-gray-200 text-lg">
-          Signed in as <span className="font-semibold">{session.user?.email}</span>
-        </p>
+        {/* ✅ Guarded session display */}
+        {session?.user?.email && (
+          <p className="mb-2 text-gray-200 text-lg">
+            Signed in as <span className="font-semibold">{session.user.email}</span>
+          </p>
+        )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {Object.entries(formData).map(([key, value]) => (
-          <div key={key} className="bg-white/5 p-4 rounded-lg shadow-sm hover:shadow-md transition">
-            <label className="block text-sm font-semibold text-gray-200 capitalize mb-1">{key}
-              {key}
-            </label>
-            <input
-              type="text"
-              value={value}
-              onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
-              className="w-full p-3 border border-white/20 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:ring-2 focus:ring-[#00c6ff] focus:outline-none transition"
-            />
-          </div>
-        ))}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {Object.entries(formData).map(([key, value]) => (
+            <div key={key} className="bg-white/5 p-4 rounded-lg shadow-sm hover:shadow-md transition">
+              <label className="block text-sm font-semibold text-gray-200 capitalize mb-1">{key}</label>
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => handleChange(key as keyof ProfileData, e.target.value)}
+                className="w-full p-3 border border-white/20 rounded-lg bg-white/20 text-white placeholder-gray-300 focus:ring-2 focus:ring-[#00c6ff] focus:outline-none transition"
+              />
+            </div>
+          ))}
 
           <button
             type="submit"

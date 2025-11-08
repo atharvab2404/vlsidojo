@@ -1,3 +1,127 @@
+// "use client";
+
+// import Image from "next/image";
+// import { Montserrat, Inter } from "next/font/google";
+// import Navbar from "./Navbar";
+
+// import { useRouter } from "next/navigation";
+// import { useSession } from "next-auth/react";
+// import { useEffect } from "react";
+
+// // Load Montserrat and Inter
+// const montserratBold = Montserrat({
+//   subsets: ["latin"],
+//   weight: "700", // Bold for heading
+// });
+
+// const montserratRegular = Montserrat({
+//   subsets: ["latin"],
+//   weight: "400", // Regular for subheading
+// });
+
+// const inter = Inter({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600"],
+// });
+
+// export default function Hero() {
+//   const { data: session, status } = useSession();
+//   const router = useRouter();
+
+//   useEffect(() => {
+//     if (status === "loading") return;
+
+//     // Only redirect if user is new
+//     if (session?.user?.isNewUser) {
+//       router.push("/myprofile");
+//     }
+//   }, [session, status, router]);
+//   return (
+//     <section className="relative bg-[#1a1a2e] text-[#f0f0f0] min-h-screen flex flex-col overflow-hidden">
+//       {/* Background Animation Layer */}
+//       <div className="absolute inset-0 z-0 opacity-20">
+//         <svg
+//           className="w-full h-full animate-circuit"
+//           xmlns="http://www.w3.org/2000/svg"
+//           preserveAspectRatio="xMidYMid slice"
+//         >
+//           <defs>
+//             <pattern
+//               id="circuitPattern"
+//               width="80"
+//               height="80"
+//               patternUnits="userSpaceOnUse"
+//             >
+//               <path
+//                 d="M10 10 H70 V70 H10 Z M40 10 V70 M10 40 H70"
+//                 stroke="#00a8ff"
+//                 strokeWidth="1"
+//                 fill="none"
+//                 strokeLinecap="round"
+//               />
+//             </pattern>
+//           </defs>
+//           <rect width="100%" height="100%" fill="url(#circuitPattern)" />
+//         </svg>
+//       </div>
+
+//       {/* Overlay Glow Layer */}
+//       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/60 to-[#1a1a2e] z-0" />
+
+//       {/* Navigation Bar */}
+//       <Navbar />
+
+//       {/* Hero Content */}
+//       <div className="relative z-10 flex flex-1 items-center justify-center pt-24 px-8 lg:px-20 gap-12">
+//         {/* Left Column */}
+//         <div className="flex-1 max-w-xl">
+//           <h1
+//             className={`${montserratBold.className} text-[1.85rem] md:text-[2.35rem] font-bold text-[#00a8ff] leading-snug max-w-xl`}
+//           >
+//             Stop Wondering What Hardware Project to Build. Start Building Your Future.
+//           </h1>
+
+//           <h2
+//             className={`${montserratRegular.className} mt-4 text-lg md:text-xl text-[#f0f0f0] leading-snug`}
+//           >
+//             Build Your Career-Defining VLSI Portfolio. Go from Blank Page to Resume-Ready Project.
+//           </h2>
+
+//           <p
+//             className={`${inter.className} mt-6 text-base md:text-lg text-[#d0d0d0] leading-relaxed`}
+//           >
+//             VLSI Dojo provides meticulously crafted, text-based guides for complex hardware projects.
+//             Master hardware design with our end-to-end guides and build the resume that gets you hired
+//             by top tech companies.
+//           </p>
+
+//           <div className="mt-8">
+//             {/* Smooth scroll to Projects */}
+//             <a
+//               href="#projects"
+//               className="bg-[#00a8ff] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-[#0090dd] transition-all inline-block"
+//             >
+//               Explore Projects
+//             </a>
+//           </div>
+//         </div>
+
+//         {/* Right Column */}
+//         <div className="flex-1 relative flex items-center justify-center">
+//           <div className="w-[36rem] h-[36rem] relative overflow-hidden">
+//             <Image
+//               src="/img9.png"
+//               alt="Processor Render"
+//               fill
+//               style={{ objectFit: "contain" }}
+//               priority
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
 "use client";
 
 import Image from "next/image";
@@ -11,12 +135,12 @@ import { useEffect } from "react";
 // Load Montserrat and Inter
 const montserratBold = Montserrat({
   subsets: ["latin"],
-  weight: "700", // Bold for heading
+  weight: "700",
 });
 
 const montserratRegular = Montserrat({
   subsets: ["latin"],
-  weight: "400", // Regular for subheading
+  weight: "400",
 });
 
 const inter = Inter({
@@ -31,48 +155,40 @@ export default function Hero() {
   useEffect(() => {
     if (status === "loading") return;
 
-    // Only redirect if user is new
     if (session?.user?.isNewUser) {
       router.push("/myprofile");
     }
   }, [session, status, router]);
-  return (
-    <section className="relative bg-[#1a1a2e] text-[#f0f0f0] min-h-screen flex flex-col overflow-hidden">
-      {/* Background Animation Layer */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        <svg
-          className="w-full h-full animate-circuit"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <pattern
-              id="circuitPattern"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M10 10 H70 V70 H10 Z M40 10 V70 M10 40 H70"
-                stroke="#00a8ff"
-                strokeWidth="1"
-                fill="none"
-                strokeLinecap="round"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#circuitPattern)" />
-        </svg>
-      </div>
 
-      {/* Overlay Glow Layer */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/60 to-[#1a1a2e] z-0" />
+  return (
+    <section className="relative bg-black text-[#f0f0f0] min-h-screen flex flex-col overflow-hidden">
+
+      {/* ✅ SAME BACKGROUND GLOW SYSTEM AS OTHER PAGE */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+        {/* Purple Glow */}
+        <div className="absolute -top-20 -left-20 w-[480px] h-[480px] bg-purple-600/25 rounded-full blur-[140px] animate-pulse"></div>
+
+        {/* Indigo Glow */}
+        <div className="absolute top-40 -right-20 w-[520px] h-[520px] bg-indigo-600/25 rounded-full blur-[160px] animate-pulse"></div>
+
+        {/* Blue Glow */}
+        <div className="absolute bottom-0 left-1/3 w-[380px] h-[380px] bg-blue-500/25 rounded-full blur-[130px] animate-pulse"></div>
+
+        {/* Extra small glows for more ambience */}
+        <div className="absolute top-1/3 left-10 w-[250px] h-[250px] bg-purple-500/20 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-20 right-32 w-[260px] h-[260px] bg-fuchsia-500/20 rounded-full blur-[140px] animate-pulse"></div>
+
+        {/* Grid overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:60px_60px] opacity-10"></div>
+      </div>
 
       {/* Navigation Bar */}
       <Navbar />
 
       {/* Hero Content */}
       <div className="relative z-10 flex flex-1 items-center justify-center pt-24 px-8 lg:px-20 gap-12">
+
         {/* Left Column */}
         <div className="flex-1 max-w-xl">
           <h1
@@ -91,15 +207,14 @@ export default function Hero() {
             className={`${inter.className} mt-6 text-base md:text-lg text-[#d0d0d0] leading-relaxed`}
           >
             VLSI Dojo provides meticulously crafted, text-based guides for complex hardware projects.
-            Master hardware design with our end-to-end guides and build the resume that gets you hired
-            by top tech companies.
+            Master hardware design with our end-to-end guides and build the resume that gets you
+            hired by top tech companies.
           </p>
 
           <div className="mt-8">
-            {/* Smooth scroll to Projects */}
             <a
               href="#projects"
-              className="bg-[#00a8ff] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-[#0090dd] transition-all inline-block"
+              className="bg-[#00a8ff] text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-[#00a8ff] transition-all inline-block"
             >
               Explore Projects
             </a>
