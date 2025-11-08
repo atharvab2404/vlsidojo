@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-interface RouteParams {
-  params: { email: string };
-}
-
-export async function GET(req: Request, { params }: RouteParams) {
+export async function GET(
+  req: Request,
+  context: { params: { email: string } }
+) {
   try {
-    const { email } = params;
+    const { email } = context.params;
 
     if (!email) {
       return NextResponse.json(
@@ -20,7 +19,7 @@ export async function GET(req: Request, { params }: RouteParams) {
       where: { email },
     });
 
-    // ✅ Create a user if not found
+    // ✅ Auto-create user if not found
     if (!user) {
       user = await prisma.user.create({
         data: {
