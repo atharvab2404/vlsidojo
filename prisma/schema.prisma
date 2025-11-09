@@ -104,17 +104,3 @@ model Purchase {
   @@unique([userId, dojoId]) // prevent duplicates
 }
 
-model Purchase {
-  id               String   @id @default(cuid())
-  userId           String
-  dojoId           String
-  razorpayOrderId  String
-  razorpayPaymentId String
-  status           String   // "paid", "pending", etc.
-  createdAt        DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-  dojo Dojo @relation(fields: [dojoId], references: [id])
-
-  @@unique([userId, dojoId]) // prevent duplicates
-}
