@@ -3,14 +3,6 @@ import Razorpay from "razorpay";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const KEY_ID = process.env.RAZORPAY_KEY_ID || "";
-const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
-
-const razorpay = new Razorpay({
-  key_id: KEY_ID,
-  key_secret: KEY_SECRET,
-});
-
 const DISCOUNTS: Record<string, number> = {
   SAVE20: 0.20,
   SAVE10: 0.10,
@@ -18,15 +10,20 @@ const DISCOUNTS: Record<string, number> = {
 
 function normalizePriceToPaise(price: any) {
   if (typeof price !== "number") return 0;
-  if (price < 1000) return Math.round(price * 100); // treat as rupees -> paise
-  return Math.round(price); // already paise
+  if (price < 1000) return Math.round(price * 100);
+  return Math.round(price);
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // ✅ 1. items[] is required
+    // ✅ Initialize Razorpay ONLY at runtime
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID!,
+      key_secret: process.env.RAZORPAY_KEY_SECRET!,
+    });
+
     if (!Array.isArray(body.items) || body.items.length === 0) {
       return NextResponse.json(
         { error: "items[] required for order creation" },
@@ -34,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ✅ 2. Compute total price in paise
+    // ✅ Calculate total price
     let amountPaise = body.items.reduce((acc: number, it: any) => {
       const price = it?.price ?? 0;
       const qty = Number(it?.quantity ?? 1);
@@ -42,9 +39,7 @@ export async function POST(req: NextRequest) {
       return acc + ppaise * Math.max(1, qty);
     }, 0);
 
-    console.log("[create-order] computed base amount:", amountPaise);
-
-    // ✅ 3. Apply discount if valid
+    // ✅ Discount
     let discountApplied = null;
     if (body.code) {
       const normalized = String(body.code).toUpperCase();
@@ -53,10 +48,6 @@ export async function POST(req: NextRequest) {
         const discountAmount = Math.floor(amountPaise * discountRate);
         amountPaise -= discountAmount;
         discountApplied = normalized;
-        console.log(
-          `[create-order] discount ${normalized} (-${discountRate * 100}%), final amount:`,
-          amountPaise
-        );
       }
     }
 
@@ -67,7 +58,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ✅ 4. Create Razorpay order with discounted amount
+    // ✅ Create Razorpay order
     const order = await razorpay.orders.create({
       amount: amountPaise,
       currency: "INR",
@@ -77,8 +68,6 @@ export async function POST(req: NextRequest) {
         discountCode: discountApplied,
       },
     });
-
-    console.log("[create-order] order created:", order);
 
     return NextResponse.json({
       id: order.id,
