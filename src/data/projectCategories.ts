@@ -75,7 +75,7 @@ export const categories = [
         id: "req-ack",
         label: "Handshake",
         name: "req-ack",
-        image: "/images/proc.png",
+        image: "/images/req.png",
         description:
           "Build an 8-bit CPU with registers and an ALU to learn more about processor design and instruction execution.",
         link: "/projects/req-ack",

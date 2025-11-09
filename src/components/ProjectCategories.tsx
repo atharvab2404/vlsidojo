@@ -289,7 +289,7 @@ export default function ProjectCategories() {
                     className="flex-shrink-0 w-80 bg-white rounded-xl p-5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl"
                     style={{ boxShadow: "0 0 10px 0 rgba(128, 0, 255, 0.12)", fontFamily: "Inter, sans-serif" }}
                   >
-                    <img src={proj.image} alt={proj.name} className="w-full h-40 object-cover rounded-md mb-3" />
+                    <img src={proj.image} alt={proj.name} className="w-full h-50 object-cover rounded-md mb-3" />
                     <h4 className="text-base font-semibold mb-2 text-black" style={{ fontFamily: "Montserrat, sans-serif" }}>
                       {proj.name}
                     </h4>
