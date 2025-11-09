@@ -10,7 +10,7 @@ type ModuleProps = {
   setModule?: (module: number) => void; // navigate between modules
 };
 
-export default function Module4({
+export default function Module6({
   readModules = [false, false, false], // default for 3 modules
   handleCheckboxChange = () => {},     // noop if not passed
   setModule = () => {},                 // noop if not passed
@@ -22,7 +22,7 @@ export default function Module4({
       {/* Execution / Core */}
       <section className="space-y-4 mb-10">
       <h2 className="text-2xl inter-subheading text-slate-900 tracking-tight">
-          <strong>Verification & Validation</strong> 
+          Stage 5: Verification & Validation
         </h2>
         <p className="leading-7 inter-body">
         Verifying a processor isn't just about making sure it works, it's about proving it works correctly under all conditions. For our Simple SIMD Processor, this means ensuring it accurately executes every instruction, correctly handles its SIMD operations, and smoothly moves data through its five-stage pipeline. The best way to do this is with a testbench.
@@ -145,10 +145,10 @@ end`}
         {/* Previous button */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(5)}
+            onClick={() => setModule(2)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ← Module 5
+            ← Module 2
           </button>
         </div>
 

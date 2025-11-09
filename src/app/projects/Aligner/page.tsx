@@ -180,7 +180,6 @@ export default function Page() {
         {module === 4 && (
           <FinalModule
             readModules={readModules}
-            handleCheckboxChange={handleCheckboxChange}
             setModule={setModule}
           />
         )}

@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import 'katex/dist/katex.min.css';
+
 // import Navbar from "@/components/Navbar"; // ✅ Adjust path if needed
 // import Link from "next/link"; // If you need internal links
 
@@ -128,15 +130,11 @@ export default function PowerGatingClockGatingBlog() {
         <div className="grid md:grid-cols-2 gap-6 my-6">
           {/* Dynamic Power Card - FIX APPLIED HERE */}
           <div className="p-5 border border-red-200 bg-red-50 rounded-lg shadow-md">
-            <h4 className="text-xl font-semibold text-red-700 mb-3">
-              Dynamic Power ({'$'}P_{dyn}{'$'})
-            </h4>
+            
             <p className="text-gray-700 mb-2">
               This is the energy consumed when transistors actively **switch** their state (charge/discharge the load).
             </p>
-            <p className="font-mono text-sm bg-red-100 p-2 rounded">
-              $$P_{dyn} \propto \alpha \cdot C \cdot V^2 \cdot f$$
-            </p>
+            
             <p className="text-sm mt-3 italic text-red-600">
               **The $V^2$ factor** makes supply voltage ($V$) the most critical target for reduction.
             </p>
@@ -144,15 +142,11 @@ export default function PowerGatingClockGatingBlog() {
 
           {/* Static Power Card - FIX APPLIED HERE */}
           <div className="p-5 border border-green-200 bg-green-50 rounded-lg shadow-md">
-            <h4 className="text-xl font-semibold text-green-700 mb-3">
-              Static Power ({'$'}P_{static}{'$'})
-            </h4>
+            
             <p className="text-gray-700 mb-2">
               This is the power consumed due to **leakage current** flowing through an "off" transistor.
             </p>
-            <p className="font-mono text-sm bg-green-100 p-2 rounded">
-              $$P_{static} = V \cdot I_{leak}$$
-            </p>
+            
             <p className="text-sm mt-3 italic text-green-600">
               This problem **gets worse exponentially** as feature sizes shrink (sub-nanometer nodes).
             </p>
@@ -212,18 +206,14 @@ export default function PowerGatingClockGatingBlog() {
           A large transistor, called a **Power Switch**, is inserted between the main power rail and the circuit block (the "power island").
         </p>
         <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-6 bg-gray-50 p-4 rounded-lg">
-          <li>
-            **Header Switch (PMOS):** Placed on the $V_{DD}$ path.
-          </li>
+          
           <li>
             **Footer Switch (NMOS):** Placed on the Ground ($GND$) path.
           </li>
           <li>
             **Isolation Cells:** Mandatory buffers that clamp the powered-down block's outputs to a known $0$ or $1$ to prevent floating voltages from corrupting active blocks.
           </li>
-          <li>
-            **Retention Registers:** Special flip-flops that hold critical state data on a small, separate, always-on power supply ($V_{keep}$) while the main block is off.
-          </li>
+          
         </ul>
 
         <p className="mb-4 leading-relaxed text-gray-700">

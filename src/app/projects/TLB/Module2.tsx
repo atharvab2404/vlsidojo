@@ -4,7 +4,17 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import MCQBlock from "./MCQBlock";
 
-export default function Module2({ readModules, handleCheckboxChange, setModule }) {
+type ModuleProps = {
+  readModules?: boolean[]; // tracks which modules are read
+  handleCheckboxChange?: (index: number) => void; // toggle module read state
+  setModule?: (module: number) => void; // navigate between modules
+};
+
+export default function Module2({
+  readModules = [false, false, false], // default for 3 modules
+  handleCheckboxChange = () => {},     // noop if not passed
+  setModule = () => {},                 // noop if not passed
+}: ModuleProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -192,7 +202,7 @@ else if CMD_load is true
           </div>
         </div>
         {/* === End of Pseudo-code Section === */}
-
+    
 
         
 
@@ -200,25 +210,27 @@ else if CMD_load is true
 
        
       </section>
-      {/* Checkbox & Navigation Buttons */}
+      
+
+        {/* Navigation Controls */}
       <div className="grid grid-cols-3 items-center mt-10 bg-slate-50 p-4 rounded-xl shadow-sm">
-        {/* Left side - Previous button (always active, blue) */}
+        {/* Previous button */}
         <div className="flex justify-start">
           <button
-            onClick={() => setModule(1)}
+            onClick={() => setModule(2)}
             className="px-5 py-2 rounded-lg font-medium shadow-md transition-colors bg-blue-600 hover:bg-blue-700 text-white"
           >
-            ←  Module 1
+            ← Module 2
           </button>
         </div>
 
-        {/* Center - Checkbox */}
+        {/* Checkbox */}
         <div className="flex justify-center">
-          <label htmlFor="read2" className="flex items-center space-x-2 text-slate-700">
+          <label htmlFor="read3" className="flex items-center space-x-2 text-slate-700">
             <input
               type="checkbox"
-              id="read2"
-              checked={readModules[1]}          
+              id="read3"
+              checked={readModules[2]}          
               onChange={() => handleCheckboxChange(1)}
               className="h-4 w-4 accent-blue-600 rounded"
             />
@@ -226,23 +238,22 @@ else if CMD_load is true
           </label>
         </div>
 
-        {/* Right side - Next button */}
+        {/* Finish button */}
         <div className="flex justify-end">
           <button
-            disabled={!readModules[1]}          
-            onClick={() => setModule(3)}        
+            disabled={!readModules[2]}          
+            onClick={() => setModule(4)}        
             className={`px-5 py-2 rounded-lg font-medium shadow-md transition-colors ${
-              readModules[1]
+              readModules[2]
                 ? "bg-blue-600 hover:bg-blue-700 text-white"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
           >
-             Module 3 →
+            Finish Dojo →
           </button>
         </div>
       </div>
 
-      
       
     </div>
   );

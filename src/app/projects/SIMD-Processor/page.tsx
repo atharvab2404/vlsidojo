@@ -230,7 +230,6 @@ export default function Page() {
         {module === 7 && (
           <FinalModule
             readModules={readModules}
-            handleCheckboxChange={handleCheckboxChange}
             setModule={setModule}
           />
         )}
