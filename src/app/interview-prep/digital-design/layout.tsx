@@ -9,12 +9,14 @@ export default function DigitalDesignLayout({
 }) {
   return (
     <div className="min-h-screen bg-[#fdfaf7] flex flex-col">
-      {/* ✅ Navbar Always Visible */}
+      {/* Navbar */}
       <Navbar />
 
-      <div className="flex flex-1">
+      {/* Added top padding so content starts BELOW navbar */}
+      <div className="flex flex-1 pt-20">
+
         {/* Sidebar */}
-        <aside className="w-72 border-r border-amber-300 bg-white p-6 sticky top-0 h-screen overflow-y-auto">
+        <aside className="w-72 border-r border-amber-300 bg-white p-6 sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto">
           <h2 className="text-xl font-bold text-gray-800 mb-6">Digital Design</h2>
 
           <nav className="space-y-6">
@@ -42,7 +44,7 @@ export default function DigitalDesignLayout({
           </nav>
         </aside>
 
-        {/* Page Content */}
+        {/* Main content */}
         <main className="flex-1 p-12">{children}</main>
       </div>
     </div>
