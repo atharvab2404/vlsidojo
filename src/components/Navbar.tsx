@@ -126,7 +126,17 @@ export default function Navbar({ showBorder = true }: NavbarProps) {
         </li>
         <li>
           <a href="/#why-dojo" className="hover:text-[#00a8ff] cursor-pointer">
-            Why Dojo?
+            Why VLSI Dojo?
+          </a>
+        </li>
+        <li>
+          <a href="/#blog" className="hover:text-[#00a8ff] cursor-pointer">
+            Interview Prep
+          </a>
+        </li>
+        <li>
+          <a href="/#blog" className="hover:text-[#00a8ff] cursor-pointer">
+            1-1 Mentorship
           </a>
         </li>
         <li>

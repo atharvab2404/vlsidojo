@@ -5,6 +5,7 @@ import Testimonials from "@/components/Testimonials";
 import CallToAction from "@/components/CallToAction";
 import BlogSection from "@/components/BlogSection";
 import KnowCreators from "@/components/KnowCreators";
+import InterviewPrepMain from "@/app/interview-prep/page";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <WhyVLSIHub />
       <ProjectCategories />
+      <InterviewPrepMain />
       <BlogSection />
       <KnowCreators/>
       <CallToAction />
