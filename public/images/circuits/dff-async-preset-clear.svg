@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350">
+  <defs>
+    <style>
+      .wire { fill: none; stroke: #334155; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-priority { fill: none; stroke: #dc2626; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .block { fill: #f0f9ff; stroke: #0284c7; stroke-width: 2.5; }
+      .text { font-family: sans-serif; font-weight: bold; fill: #1e293b; font-size: 16px; }
+      .label-priority { font-family: sans-serif; fill: #b91c1c; font-size: 14px; font-weight: bold; }
+      .clk-triangle { fill: none; stroke: #0284c7; stroke-width: 2; }
+      .bubble { fill: #fff; stroke: #dc2626; stroke-width: 2.5; }
+    </style>
+  </defs>
+
+  <!-- FF Block -->
+  <g transform="translate(120, 100)">
+    <rect class="block" width="160" height="150" rx="8" ry="8" />
+    <text x="80" y="40" text-anchor="middle" class="label-priority" style="fill:#0369a1">D Flip-Flop</text>
+    
+    <!-- Sync Inputs -->
+    <text x="15" y="60" class="text">D</text>
+    <path class="clk-triangle" d="M0,110 L15,120 L0,130" />
+    
+    <!-- Outputs -->
+    <text x="145" y="60" text-anchor="end" class="text">Q</text>
+    <text x="145" y="120" text-anchor="end" class="text">Q'</text>
+  </g>
+
+  <!-- === Async Pins (Priority) === -->
+  
+  <!-- PRESET (Top) -->
+  <line class="wire-priority" x1="200" y1="40" x2="200" y2="100" />
+  <circle class="bubble" cx="200" cy="94" r="5" /> <!-- Bubble at input -->
+  <text x="200" y="30" text-anchor="middle" class="label-priority">PRE'</text>
+  
+  <!-- CLEAR (Bottom) -->
+  <line class="wire-priority" x1="200" y1="310" x2="200" y2="250" />
+  <circle class="bubble" cx="200" cy="256" r="5" /> <!-- Bubble at input -->
+  <text x="200" y="330" text-anchor="middle" class="label-priority">CLR'</text>
+  
+  <!-- === Sync Connections (Standard) === -->
+  <line class="wire" x1="50" y1="160" x2="120" y2="160" /> <!-- D -->
+  <text x="40" y="165" text-anchor="end" class="text">Data</text>
+  
+  <line class="wire" x1="50" y1="220" x2="120" y2="220" /> <!-- Clk -->
+  <text x="40" y="225" text-anchor="end" class="text">Clk</text>
+  
+  <line class="wire" x1="280" y1="160" x2="350" y2="160" /> <!-- Q -->
+  <text x="360" y="165" class="text">Q</text>
+  
+  <line class="wire" x1="280" y1="220" x2="350" y2="220" /> <!-- Q' -->
+  <text x="360" y="225" class="text">Q'</text>
+
+</svg>

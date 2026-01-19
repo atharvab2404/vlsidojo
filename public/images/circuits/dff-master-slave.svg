@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350">
+  <defs>
+    <style>
+      .wire { fill: none; stroke: #334155; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .block { fill: #f0f9ff; stroke: #0284c7; stroke-width: 2.5; }
+      .text { font-family: sans-serif; font-weight: bold; fill: #1e293b; font-size: 16px; }
+      .label { font-family: sans-serif; fill: #0369a1; font-size: 14px; font-weight: bold; }
+      .sublabel { font-family: sans-serif; fill: #64748b; font-size: 12px; }
+      .dot { fill: #334155; }
+    </style>
+  </defs>
+
+  <!-- === MASTER LATCH === -->
+  <g transform="translate(150, 100)">
+    <rect class="block" width="120" height="120" rx="10" ry="10" />
+    <text x="60" y="30" text-anchor="middle" class="label">MASTER</text>
+    <text x="60" y="50" text-anchor="middle" class="sublabel">(D Latch)</text>
+    
+    <!-- Ports -->
+    <text x="10" y="40" class="text">D</text>
+    <text x="10" y="100" class="text">E</text>
+    <text x="100" y="40" text-anchor="end" class="text">Q</text>
+  </g>
+
+  <!-- === SLAVE LATCH === -->
+  <g transform="translate(450, 100)">
+    <rect class="block" width="120" height="120" rx="10" ry="10" />
+    <text x="60" y="30" text-anchor="middle" class="label">SLAVE</text>
+    <text x="60" y="50" text-anchor="middle" class="sublabel">(D Latch)</text>
+    
+    <!-- Ports -->
+    <text x="10" y="40" class="text">D</text>
+    <text x="10" y="100" class="text">E</text>
+    <text x="100" y="40" text-anchor="end" class="text">Q</text>
+    <text x="100" y="100" text-anchor="end" class="text">Q'</text>
+  </g>
+
+  <!-- === INVERTER at (100, 200) === -->
+  <g transform="translate(100, 200)">
+    <path style="fill:#fff; stroke:#334155; stroke-width:2.5" d="M0,0 L30,15 L0,30 Z" />
+    <circle style="fill:#fff; stroke:#334155; stroke-width:2.5" cx="34" cy="15" r="4" />
+  </g>
+
+  <!-- === WIRING === -->
+
+  <!-- Data Input -->
+  <line class="wire" x1="50" y1="130" x2="150" y2="130" />
+  <text x="30" y="135" class="text">D_in</text>
+
+  <!-- Master Q to Slave D -->
+  <line class="wire" x1="270" y1="130" x2="450" y2="130" />
+  <text x="360" y="120" text-anchor="middle" class="sublabel">Qm</text>
+
+  <!-- Clock Network -->
+  <text x="30" y="285" class="text">Clk</text>
+  
+  <!-- Main Clock Bus -->
+  <line class="wire" x1="50" y1="280" x2="460" y2="280" /> 
+  <circle class="dot" cx="80" cy="280" r="3" />
+  
+  <!-- Path to Slave E (Direct) -->
+  <!-- Slave E is at (450+10, 100+100) = (460, 200) -->
+  <line class="wire" x1="460" y1="280" x2="460" y2="200" /> <!-- Corrected x2 from 450 to 460 -->
+
+  <!-- Path to Inverter -->
+  <line class="wire" x1="80" y1="280" x2="80" y2="215" /> 
+  <line class="wire" x1="80" y1="215" x2="100" y2="215" /> <!-- Into Inverter -->
+
+  <!-- Path from Inverter to Master E -->
+  <!-- Master E is at (150+10, 100+100) = (160, 200) -->
+  <!-- Inverter Out is at (100+34+4, 200+15) approx (138, 215) -->
+  <line class="wire" x1="138" y1="215" x2="160" y2="215" /> 
+  <line class="wire" x1="160" y1="215" x2="160" y2="200" /> <!-- Connect -->
+  
+  <!-- Outputs -->
+  <line class="wire" x1="570" y1="130" x2="650" y2="130" />
+  <text x="660" y="135" class="text">Q</text>
+  
+  <line class="wire" x1="570" y1="190" x2="650" y2="190" />
+  <text x="660" y="195" class="text">Q'</text>
+
+</svg>

@@ -1,0 +1,12 @@
+src/app/interview-prep/digital-design/how-to-build-a-full-subtractor-using-a-full-adder/SubtractorVisualizer.tsx(28,11): error TS7034: Variable 'sum' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/app/interview-prep/digital-design/how-to-build-a-full-subtractor-using-a-full-adder/SubtractorVisualizer.tsx(129,143): error TS7005: Variable 'sum' implicitly has an 'any[]' type.
+src/app/interview-prep/digital-design/how-to-build-a-full-subtractor-using-a-full-adder/SubtractorVisualizer.tsx(130,38): error TS7005: Variable 'sum' implicitly has an 'any[]' type.
+src/app/interview-prep/digital-design/synchronous-vs-asynchronous-ripple-counters/CounterVisualizer.tsx(14,26): error TS2554: Expected 1 arguments, but got 0.
+src/app/interview-prep/digital-design/what-are-universal-gates-nand-and-nor/UniversalGateBuilder.tsx(192,42): error TS2447: The '&' operator is not allowed for boolean types. Consider using '&&' instead.
+src/app/interview-prep/digital-design/what-are-universal-gates-nand-and-nor/UniversalGateBuilder.tsx(212,42): error TS2447: The '|' operator is not allowed for boolean types. Consider using '||' instead.
+src/app/interview-prep/digital-design/what-is-a-combinational-circuit-vs-sequential/BehaviorComparator.tsx(222,101): error TS2322: Type '{ d: string; fill: string; stroke: string; strokeWidth: string; strokeStep: string; }' is not assignable to type 'SVGProps<SVGPathElement>'.
+  Property 'strokeStep' does not exist on type 'SVGProps<SVGPathElement>'.
+src/app/interview-prep/digital-design/what-is-a-combinational-circuit-vs-sequential/BehaviorComparator.tsx(223,101): error TS2322: Type '{ d: string; fill: string; stroke: string; strokeWidth: string; strokeStep: string; }' is not assignable to type 'SVGProps<SVGPathElement>'.
+  Property 'strokeStep' does not exist on type 'SVGProps<SVGPathElement>'.
+src/app/interview-prep/digital-design/what-is-a-combinational-circuit-vs-sequential/BehaviorComparator.tsx(224,102): error TS2322: Type '{ d: string; fill: string; stroke: string; strokeWidth: string; strokeStep: string; }' is not assignable to type 'SVGProps<SVGPathElement>'.
+  Property 'strokeStep' does not exist on type 'SVGProps<SVGPathElement>'.

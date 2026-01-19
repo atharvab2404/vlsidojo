@@ -1,6 +1,10 @@
 // src/app/interview-prep/digital-design/curriculum.ts
 export function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return text
+    .toLowerCase()
+    .replace(/'/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 export const digitalDesignCurriculum = [
@@ -55,6 +59,56 @@ export const digitalDesignCurriculum = [
       "How to Design a Synchronous Counter with Parallel Load",
       "Special Counters: Ring Counter and Johnson Counter",
       "What is Reset Synchronization? (Synchronous vs. Asynchronous Reset)",
+    ],
+  },
+  {
+    hub: "Finite State Machine (FSM) Design",
+    subtopics: [
+      "Mealy vs. Moore: The Complete FSM Comparison",
+      "How to Design an FSM (from State Diagram to Logic Gates)",
+      "State Assignment: Binary vs. Gray vs. One-Hot Encoding",
+      "State Minimization: The Partitioning Method Explained",
+      "How to Analyze a Sequential Circuit (Derive FSM from Gates)",
+      "FSM Design Problem: How to Design a Sequence Detector (e.g., '1011')",
+      "FSM Design Problem: Designing a Serial Adder (Mealy and Moore)",
+      "FSM Design Problem: Designing a Vending Machine Controller",
+      "FSM Design Problem: Designing a Traffic Light Controller",
+      "What is an Algorithmic State Machine (ASM) Chart?",
+    ],
+  },
+  {
+    hub: "Verilog & RTL Design for Interviews",
+    subtopics: [
+      "Blocking (=) vs. Non-Blocking (<=) Assignments: The #1 Verilog Question",
+      "Structural vs. Behavioral vs. Dataflow Modeling in Verilog",
+      "How to Code a Combinational Circuit (always @*)",
+      "How to Code a Sequential Circuit (always @(posedge clk))",
+      "How to Create an Inadvertent Latch in Verilog (and How to Fix It)",
+      "Verilog if-else vs. case Statements (Synthesis & Priority)",
+      "Verilog Tasks vs. Functions: Key Differences",
+      "What is a Parameterized Verilog Module?",
+      "Bus Implementation: Tri-State Buffers vs. Multiplexers",
+      "Verilog for Loops and the generate Construct",
+      "FSM Verilog Coding Styles (1-Process, 2-Process, 3-Process)",
+    ],
+  },
+  {
+    hub: "Advanced Topics: STA, Timing & VLSI",
+    subtopics: [
+      "Setup and Hold Time: The Most Important Timing Concepts",
+      "How to Fix Setup and Hold Violations (Interview Guide)",
+      "What is Metastability? (And How to Prevent It with Synchronizers)",
+      "What is Clock Skew? (Positive vs. Negative Skew and its effect on Setup/Hold)",
+      "What is Clock Jitter?",
+      "Logic Hazards Explained: Static, Dynamic, and Function Hazards",
+      "How to Find and Fix Static Hazards using K-Maps",
+      "Static vs. Dynamic Power Consumption (Equation & Reduction Techniques)",
+      "What is Clock Domain Crossing (CDC)?",
+      "The VLSI Design Flow Explained (RTL to GDSII)",
+      "What is Static Timing Analysis (STA)?",
+      "What is Design for Testability (DFT)?",
+      "Testing Fault Models: Stuck-at-0 and Stuck-at-1",
+      "DFT Techniques: Scan Chains, Boundary Scan, and BIST",
     ],
   },
 ];

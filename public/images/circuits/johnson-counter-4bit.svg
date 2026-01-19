@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350">
+  <defs>
+    <style>
+      .wire { fill: none; stroke: #db2777; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .wire-gray { fill: none; stroke: #334155; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .block { fill: #fce7f3; stroke: #db2777; stroke-width: 2.5; }
+      .text { font-family: sans-serif; font-weight: bold; fill: #1e293b; font-size: 16px; }
+      .label { font-family: sans-serif; fill: #be185d; font-size: 14px; font-weight: bold; }
+      .clk-triangle { fill: none; stroke: #db2777; stroke-width: 2; }
+      .dot { fill: #db2777; }
+    </style>
+  </defs>
+
+  <!-- FF0 at 150 -->
+  <g transform="translate(150, 100)">
+    <rect class="block" width="100" height="120" rx="6" ry="6" />
+    <text x="50" y="30" text-anchor="middle" class="label">FF0</text>
+    <text x="10" y="50" class="text">D</text>
+    <text x="90" y="50" text-anchor="end" class="text">Q</text>
+    <text x="90" y="90" text-anchor="end" class="text">Q'</text>
+    <path class="clk-triangle" d="M10,90 L20,100 L10,110" />
+  </g>
+
+  <!-- FF1 at 350 -->
+  <g transform="translate(350, 100)">
+    <rect class="block" width="100" height="120" rx="6" ry="6" />
+    <text x="50" y="30" text-anchor="middle" class="label">FF1</text>
+    <text x="10" y="50" class="text">D</text>
+    <text x="90" y="50" text-anchor="end" class="text">Q</text>
+    <text x="90" y="90" text-anchor="end" class="text">Q'</text>
+    <path class="clk-triangle" d="M10,90 L20,100 L10,110" />
+  </g>
+
+  <!-- FF2 at 550 -->
+  <g transform="translate(550, 100)">
+    <rect class="block" width="100" height="120" rx="6" ry="6" />
+    <text x="50" y="30" text-anchor="middle" class="label">FF2</text>
+    <text x="10" y="50" class="text">D</text>
+    <text x="90" y="50" text-anchor="end" class="text">Q</text>
+    <text x="90" y="90" text-anchor="end" class="text">Q'</text>
+    <path class="clk-triangle" d="M10,90 L20,100 L10,110" />
+  </g>
+
+  <!-- FF3 at 750 -->
+  <g transform="translate(750, 100)">
+    <rect class="block" width="100" height="120" rx="6" ry="6" />
+    <text x="50" y="30" text-anchor="middle" class="label">FF3</text>
+    <text x="10" y="50" class="text">D</text>
+    <text x="90" y="50" text-anchor="end" class="text">Q</text>
+    <text x="90" y="90" text-anchor="end" class="text">Q'</text>
+    <path class="clk-triangle" d="M10,90 L20,100 L10,110" />
+  </g>
+
+  <!-- Feedback: Q3' (840) -> D0 (160) -->
+  <!-- Q' is at y=90 relative -> 190 absolute -->
+  <line class="wire" x1="840" y1="190" x2="870" y2="190" /> <!-- Out stub from 840 -->
+  <line class="wire" x1="870" y1="190" x2="870" y2="60" /> <!-- Up -->
+  <line class="wire" x1="870" y1="60" x2="80" y2="60" /> <!-- Across Top -->
+  <line class="wire" x1="80" y1="60" x2="80" y2="150" /> <!-- Down -->
+  <line class="wire" x1="80" y1="150" x2="160" y2="150" /> <!-- In to D0 at 160 -->
+
+  <text x="480" y="50" text-anchor="middle" class="label">Twisted Feedback: Q3' &#8594; D0</text>
+
+  <!-- Internal Connections: Q to D -->
+  <!-- Q0(240) -> D1(360) -->
+  <line class="wire-gray" x1="240" y1="150" x2="360" y2="150" />
+  <!-- Q1(440) -> D2(560) -->
+  <line class="wire-gray" x1="440" y1="150" x2="560" y2="150" />
+  <!-- Q2(640) -> D3(760) -->
+  <line class="wire-gray" x1="640" y1="150" x2="760" y2="150" />
+
+  <!-- Clock Line -->
+  <line class="wire-gray" x1="50" y1="280" x2="760" y2="280" /> 
+  <text x="40" y="285" text-anchor="end" class="text">Clk</text>
+  
+  <line class="wire-gray" x1="160" y1="280" x2="160" y2="200" /> <!-- To FF0 -->
+  <circle style="fill:#334155" cx="160" cy="280" r="3" />
+  
+  <line class="wire-gray" x1="360" y1="280" x2="360" y2="200" /> <!-- To FF1 -->
+  <circle style="fill:#334155" cx="360" cy="280" r="3" />
+  
+  <line class="wire-gray" x1="560" y1="280" x2="560" y2="200" /> <!-- To FF2 -->
+  <circle style="fill:#334155" cx="560" cy="280" r="3" />
+  
+  <line class="wire-gray" x1="760" y1="280" x2="760" y2="200" /> <!-- To FF3 -->
+
+</svg>

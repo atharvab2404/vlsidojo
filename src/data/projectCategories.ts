@@ -50,7 +50,7 @@ export const categories = [
         features: ["Step-by-step guide", "Testbenches", "Resume README"],
       },
       {
-        id: "alu-4bit",
+        id: "data-aligner",
         label: "Beginner-Friendly",
         name: "High-Speed Data Aligner",
         image: "/projects/align.png",
